@@ -1,3 +1,4 @@
+# Smart API Automation Workflow
 name: 🚀 API Automation CI
 
 on:
@@ -18,8 +19,8 @@ on:
         required: false
         default: ""
 
-        permissions:
-          contents: read
+permissions:
+  contents: read
 
 jobs:
   api-tests:
@@ -30,11 +31,10 @@ jobs:
 
     steps:
       - name: 📥 Checkout repository
-      - uses: actions/checkout@v4
-      - with:
-      - ref: ${{ github.event.inputs.branch || github.ref_name }}
-      - token: ${{ secrets.GITHUB_TOKEN }}
-
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.branch || github.ref_name }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: ☕ Setup JDK
         uses: actions/setup-java@v4
