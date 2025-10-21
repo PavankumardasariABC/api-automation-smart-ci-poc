@@ -56,12 +56,16 @@ jobs:
       - name: 🧪 Run Tests
         run: |
           if [ "${{ github.event.inputs.test_class }}" != "" ]; then
-            ./gradlew clean test -Dtest=${{ github.event.inputs.test_class }}
-          elif [ "${{ steps.smart.outputs.group }}" != "" ]; then
-            ./gradlew clean test -Dgroups=${{ steps.smart.outputs.group }}
+            echo "🎯 Running specific test class: ${{ github.event.inputs.test_class }}"
+            ./gradlew clean test --tests "${{ github.event.inputs.test_class }}"
+          elif [ "${{ github.event.inputs.test_group }}" != "" ] && [ "${{ github.event.inputs.test_group }}" != "All" ]; then
+            echo "🏷️ Running specific TestNG group: ${{ github.event.inputs.test_group }}"
+            ./gradlew clean test -Dgroups=${{ github.event.inputs.test_group }}
           else
+            echo "🧩 Running full regression suite..."
             ./gradlew clean test
           fi
+      
 
       - name: 📊 Generate Allure Report
         run: ./gradlew allureReport

@@ -10,6 +10,9 @@
     <test name="Authentication and Merchant Flow">
         <classes>
             <!-- 🔐 Authentication Tests -->
+            <class name="com.externalAPIs.tests.auth.Authorization_TokenTests"/>
+            <class name="com.externalAPIs.tests.auth.Secure_TokenTests"/>
+            <class name="com.externalAPIs.tests.auth.Glofox_ClientTokenTests"/>
             <class name="com.externalAPIs.tests.auth.Glofox_SecureClientTokenTests"/>
 
             <!-- 🧩 COMMON APIs -->
