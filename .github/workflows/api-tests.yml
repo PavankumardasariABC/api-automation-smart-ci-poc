@@ -76,10 +76,15 @@ jobs:
             ./gradlew test
           fi
 
-      - name: 🧰 Install Allure CLI
+      - name: 🧰 Ensure Allure CLI Installed (macOS-safe)
         run: |
-          sudo apt-get update
-          sudo apt-get install -y allure
+          if ! command -v allure &> /dev/null; then
+            echo "Installing Allure CLI..."
+            brew install allure || echo "⚠️ Skipping Allure install (already handled by Gradle)"
+          else
+            echo "✅ Allure CLI already installed"
+          fi
+      
 
       - name: 📊 Generate Allure Report
         run: ./gradlew allureReport
