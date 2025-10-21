@@ -40,6 +40,15 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '21'
+      - name: 🧱 Cache Gradle dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
 
       - name: 🧠 Smart Test Selection
         id: smart
@@ -65,7 +74,7 @@ jobs:
             ./gradlew clean test -Dgroups=${{ github.event.inputs.test_group }}
           else
             echo "🧩 Running full regression suite..."
-            ./gradlew clean test
+            ./gradlew test
           fi
       - name: 🧰 Install Allure CLI
   run: |
