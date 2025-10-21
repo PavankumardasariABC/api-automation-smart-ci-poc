@@ -6,11 +6,10 @@ on:
     branches: [ main, develop ]
   workflow_dispatch:
     inputs:
-        branch:
-          description: "Select branch to run tests"
-          required: true
-          default: "main"
-
+      branch:
+        description: "Select branch to run tests"
+        required: true
+        default: "main"
       test_group:
         description: "Test group (Sanity, Integration, Regression, All)"
         required: true
@@ -34,7 +33,7 @@ jobs:
       - name: 📥 Checkout repository
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.inputs.branch || github.ref_name }}
+          ref: ${{ github.event.inputs.branch || github.ref_name || 'main' }}
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: ☕ Setup JDK
