@@ -1,0 +1,96 @@
+name: 🚀 API Automation CI
+
+on:
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: "Select branch to run tests"
+        required: true
+        default: "develop"
+      test_group:
+        description: "Test group (Sanity, Integration, Regression, All)"
+        required: true
+        default: "All"
+      test_class:
+        description: "Optional: Run only specific API test class"
+        required: false
+        default: ""
+
+jobs:
+  api-tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: api_automation_framework_gradle
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.branch || github.ref_name }}
+
+      - name: ☕ Setup JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: 🧠 Smart Test Selection
+        id: smart
+        run: |
+          echo "Detecting changed test files..."
+          CHANGED=$(git diff --name-only origin/main...HEAD | grep 'src/test/java' || true)
+          if [ -n "$CHANGED" ]; then
+            echo "Changed test files:"
+            echo "$CHANGED"
+            echo "group=Custom" >> $GITHUB_OUTPUT
+          else
+            echo "No specific changes; running default group."
+            echo "group=${{ github.event.inputs.test_group }}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: 🧪 Run Tests
+        run: |
+          if [ "${{ github.event.inputs.test_class }}" != "" ]; then
+            ./gradlew clean test -Dtest=${{ github.event.inputs.test_class }}
+          elif [ "${{ steps.smart.outputs.group }}" != "" ]; then
+            ./gradlew clean test -Dgroups=${{ steps.smart.outputs.group }}
+          else
+            ./gradlew clean test
+          fi
+
+      - name: 📊 Generate Allure Report
+        run: ./gradlew allureReport
+
+      - name: 🚨 Upload Allure Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results
+          path: api_automation_framework_gradle/reports/current
+
+      - name: 💬 Comment on PR
+        if: ${{ github.event_name == 'pull_request' }}
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const prNumber = context.issue.number;
+            const message = `
+            ✅ API tests executed for this PR
+            - **Branch:** ${{ github.ref_name }}
+            - **Group:** ${{ github.event.inputs.test_group || 'All' }}
+            `;
+            await github.rest.issues.createComment({
+              issue_number: prNumber,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: message
+            });
+
+      - name: 🛑 Fail Build on Test Failure
+        if: failure()
+        run: |
+          echo "❌ Tests failed! Build will be marked as failed."
+          exit 1
