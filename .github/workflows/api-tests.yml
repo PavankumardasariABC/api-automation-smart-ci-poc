@@ -9,7 +9,7 @@ on:
       branch:
         description: "Select branch to run tests"
         required: true
-        default: "main"
+        default: "feature/github-actions-poc"
       test_group:
         description: "Test group (Sanity, Integration, Regression, All)"
         required: true
@@ -25,15 +25,12 @@ permissions:
 jobs:
   api-tests:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: api_automation_framework_gradle
 
     steps:
       - name: 📥 Checkout repository
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.inputs.branch || github.ref_name || 'main' }}
+          ref: ${{ github.event.inputs.branch || github.ref_name || 'feature/github-actions-poc' }}
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: ☕ Setup JDK
@@ -46,7 +43,7 @@ jobs:
         id: smart
         run: |
           echo "Detecting changed test files..."
-          CHANGED=$(git diff --name-only origin/main...HEAD | grep 'src/test/java' || true)
+          CHANGED=$(git diff --name-only origin/feature/github-actions-poc...HEAD | grep 'src/test/java' || true)
           if [ -n "$CHANGED" ]; then
             echo "Changed test files:"
             echo "$CHANGED"
@@ -73,7 +70,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: allure-results
-          path: api_automation_framework_gradle/reports/current
+          path: reports/current
 
       - name: 💬 Comment on PR
         if: ${{ github.event_name == 'pull_request' }}
