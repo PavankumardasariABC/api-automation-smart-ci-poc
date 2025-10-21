@@ -9,7 +9,7 @@ on:
       branch:
         description: "Select branch to run tests"
         required: true
-        default: "feature/github-actions-poc"
+        default: "feature/github-actions-poc-"   # 👈 updated with dash
       test_group:
         description: "Test group (Sanity, Integration, Regression, All)"
         required: true
@@ -30,7 +30,7 @@ jobs:
       - name: 📥 Checkout repository
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.inputs.branch || github.ref_name || 'feature/github-actions-poc' }}
+          ref: ${{ github.event.inputs.branch || github.ref_name || 'feature/github-actions-poc-' }}  # 👈 updated with dash
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: ☕ Setup JDK
@@ -43,7 +43,7 @@ jobs:
         id: smart
         run: |
           echo "Detecting changed test files..."
-          CHANGED=$(git diff --name-only origin/feature/github-actions-poc...HEAD | grep 'src/test/java' || true)
+          CHANGED=$(git diff --name-only origin/feature/github-actions-poc-...HEAD | grep 'src/test/java' || true)  # 👈 updated with dash
           if [ -n "$CHANGED" ]; then
             echo "Changed test files:"
             echo "$CHANGED"
