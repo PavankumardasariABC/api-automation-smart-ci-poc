@@ -6,10 +6,11 @@ on:
     branches: [ main, develop ]
   workflow_dispatch:
     inputs:
-      branch:
-        description: "Select branch to run tests"
-        required: true
-        default: "develop"
+        branch:
+          description: "Select branch to run tests"
+          required: true
+          default: "main"
+
       test_group:
         description: "Test group (Sanity, Integration, Regression, All)"
         required: true
