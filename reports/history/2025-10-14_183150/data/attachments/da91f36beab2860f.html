@@ -1,0 +1,115 @@
+<div>Status code 201 </div>
+
+
+<h4>Body</h4>
+<div>
+    <pre class="preformated-text">
+{
+    &quot;name&quot;: &quot;Regions Bank QA-1bdba4&quot;,
+    &quot;countryCode&quot;: &quot;US&quot;,
+    &quot;paymentType&quot;: &quot;EFT&quot;,
+    &quot;isManualApprovalRequired&quot;: false,
+    &quot;isDepositApprovalRequired&quot;: false,
+    &quot;fileFormatType&quot;: &quot;NACHA&quot;,
+    &quot;platform&quot;: &quot;REGIONS BANK&quot;,
+    &quot;provider&quot;: &quot;REGIONS_BANK&quot;,
+    &quot;fileNamingPattern&quot;: &quot;{cv:counter}_{dv:dd-MM-yy}&quot;,
+    &quot;fileExtension&quot;: &quot;ach&quot;,
+    &quot;maxBatchPerFile&quot;: 100,
+    &quot;maxTransactionPerBatch&quot;: 9999,
+    &quot;maxTransactionPerFile&quot;: 9999,
+    &quot;maxBatchingTxTimeout&quot;: 20,
+    &quot;tinLength&quot;: 15,
+    &quot;generalDetails&quot;: {
+        &quot;originator.companyIdentification&quot;: &quot;G710602737&quot;,
+        &quot;destination.fileIdModifier&quot;: &quot;P&quot;,
+        &quot;maxPendingPaymentFileResponseTimeInMinutes&quot;: 4.0,
+        &quot;originator.originatorStatusCode&quot;: &quot;1&quot;,
+        &quot;destination.destinationBankName&quot;: &quot;REGIONS BANK&quot;,
+        &quot;destination.referenceCode&quot;: &quot;XXXXXXXX&quot;,
+        &quot;originator.immediateOriginName&quot;: &quot;ABC FINANCIAL SVCSXXXXX&quot;,
+        &quot;originator.originatorDFIIdentifier&quot;: &quot;06200019&quot;,
+        &quot;destination.priorityCode&quot;: &quot;01&quot;,
+        &quot;depositEntryDescription&quot;: &quot;EARLY&quot;,
+        &quot;destination.blockingFactor&quot;: &quot;10&quot;,
+        &quot;refundEntryDescription&quot;: &quot;CLUBCHARGE&quot;,
+        &quot;destination.immediateDestination&quot;: &quot;062000019&quot;,
+        &quot;chargeEntryDescription&quot;: &quot;CLUB FEES&quot;,
+        &quot;originator.immediateOrigin&quot;: &quot;1710602737&quot;,
+        &quot;batchFile.blocking&quot;: &quot;TRUE&quot;,
+        &quot;destination.formatCode&quot;: &quot;1&quot;,
+        &quot;customerCarePhone&quot;: &quot;8888279262&quot;
+    },
+    &quot;storageDetails&quot;: {
+        &quot;receive&quot;: {
+            &quot;protocolType&quot;: &quot;S3&quot;,
+            &quot;bucketName&quot;: &quot;abcfinancial-qa-payment-files-us-eft&quot;,
+            &quot;region&quot;: &quot;us-west-2&quot;,
+            &quot;initFolder&quot;: true,
+            &quot;folderPath&quot;: &quot;transactions/responses_1bdba4&quot;
+        },
+        &quot;send&quot;: {
+            &quot;protocolType&quot;: &quot;S3&quot;,
+            &quot;bucketName&quot;: &quot;abcfinancial-qa-payment-files-us-eft&quot;,
+            &quot;region&quot;: &quot;us-west-2&quot;,
+            &quot;initFolder&quot;: true,
+            &quot;folderPath&quot;: &quot;transactions/requests_1bdba4&quot;
+        }
+    },
+    &quot;communicationDetails&quot;: {
+        &quot;receiveEndpoint&quot;: {
+            &quot;folderPath&quot;: &quot;/srv/qa/regions/responses/demo_1bdba4&quot;,
+            &quot;password&quot;: &quot;******&quot;,
+            &quot;protocolType&quot;: &quot;SFTP&quot;,
+            &quot;deleteAfterReceive&quot;: false,
+            &quot;batchFileRenameOnCopy&quot;: true,
+            &quot;url&quot;: &quot;mocksftp.qa.30preprod.com&quot;,
+            &quot;batchFileExtension&quot;: &quot;*&quot;,
+            &quot;username&quot;: &quot;qabank&quot;
+        },
+        &quot;sendEndpoint&quot;: {
+            &quot;folderPath&quot;: &quot;/srv/qa/regions/requests/demo_1bdba4&quot;,
+            &quot;password&quot;: &quot;******&quot;,
+            &quot;deleteAfterSend&quot;: false,
+            &quot;protocolType&quot;: &quot;SFTP&quot;,
+            &quot;batchFileRenameOnCopy&quot;: true,
+            &quot;url&quot;: &quot;mocksftp.qa.30preprod.com&quot;,
+            &quot;batchFileExtension&quot;: &quot;ach&quot;,
+            &quot;username&quot;: &quot;qabank&quot;
+        }
+    },
+    &quot;id&quot;: &quot;11f0a8fd-eacf-1f95-ac88-353bbe4be12d&quot;,
+    &quot;processorStatus&quot;: &quot;READY&quot;,
+    &quot;categoryId&quot;: &quot;41424320-4445-4620-4341-544547202020&quot;,
+    &quot;category&quot;: {
+        &quot;name&quot;: &quot;DEFAULT&quot;,
+        &quot;description&quot;: &quot;Default merchant-processor category&quot;,
+        &quot;id&quot;: &quot;41424320-4445-4620-4341-544547202020&quot;
+    },
+    &quot;active&quot;: true,
+    &quot;maxAmountPerBatch&quot;: 10000000,
+    &quot;maxMonetaryAmountPerBatch&quot;: {
+        &quot;amount&quot;: 10000000.00,
+        &quot;currency&quot;: &quot;USD&quot;
+    }
+}    </pre>
+</div>
+
+<h4>Headers</h4>
+<div>
+        <div>Transfer-Encoding: chunked</div>
+        <div>X-Content-Type-Options: nosniff</div>
+        <div>Connection: keep-alive</div>
+        <div>Pragma: no-cache</div>
+        <div>Date: Tue, 14 Oct 2025 13:01:40 GMT</div>
+        <div>X-Frame-Options: DENY</div>
+        <div>Strict-Transport-Security: max-age=31536000; includeSubDomains</div>
+        <div>Cache-Control: no-cache, no-store, max-age=0, must-revalidate</div>
+        <div>Vary: Access-Control-Request-Headers</div>
+        <div>Expires: 0</div>
+        <div>X-XSS-Protection: 0</div>
+        <div>Content-Type: application/json</div>
+        <div>Location: https://secure.dev.30preprod.com/abcpg/processor/11f0a8fd-eacf-1f95-ac88-353bbe4be12d</div>
+</div>
+
+

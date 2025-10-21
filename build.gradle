@@ -1,0 +1,176 @@
+plugins {
+    id 'java'
+    id 'io.qameta.allure' version '2.11.2'
+}
+
+group = 'com.externalAPIs'
+version = '1.0'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    allureVersion = '2.27.0'
+    restAssuredVersion = '5.4.0'
+    testngVersion = '7.10.2'
+}
+
+dependencies {
+    implementation "io.rest-assured:rest-assured:${restAssuredVersion}"
+    implementation "io.rest-assured:json-path:${restAssuredVersion}"
+
+    implementation "io.qameta.allure:allure-testng:${allureVersion}"
+    implementation "io.qameta.allure:allure-rest-assured:${allureVersion}"
+
+    implementation "org.testng:testng:${testngVersion}"
+
+    implementation 'com.googlecode.json-simple:json-simple:1.1.1'
+    implementation 'com.google.code.gson:gson:2.11.0'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.0'
+
+    implementation 'org.slf4j:slf4j-simple:2.0.12'
+    implementation 'org.apache.logging.log4j:log4j-core:2.22.1'
+    implementation 'org.apache.logging.log4j:log4j-api:2.22.1'
+}
+
+/////////////////////////////////////////////////////////////
+// ✅ REPORT GENERATION TASKS (Define FIRST)
+/////////////////////////////////////////////////////////////
+tasks.register('runAllureReport') {
+    group = "reporting"
+    description = "Safely generate Allure report after tests"
+    dependsOn 'generateAllureReport'
+}
+
+tasks.register('generateAllureReport') {
+    group = "reporting"
+    description = "Generate a brand-new Allure HTML report"
+
+    doLast {
+        def resultsDir = file("$buildDir/allure-results")
+        def outputDir  = file("$projectDir/reports/current")
+        def timestamp  = new Date().format("yyyy-MM-dd_HHmmss")
+
+        println "\n🧹 Cleaning old report folders..."
+        if (outputDir.exists()) outputDir.deleteDir()
+
+        // Remove stale metadata files that cause timestamp caching
+        fileTree(dir: resultsDir, include: ['*.json']).matching {
+            include 'executor.json', '.executor.json', 'environment.json'
+        }.each { it.delete() }
+        println "🧹 Removed stale Allure executor/environment metadata."
+
+        println "⏳ Waiting 7 seconds for Allure to flush results..."
+        sleep(7000)
+
+        if (!resultsDir.exists() || resultsDir.listFiles().length == 0) {
+            println "❌ No allure-results found — report skipped."
+            return
+        }
+
+        println "⚙️ Generating fresh Allure report..."
+
+        // --- FIX: use Groovy’s Process execution instead of Gradle exec() ---
+        try {
+            def cmd = "allure generate '${resultsDir}' --clean -o '${outputDir}'"
+            println "💻 Running command: ${cmd}"
+
+            def process = ["bash", "-c", cmd].execute()
+            process.waitForProcessOutput(System.out, System.err)
+
+            if (process.exitValue() == 0) {
+                println "✅ Allure report generated → ${outputDir}/index.html"
+            } else {
+                println "❌ Allure CLI exited with code ${process.exitValue()}"
+                println "💡 Try manually: allure generate ${resultsDir} --clean -o ${outputDir}"
+            }
+        } catch (Exception e) {
+            println "❌ Allure CLI failed — ${e.message}"
+            println "💡 Try manually: allure generate ${resultsDir} --clean -o ${outputDir}"
+        }
+
+        // Archive each run
+        if (outputDir.exists()) {
+            copy {
+                from outputDir
+                into "$projectDir/reports/history/${timestamp}"
+            }
+            println "🗂 Archived → reports/history/${timestamp}"
+
+            // Automatically open latest report on macOS
+            if (System.getProperty("os.name").toLowerCase().contains("mac")) {
+                try {
+                    def openCmd = "open '${outputDir}/index.html'"
+                    ["bash", "-c", openCmd].execute()
+                    println "🖥️ Opened latest report automatically."
+                } catch (ignored) {}
+            }
+        }
+    }
+}
+
+/////////////////////////////////////////////////////////////
+// ✅ TEST CONFIGURATION (Define AFTER Allure Tasks)
+/////////////////////////////////////////////////////////////
+test {
+    useTestNG {
+        suites 'testng.xml'
+    }
+
+    maxParallelForks = 1
+    failFast = false
+    ignoreFailures = true
+    outputs.upToDateWhen { false }
+
+    testLogging {
+        events "passed", "failed", "skipped", "standardOut", "standardError"
+        showStandardStreams = true
+        exceptionFormat = 'full'
+    }
+
+    doFirst {
+        def resultsDir = file("$buildDir/allure-results")
+        if (resultsDir.exists()) resultsDir.deleteDir()
+        resultsDir.mkdirs()
+        println "🧹 Purged old build/allure-results"
+        println "🕓 Started test cycle at " + new Date().format("yyyy-MM-dd HH:mm:ss")
+    }
+
+    finalizedBy 'runAllureReport'   // ✅ works now since it’s defined above
+}
+
+/////////////////////////////////////////////////////////////
+// ✅ ALLURE ADAPTER CONFIGURATION
+/////////////////////////////////////////////////////////////
+allure {
+    version = allureVersion
+    adapter {
+        frameworks {
+            testng {
+                adapterVersion = allureVersion
+            }
+        }
+        autoconfigure = true
+        aspectjWeaver = true
+    }
+}
+
+/////////////////////////////////////////////////////////////
+// ✅ ENVIRONMENT INFO (Optional)
+/////////////////////////////////////////////////////////////
+tasks.register('printEnv') {
+    doLast {
+        println "\n===== ENVIRONMENT INFO ====="
+        println "Environment: " + System.getProperty("env", "dev")
+        println "Java Version: " + JavaVersion.current()
+        println "Allure Version: ${allureVersion}"
+        println "RestAssured Version: ${restAssuredVersion}"
+        println "============================\n"
+    }
+}

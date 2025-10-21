@@ -1,0 +1,18 @@
+https://dev.30preprod.com/api/ors/payment-session-consumer
+Headers:
+{ Authorization=****, Content-Type=application/json;charset=UTF-8, User-Agent=Automation-Test,  }
+
+Body:
+{
+  "name": "consumer_glofox_1760686916540",
+  "allowedModes": [
+    "ADD_TOKEN",
+    "PAY_NOW"
+  ],
+  "disableVoidJob": false,
+  "allowedOrigins": [
+    "https://dev.30preprod.com"
+  ],
+  "enableReceiptNumberGeneration": false,
+  "authClientId": "GLOFOX_AUTH"
+}

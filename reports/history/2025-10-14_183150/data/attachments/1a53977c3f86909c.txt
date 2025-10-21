@@ -1,0 +1,12 @@
+{
+  "name": "QA Merchant-1760446876750",
+  "description": "Test Merchant for API Automation",
+  "address": {
+    "address": "727 Main Street",
+    "city": "Sherwood",
+    "regionCode": "AR",
+    "postalCode": "72120",
+    "countryCode": "US"
+  },
+  "supportPhone": "440-603-1623"
+}

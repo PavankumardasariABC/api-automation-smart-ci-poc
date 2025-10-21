@@ -1,0 +1,19 @@
+[
+  {
+    "taxIncluded": true,
+    "name": "OP-Location",
+    "timezone": "US/Central",
+    "phone": {
+      "extension": "56648",
+      "countryCode": "US",
+      "number": "9012219286"
+    },
+    "address": {
+      "countryCode": "US",
+      "city": "Cobleskill",
+      "postalCode": "12043",
+      "provinceCode": "NY",
+      "address1": "139 Merchant Place"
+    }
+  }
+]

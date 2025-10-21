@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.externalAPIs.tests.Charge.CreateAchPaymentChargeTests" tests="1" skipped="0" failures="0" errors="0" timestamp="2025-10-17T08:02:05.120Z" hostname="corp-gwil01.abcfinancial.net" time="1.831">
+  <properties/>
+  <testcase name="createAchPaymentCharge[0]({amount=2300, tokenId=11f092f8-1139-f15c-91b9-ef36cde23978, relatedReferenceId=f58c6195-16bb-42e4-b592-9bcfdc6fff7e, terminalId=11f0ab2f-8fed-e305-95ff-1bc04321ff3b, descriptor=success webhook test - 1760688125120, effectiveDate=2026-09-16, referenceId=13e2c27e-1960-4cd2-9473-08d79905152b})" classname="com.externalAPIs.tests.Charge.CreateAchPaymentChargeTests" time="1.831"/>
+  <system-out><![CDATA[]]>&#x1f510;<![CDATA[ Reusing cached GlofoxSecureClientToken
+Request method:	POST
+Request URI:	https://secure.dev.30preprod.com/api/abcpg/payments/charge
+Proxy:			<none>
+Request params:	<none>
+Query params:	<none>
+Form params:	<none>
+Path params:	<none>
+Headers:		Authorization=Bearer eyJraWQiOiJYOGw3MGhWWjI2R1AzUWwyIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiJHTE9GT1hfU0VDVVJFX0FVVEgiLCJhdWQiOiJhYmMtcGF5bWVudC1nYXRld2F5IiwibmJmIjoxNzYwNjg4MDg5LCJfdCI6IkNMSUVOVF9PTkxZIiwic2NvcGUiOlsic2VjdXJlOnByb3RlY3RlZCJdLCJpc3MiOiJodHRwczovL3NlY3VyZS5kZXYuMzBwcmVwcm9kLmNvbSIsImV4cCI6MTc2MDc3NDQ4OSwiaWF0IjoxNzYwNjg4MDg5LCJqdGkiOiI1YzAxMTcwZi00NGNkLTQ4NGUtYTBkZi1mYjcyOWM0OGE0NGMiLCJjbGllbnRfaWQiOiJHTE9GT1hfU0VDVVJFX0FVVEgiLCJhdXRob3JpdGllcyI6WyJ0cmFuc2FjdGlvbjpjbGllbnQtcmVhZCIsInBnLXBheW1lbnQ6Y2xpZW50LWNyZWF0ZSJdfQ.GXD-evQxDbYdcgszYvw6jx8QGz3Z4Evp8fXQ_zM8QWyooScWi3yABt4lHXL13sVVzpOZCr43nbdePsn5v0LqP2kx25UzVUrPN1UNxZj8sgANV6kHLgkDQXYnAAuPkWDtG-p7XegpnahfKpYsBxn3lw_i-oYQQZ6jmlqr1pGhuPC2z24j5nxMHS1dcrgugO6dYP6x4FsOovJuIH203FZGtTjubbvIqBkBxamNjX3PTDrOGM5nlnCkYl84AB34Vvhy8zxySAd_5FGnKBUjiIZ9WZlWnQAvhWEj4EM_bOOdhYTR_1AzYpg8qJkzyLRykeweQyuXNRcEiRtbTrfsGU9ZPw
+				ABCFS-TENANT-ID=41424320-436f-6d70-616e-792020202020
+				User-Agent=Automation-Test
+				Accept=*/*
+				Content-Type=application/json
+Cookies:		<none>
+Multiparts:		<none>
+Body:
+{
+    "requests": [
+        {
+            "amount": "2300",
+            "tokenId": "11f092f8-1139-f15c-91b9-ef36cde23978",
+            "relatedReferenceId": "f58c6195-16bb-42e4-b592-9bcfdc6fff7e",
+            "terminalId": "11f0ab2f-8fed-e305-95ff-1bc04321ff3b",
+            "descriptor": "success webhook test - 1760688125120",
+            "effectiveDate": "2026-09-16",
+            "referenceId": "13e2c27e-1960-4cd2-9473-08d79905152b"
+        }
+    ]
+}
+HTTP/1.1 200 OK
+Date: Fri, 17 Oct 2025 08:02:06 GMT
+Content-Type: application/json
+Transfer-Encoding: chunked
+Connection: keep-alive
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+X-Frame-Options: DENY
+Location: https://secure.dev.30preprod.com/abcpg/payments/charge/11f0ab2f-930b-76bc-95ff-1bc04321ff3b
+
+{
+    "responses": [
+        {
+            "amount": 2300,
+            "referenceId": "13e2c27e-1960-4cd2-9473-08d79905152b",
+            "tokenId": "11f092f8-1139-f15c-91b9-ef36cde23978",
+            "terminalId": "11f0ab2f-8fed-e305-95ff-1bc04321ff3b",
+            "descriptor": "success webhook test - 1760688125120",
+            "metadata": {
+                "uniqueTransactionId": "DV2529000000001",
+                "secCode": "PPD"
+            },
+            "transactionId": "11f0ab2f-930c-fd5d-95ff-1bc04321ff3b",
+            "status": "SUCCESS"
+        }
+    ]
+}
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

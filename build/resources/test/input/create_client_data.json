@@ -1,0 +1,26 @@
+[
+  {
+    "clientId": "glofox-test-01",
+    "resourceIds": ["abc-payment-gateway"],
+    "scopes": ["secure:protected"],
+    "authorities": ["pg-payment:client-write"],
+    "grantTypes": ["password", "refresh_token", "client_credentials", "authorization_code"],
+    "accessTokenExpiration": 86400,
+    "refreshTokenExpiration": 1209600,
+    "autoApprove": "*",
+    "clientSecret": "glofox123",
+    "subject": "Test client creation for glofox"
+  },
+  {
+    "clientId": "glofox-test-02",
+    "resourceIds": ["abc-payment-gateway"],
+    "scopes": ["secure:protected"],
+    "authorities": ["pg-payment:client-write"],
+    "grantTypes": ["client_credentials"],
+    "accessTokenExpiration": 43200,
+    "refreshTokenExpiration": 604800,
+    "autoApprove": "*",
+    "clientSecret": "glofox999",
+    "subject": "Alternate test case"
+  }
+]

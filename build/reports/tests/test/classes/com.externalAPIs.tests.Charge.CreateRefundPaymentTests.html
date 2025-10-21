@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=edge"/>
+<title>Test results - Class com.externalAPIs.tests.Charge.CreateRefundPaymentTests</title>
+<link href="../css/base-style.css" rel="stylesheet" type="text/css"/>
+<link href="../css/style.css" rel="stylesheet" type="text/css"/>
+<script src="../js/report.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="content">
+<h1>Class com.externalAPIs.tests.Charge.CreateRefundPaymentTests</h1>
+<div class="breadcrumbs">
+<a href="../index.html">all</a> &gt; 
+<a href="../packages/com.externalAPIs.tests.Charge.html">com.externalAPIs.tests.Charge</a> &gt; CreateRefundPaymentTests</div>
+<div id="summary">
+<table>
+<tr>
+<td>
+<div class="summaryGroup">
+<table>
+<tr>
+<td>
+<div class="infoBox" id="tests">
+<div class="counter">2</div>
+<p>tests</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="failures">
+<div class="counter">2</div>
+<p>failures</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="ignored">
+<div class="counter">0</div>
+<p>ignored</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="duration">
+<div class="counter">4.012s</div>
+<p>duration</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</td>
+<td>
+<div class="infoBox failures" id="successRate">
+<div class="percent">0%</div>
+<p>successful</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="tab-container">
+<ul class="tabLinks">
+<li>
+<a href="#">Failed tests</a>
+</li>
+<li>
+<a href="#">Tests</a>
+</li>
+<li>
+<a href="#">Standard output</a>
+</li>
+</ul>
+<div class="tab">
+<h2>Failed tests</h2>
+<div class="test">
+<a name="createRefundPayment[0]({amount=2300, metadata={}, tokenId=11f092f5-df62-00cb-91b9-ef36cde23978, terminalId=11f0ab2f-8fed-e305-95ff-1bc04321ff3b, descriptor=Refund via automation test - 1760688126953, referenceId=13e2c27e-1960-4cd2-9473-08d79905152b, effectiveDate=2025-09-16})"></a>
+<h3 class="failures">createRefundPayment[0]({amount=2300, metadata={}, tokenId=11f092f5-df62-00cb-91b9-ef36cde23978, terminalId=11f0ab2f-8fed-e305-95ff-1bc04321ff3b, descriptor=Refund via automation test - 1760688126953, referenceId=13e2c27e-1960-4cd2-9473-08d79905152b, effectiveDate=2025-09-16})</h3>
+<span class="code">
+<pre>java.lang.AssertionError: ❌ 401 - Unauthorized: Token invalid or expired.
+	at org.testng.Assert.fail(Assert.java:111)
+	at com.externalAPIs.tests.Charge.CreateRefundPaymentTests.createRefundPayment(CreateRefundPaymentTests.java:119)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.testng.internal.invokers.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:141)
+	at org.testng.internal.invokers.TestInvoker.invokeMethod(TestInvoker.java:686)
+	at org.testng.internal.invokers.TestInvoker.invokeTestMethod(TestInvoker.java:230)
+	at org.testng.internal.invokers.MethodRunner.runInSequence(MethodRunner.java:63)
+	at org.testng.internal.invokers.TestInvoker$MethodInvocationAgent.invoke(TestInvoker.java:992)
+	at org.testng.internal.invokers.TestInvoker.invokeTestMethods(TestInvoker.java:203)
+	at org.testng.internal.invokers.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:154)
+	at org.testng.internal.invokers.TestMethodWorker.run(TestMethodWorker.java:134)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at org.testng.TestRunner.privateRun(TestRunner.java:739)
+	at org.testng.TestRunner.run(TestRunner.java:614)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:421)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:413)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:373)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:312)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:95)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1274)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1208)
+	at org.testng.TestNG.runSuites(TestNG.java:1112)
+	at org.testng.TestNG.run(TestNG.java:1079)
+	at org.gradle.api.internal.tasks.testing.testng.TestNGTestRunner.runTests(TestNGTestRunner.java:131)
+	at org.gradle.api.internal.tasks.testing.testng.TestNGTestClassProcessor.stop(TestNGTestClassProcessor.java:103)
+	at org.gradle.api.internal.tasks.testing.SuiteTestClassProcessor.stop(SuiteTestClassProcessor.java:64)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:36)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)
+	at org.gradle.internal.dispatch.ContextClassLoaderDispatch.dispatch(ContextClassLoaderDispatch.java:33)
+	at org.gradle.internal.dispatch.ProxyDispatchAdapter$DispatchingInvocationHandler.invoke(ProxyDispatchAdapter.java:92)
+	at jdk.proxy1/jdk.proxy1.$Proxy4.stop(Unknown Source)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker$3.run(TestWorker.java:200)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.executeAndMaintainThreadName(TestWorker.java:132)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:103)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:63)
+	at org.gradle.process.internal.worker.child.ActionExecutionWorker.execute(ActionExecutionWorker.java:56)
+	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:122)
+	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:72)
+	at worker.org.gradle.process.internal.worker.GradleWorkerMain.run(GradleWorkerMain.java:69)
+	at worker.org.gradle.process.internal.worker.GradleWorkerMain.main(GradleWorkerMain.java:74)
+</pre>
+</span>
+</div>
+<div class="test">
+<a name="createRefundPayment[1]({amount=1500, metadata={}, tokenId=11f092f8-1139-f15c-91b9-ef36cde23978, terminalId=11f0ab2f-8fed-e305-95ff-1bc04321ff3b, descriptor=Partial refund validation test - 1760688126953, referenceId=13e2c27e-1960-4cd2-9473-08d79905152b, effectiveDate=2025-09-20})"></a>
+<h3 class="failures">createRefundPayment[1]({amount=1500, metadata={}, tokenId=11f092f8-1139-f15c-91b9-ef36cde23978, terminalId=11f0ab2f-8fed-e305-95ff-1bc04321ff3b, descriptor=Partial refund validation test - 1760688126953, referenceId=13e2c27e-1960-4cd2-9473-08d79905152b, effectiveDate=2025-09-20})</h3>
+<span class="code">
+<pre>java.lang.AssertionError: ❌ 401 - Unauthorized: Token invalid or expired.
+	at org.testng.Assert.fail(Assert.java:111)
+	at com.externalAPIs.tests.Charge.CreateRefundPaymentTests.createRefundPayment(CreateRefundPaymentTests.java:119)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.testng.internal.invokers.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:141)
+	at org.testng.internal.invokers.TestInvoker.invokeMethod(TestInvoker.java:686)
+	at org.testng.internal.invokers.TestInvoker.invokeTestMethod(TestInvoker.java:230)
+	at org.testng.internal.invokers.MethodRunner.runInSequence(MethodRunner.java:63)
+	at org.testng.internal.invokers.TestInvoker$MethodInvocationAgent.invoke(TestInvoker.java:992)
+	at org.testng.internal.invokers.TestInvoker.invokeTestMethods(TestInvoker.java:203)
+	at org.testng.internal.invokers.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:154)
+	at org.testng.internal.invokers.TestMethodWorker.run(TestMethodWorker.java:134)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at org.testng.TestRunner.privateRun(TestRunner.java:739)
+	at org.testng.TestRunner.run(TestRunner.java:614)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:421)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:413)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:373)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:312)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:95)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1274)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1208)
+	at org.testng.TestNG.runSuites(TestNG.java:1112)
+	at org.testng.TestNG.run(TestNG.java:1079)
+	at org.gradle.api.internal.tasks.testing.testng.TestNGTestRunner.runTests(TestNGTestRunner.java:131)
+	at org.gradle.api.internal.tasks.testing.testng.TestNGTestClassProcessor.stop(TestNGTestClassProcessor.java:103)
+	at org.gradle.api.internal.tasks.testing.SuiteTestClassProcessor.stop(SuiteTestClassProcessor.java:64)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:36)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)
+	at org.gradle.internal.dispatch.ContextClassLoaderDispatch.dispatch(ContextClassLoaderDispatch.java:33)
+	at org.gradle.internal.dispatch.ProxyDispatchAdapter$DispatchingInvocationHandler.invoke(ProxyDispatchAdapter.java:92)
+	at jdk.proxy1/jdk.proxy1.$Proxy4.stop(Unknown Source)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker$3.run(TestWorker.java:200)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.executeAndMaintainThreadName(TestWorker.java:132)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:103)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:63)
+	at org.gradle.process.internal.worker.child.ActionExecutionWorker.execute(ActionExecutionWorker.java:56)
+	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:122)
+	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:72)
+	at worker.org.gradle.process.internal.worker.GradleWorkerMain.run(GradleWorkerMain.java:69)
+	at worker.org.gradle.process.internal.worker.GradleWorkerMain.main(GradleWorkerMain.java:74)
+</pre>
+</span>
+</div>
+</div>
+<div class="tab">
+<h2>Tests</h2>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Duration</th>
+<th>Result</th>
+</tr>
+</thead>
+<tr>
+<td class="failures">createRefundPayment[0]({amount=2300, metadata={}, tokenId=11f092f5-df62-00cb-91b9-ef36cde23978, terminalId=11f0ab2f-8fed-e305-95ff-1bc04321ff3b, descriptor=Refund via automation test - 1760688126953, referenceId=13e2c27e-1960-4cd2-9473-08d79905152b, effectiveDate=2025-09-16})</td>
+<td class="failures">2.351s</td>
+<td class="failures">failed</td>
+</tr>
+<tr>
+<td class="failures">createRefundPayment[1]({amount=1500, metadata={}, tokenId=11f092f8-1139-f15c-91b9-ef36cde23978, terminalId=11f0ab2f-8fed-e305-95ff-1bc04321ff3b, descriptor=Partial refund validation test - 1760688126953, referenceId=13e2c27e-1960-4cd2-9473-08d79905152b, effectiveDate=2025-09-20})</td>
+<td class="failures">1.661s</td>
+<td class="failures">failed</td>
+</tr>
+</table>
+</div>
+<div class="tab">
+<h2>Standard output</h2>
+<span class="code">
+<pre>&#x1f9fe; Prepared Refund Data: {amount=2300, metadata={}, tokenId=11f092f5-df62-00cb-91b9-ef36cde23978, terminalId=11f0ab2f-8fed-e305-95ff-1bc04321ff3b, descriptor=Refund via automation test - 1760688126953, referenceId=13e2c27e-1960-4cd2-9473-08d79905152b, effectiveDate=2025-09-16}
+&#x1f9fe; Prepared Refund Data: {amount=1500, metadata={}, tokenId=11f092f8-1139-f15c-91b9-ef36cde23978, terminalId=11f0ab2f-8fed-e305-95ff-1bc04321ff3b, descriptor=Partial refund validation test - 1760688126953, referenceId=13e2c27e-1960-4cd2-9473-08d79905152b, effectiveDate=2025-09-20}
+&#x1f510; Reusing cached GlofoxSecureClientToken
+Request method:	POST
+Request URI:	https://api-dev.pgw.abc.fitness/api/payment-gateway/payments/refund
+Proxy:			&lt;none&gt;
+Request params:	&lt;none&gt;
+Query params:	&lt;none&gt;
+Form params:	&lt;none&gt;
+Path params:	&lt;none&gt;
+Headers:		Authorization=Bearer eyJraWQiOiJYOGw3MGhWWjI2R1AzUWwyIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiJHTE9GT1hfU0VDVVJFX0FVVEgiLCJhdWQiOiJhYmMtcGF5bWVudC1nYXRld2F5IiwibmJmIjoxNzYwNjg4MDg5LCJfdCI6IkNMSUVOVF9PTkxZIiwic2NvcGUiOlsic2VjdXJlOnByb3RlY3RlZCJdLCJpc3MiOiJodHRwczovL3NlY3VyZS5kZXYuMzBwcmVwcm9kLmNvbSIsImV4cCI6MTc2MDc3NDQ4OSwiaWF0IjoxNzYwNjg4MDg5LCJqdGkiOiI1YzAxMTcwZi00NGNkLTQ4NGUtYTBkZi1mYjcyOWM0OGE0NGMiLCJjbGllbnRfaWQiOiJHTE9GT1hfU0VDVVJFX0FVVEgiLCJhdXRob3JpdGllcyI6WyJ0cmFuc2FjdGlvbjpjbGllbnQtcmVhZCIsInBnLXBheW1lbnQ6Y2xpZW50LWNyZWF0ZSJdfQ.GXD-evQxDbYdcgszYvw6jx8QGz3Z4Evp8fXQ_zM8QWyooScWi3yABt4lHXL13sVVzpOZCr43nbdePsn5v0LqP2kx25UzVUrPN1UNxZj8sgANV6kHLgkDQXYnAAuPkWDtG-p7XegpnahfKpYsBxn3lw_i-oYQQZ6jmlqr1pGhuPC2z24j5nxMHS1dcrgugO6dYP6x4FsOovJuIH203FZGtTjubbvIqBkBxamNjX3PTDrOGM5nlnCkYl84AB34Vvhy8zxySAd_5FGnKBUjiIZ9WZlWnQAvhWEj4EM_bOOdhYTR_1AzYpg8qJkzyLRykeweQyuXNRcEiRtbTrfsGU9ZPw
+				ABCFS-TENANT-ID=41424320-436f-6d70-616e-792020202020
+				User-Agent=Automation-Test
+				Accept=*/*
+				Content-Type=application/json
+Cookies:		&lt;none&gt;
+Multiparts:		&lt;none&gt;
+Body:
+{
+    &quot;requests&quot;: [
+        {
+            &quot;amount&quot;: &quot;2300&quot;,
+            &quot;metadata&quot;: {
+                
+            },
+            &quot;tokenId&quot;: &quot;11f092f5-df62-00cb-91b9-ef36cde23978&quot;,
+            &quot;terminalId&quot;: &quot;11f0ab2f-8fed-e305-95ff-1bc04321ff3b&quot;,
+            &quot;descriptor&quot;: &quot;Refund via automation test - 1760688126953&quot;,
+            &quot;referenceId&quot;: &quot;13e2c27e-1960-4cd2-9473-08d79905152b&quot;,
+            &quot;effectiveDate&quot;: &quot;2025-09-16&quot;
+        }
+    ]
+}
+HTTP/1.1 401 Unauthorized
+Date: Fri, 17 Oct 2025 08:02:08 GMT
+Content-Type: application/json
+Content-Length: 49
+Connection: keep-alive
+x-gravitee-transaction-id: ac3c8ac8-b428-49e3-bc8a-c8b42839e3af
+x-gravitee-request-id: ac3c8ac8-b428-49e3-bc8a-c8b42839e3af
+cf-cache-status: DYNAMIC
+Nel: {&quot;report_to&quot;:&quot;cf-nel&quot;,&quot;success_fraction&quot;:0.0,&quot;max_age&quot;:604800}
+Report-To: {&quot;group&quot;:&quot;cf-nel&quot;,&quot;max_age&quot;:604800,&quot;endpoints&quot;:[{&quot;url&quot;:&quot;https://a.nel.cloudflare.com/report/v4?s=3%2B3o1OaP8GSPw6ipP9ygMbPS4WY8lJ%2FKQj1TljQj1hKs0zNerfumyDG32IOg13cjSTtz7Mpce0YqT5ZgCYHfgTeeMgmbBSeINLF6L%2Fcnu6ucDTiQCTmE&quot;}]}
+Server: cloudflare
+CF-RAY: 98fe45a05f226719-DFW
+alt-svc: h3=&quot;:443&quot;; ma=86400
+
+{
+    &quot;message&quot;: &quot;Unauthorized&quot;,
+    &quot;http_status_code&quot;: 401
+}
+&#x1f510; Reusing cached GlofoxSecureClientToken
+Request method:	POST
+Request URI:	https://api-dev.pgw.abc.fitness/api/payment-gateway/payments/refund
+Proxy:			&lt;none&gt;
+Request params:	&lt;none&gt;
+Query params:	&lt;none&gt;
+Form params:	&lt;none&gt;
+Path params:	&lt;none&gt;
+Headers:		Authorization=Bearer eyJraWQiOiJYOGw3MGhWWjI2R1AzUWwyIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiJHTE9GT1hfU0VDVVJFX0FVVEgiLCJhdWQiOiJhYmMtcGF5bWVudC1nYXRld2F5IiwibmJmIjoxNzYwNjg4MDg5LCJfdCI6IkNMSUVOVF9PTkxZIiwic2NvcGUiOlsic2VjdXJlOnByb3RlY3RlZCJdLCJpc3MiOiJodHRwczovL3NlY3VyZS5kZXYuMzBwcmVwcm9kLmNvbSIsImV4cCI6MTc2MDc3NDQ4OSwiaWF0IjoxNzYwNjg4MDg5LCJqdGkiOiI1YzAxMTcwZi00NGNkLTQ4NGUtYTBkZi1mYjcyOWM0OGE0NGMiLCJjbGllbnRfaWQiOiJHTE9GT1hfU0VDVVJFX0FVVEgiLCJhdXRob3JpdGllcyI6WyJ0cmFuc2FjdGlvbjpjbGllbnQtcmVhZCIsInBnLXBheW1lbnQ6Y2xpZW50LWNyZWF0ZSJdfQ.GXD-evQxDbYdcgszYvw6jx8QGz3Z4Evp8fXQ_zM8QWyooScWi3yABt4lHXL13sVVzpOZCr43nbdePsn5v0LqP2kx25UzVUrPN1UNxZj8sgANV6kHLgkDQXYnAAuPkWDtG-p7XegpnahfKpYsBxn3lw_i-oYQQZ6jmlqr1pGhuPC2z24j5nxMHS1dcrgugO6dYP6x4FsOovJuIH203FZGtTjubbvIqBkBxamNjX3PTDrOGM5nlnCkYl84AB34Vvhy8zxySAd_5FGnKBUjiIZ9WZlWnQAvhWEj4EM_bOOdhYTR_1AzYpg8qJkzyLRykeweQyuXNRcEiRtbTrfsGU9ZPw
+				ABCFS-TENANT-ID=41424320-436f-6d70-616e-792020202020
+				User-Agent=Automation-Test
+				Accept=*/*
+				Content-Type=application/json
+Cookies:		&lt;none&gt;
+Multiparts:		&lt;none&gt;
+Body:
+{
+    &quot;requests&quot;: [
+        {
+            &quot;amount&quot;: &quot;2300&quot;,
+            &quot;metadata&quot;: {
+                
+            },
+            &quot;tokenId&quot;: &quot;11f092f5-df62-00cb-91b9-ef36cde23978&quot;,
+            &quot;terminalId&quot;: &quot;11f0ab2f-8fed-e305-95ff-1bc04321ff3b&quot;,
+            &quot;descriptor&quot;: &quot;Refund via automation test - 1760688126953&quot;,
+            &quot;referenceId&quot;: &quot;13e2c27e-1960-4cd2-9473-08d79905152b&quot;,
+            &quot;effectiveDate&quot;: &quot;2025-09-16&quot;
+        }
+    ]
+}
+HTTP/1.1 401 Unauthorized
+Date: Fri, 17 Oct 2025 08:02:09 GMT
+Content-Type: application/json
+Content-Length: 49
+Connection: keep-alive
+x-gravitee-transaction-id: b34202e3-23f9-44df-8202-e323f9c4df5d
+x-gravitee-request-id: b34202e3-23f9-44df-8202-e323f9c4df5d
+cf-cache-status: DYNAMIC
+Nel: {&quot;report_to&quot;:&quot;cf-nel&quot;,&quot;success_fraction&quot;:0.0,&quot;max_age&quot;:604800}
+Report-To: {&quot;group&quot;:&quot;cf-nel&quot;,&quot;max_age&quot;:604800,&quot;endpoints&quot;:[{&quot;url&quot;:&quot;https://a.nel.cloudflare.com/report/v4?s=aGRsq6pV7CDS0f8bqNVMgbYo%2Fqj0j9vURK9WQnTvEg9%2FnyLA6uJA0DZvbVTdRKaLI0TN136St4Lt7uSo8kJk8nXe1RYEZBWU4R1qX1FfJuxoBWBeYA%3D%3D&quot;}]}
+Server: cloudflare
+CF-RAY: 98fe45a68d772e6d-DFW
+alt-svc: h3=&quot;:443&quot;; ma=86400
+
+{
+    &quot;message&quot;: &quot;Unauthorized&quot;,
+    &quot;http_status_code&quot;: 401
+}
+&#x1f510; Reusing cached GlofoxSecureClientToken
+Request method:	POST
+Request URI:	https://api-dev.pgw.abc.fitness/api/payment-gateway/payments/refund
+Proxy:			&lt;none&gt;
+Request params:	&lt;none&gt;
+Query params:	&lt;none&gt;
+Form params:	&lt;none&gt;
+Path params:	&lt;none&gt;
+Headers:		Authorization=Bearer eyJraWQiOiJYOGw3MGhWWjI2R1AzUWwyIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiJHTE9GT1hfU0VDVVJFX0FVVEgiLCJhdWQiOiJhYmMtcGF5bWVudC1nYXRld2F5IiwibmJmIjoxNzYwNjg4MDg5LCJfdCI6IkNMSUVOVF9PTkxZIiwic2NvcGUiOlsic2VjdXJlOnByb3RlY3RlZCJdLCJpc3MiOiJodHRwczovL3NlY3VyZS5kZXYuMzBwcmVwcm9kLmNvbSIsImV4cCI6MTc2MDc3NDQ4OSwiaWF0IjoxNzYwNjg4MDg5LCJqdGkiOiI1YzAxMTcwZi00NGNkLTQ4NGUtYTBkZi1mYjcyOWM0OGE0NGMiLCJjbGllbnRfaWQiOiJHTE9GT1hfU0VDVVJFX0FVVEgiLCJhdXRob3JpdGllcyI6WyJ0cmFuc2FjdGlvbjpjbGllbnQtcmVhZCIsInBnLXBheW1lbnQ6Y2xpZW50LWNyZWF0ZSJdfQ.GXD-evQxDbYdcgszYvw6jx8QGz3Z4Evp8fXQ_zM8QWyooScWi3yABt4lHXL13sVVzpOZCr43nbdePsn5v0LqP2kx25UzVUrPN1UNxZj8sgANV6kHLgkDQXYnAAuPkWDtG-p7XegpnahfKpYsBxn3lw_i-oYQQZ6jmlqr1pGhuPC2z24j5nxMHS1dcrgugO6dYP6x4FsOovJuIH203FZGtTjubbvIqBkBxamNjX3PTDrOGM5nlnCkYl84AB34Vvhy8zxySAd_5FGnKBUjiIZ9WZlWnQAvhWEj4EM_bOOdhYTR_1AzYpg8qJkzyLRykeweQyuXNRcEiRtbTrfsGU9ZPw
+				ABCFS-TENANT-ID=41424320-436f-6d70-616e-792020202020
+				User-Agent=Automation-Test
+				Accept=*/*
+				Content-Type=application/json
+Cookies:		&lt;none&gt;
+Multiparts:		&lt;none&gt;
+Body:
+{
+    &quot;requests&quot;: [
+        {
+            &quot;amount&quot;: &quot;1500&quot;,
+            &quot;metadata&quot;: {
+                
+            },
+            &quot;tokenId&quot;: &quot;11f092f8-1139-f15c-91b9-ef36cde23978&quot;,
+            &quot;terminalId&quot;: &quot;11f0ab2f-8fed-e305-95ff-1bc04321ff3b&quot;,
+            &quot;descriptor&quot;: &quot;Partial refund validation test - 1760688126953&quot;,
+            &quot;referenceId&quot;: &quot;13e2c27e-1960-4cd2-9473-08d79905152b&quot;,
+            &quot;effectiveDate&quot;: &quot;2025-09-20&quot;
+        }
+    ]
+}
+HTTP/1.1 401 Unauthorized
+Date: Fri, 17 Oct 2025 08:02:10 GMT
+Content-Type: application/json
+Content-Length: 49
+Connection: keep-alive
+x-gravitee-transaction-id: bd4dc4b8-2cc1-449c-8dc4-b82cc1349c29
+x-gravitee-request-id: bd4dc4b8-2cc1-449c-8dc4-b82cc1349c29
+cf-cache-status: DYNAMIC
+Nel: {&quot;report_to&quot;:&quot;cf-nel&quot;,&quot;success_fraction&quot;:0.0,&quot;max_age&quot;:604800}
+Report-To: {&quot;group&quot;:&quot;cf-nel&quot;,&quot;max_age&quot;:604800,&quot;endpoints&quot;:[{&quot;url&quot;:&quot;https://a.nel.cloudflare.com/report/v4?s=2Mt1cc0vXzWBuaWTevHb%2BnaMmSid8p5FFRNQGCC753f60GGruDV2%2Bvqee3DuZOZoWL5x16ax2Y1fWVKpoglc7oYp4G04%2FaiBPXi5X9O%2FIfxfu3IgJDI7&quot;}]}
+Server: cloudflare
+CF-RAY: 98fe45acaaff6701-DFW
+alt-svc: h3=&quot;:443&quot;; ma=86400
+
+{
+    &quot;message&quot;: &quot;Unauthorized&quot;,
+    &quot;http_status_code&quot;: 401
+}
+&#x1f510; Reusing cached GlofoxSecureClientToken
+Request method:	POST
+Request URI:	https://api-dev.pgw.abc.fitness/api/payment-gateway/payments/refund
+Proxy:			&lt;none&gt;
+Request params:	&lt;none&gt;
+Query params:	&lt;none&gt;
+Form params:	&lt;none&gt;
+Path params:	&lt;none&gt;
+Headers:		Authorization=Bearer eyJraWQiOiJYOGw3MGhWWjI2R1AzUWwyIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiJHTE9GT1hfU0VDVVJFX0FVVEgiLCJhdWQiOiJhYmMtcGF5bWVudC1nYXRld2F5IiwibmJmIjoxNzYwNjg4MDg5LCJfdCI6IkNMSUVOVF9PTkxZIiwic2NvcGUiOlsic2VjdXJlOnByb3RlY3RlZCJdLCJpc3MiOiJodHRwczovL3NlY3VyZS5kZXYuMzBwcmVwcm9kLmNvbSIsImV4cCI6MTc2MDc3NDQ4OSwiaWF0IjoxNzYwNjg4MDg5LCJqdGkiOiI1YzAxMTcwZi00NGNkLTQ4NGUtYTBkZi1mYjcyOWM0OGE0NGMiLCJjbGllbnRfaWQiOiJHTE9GT1hfU0VDVVJFX0FVVEgiLCJhdXRob3JpdGllcyI6WyJ0cmFuc2FjdGlvbjpjbGllbnQtcmVhZCIsInBnLXBheW1lbnQ6Y2xpZW50LWNyZWF0ZSJdfQ.GXD-evQxDbYdcgszYvw6jx8QGz3Z4Evp8fXQ_zM8QWyooScWi3yABt4lHXL13sVVzpOZCr43nbdePsn5v0LqP2kx25UzVUrPN1UNxZj8sgANV6kHLgkDQXYnAAuPkWDtG-p7XegpnahfKpYsBxn3lw_i-oYQQZ6jmlqr1pGhuPC2z24j5nxMHS1dcrgugO6dYP6x4FsOovJuIH203FZGtTjubbvIqBkBxamNjX3PTDrOGM5nlnCkYl84AB34Vvhy8zxySAd_5FGnKBUjiIZ9WZlWnQAvhWEj4EM_bOOdhYTR_1AzYpg8qJkzyLRykeweQyuXNRcEiRtbTrfsGU9ZPw
+				ABCFS-TENANT-ID=41424320-436f-6d70-616e-792020202020
+				User-Agent=Automation-Test
+				Accept=*/*
+				Content-Type=application/json
+Cookies:		&lt;none&gt;
+Multiparts:		&lt;none&gt;
+Body:
+{
+    &quot;requests&quot;: [
+        {
+            &quot;amount&quot;: &quot;1500&quot;,
+            &quot;metadata&quot;: {
+                
+            },
+            &quot;tokenId&quot;: &quot;11f092f8-1139-f15c-91b9-ef36cde23978&quot;,
+            &quot;terminalId&quot;: &quot;11f0ab2f-8fed-e305-95ff-1bc04321ff3b&quot;,
+            &quot;descriptor&quot;: &quot;Partial refund validation test - 1760688126953&quot;,
+            &quot;referenceId&quot;: &quot;13e2c27e-1960-4cd2-9473-08d79905152b&quot;,
+            &quot;effectiveDate&quot;: &quot;2025-09-20&quot;
+        }
+    ]
+}
+HTTP/1.1 401 Unauthorized
+Date: Fri, 17 Oct 2025 08:02:10 GMT
+Content-Type: application/json
+Content-Length: 49
+Connection: keep-alive
+x-gravitee-transaction-id: 64a840bb-fdb8-4762-a840-bbfdb88762e4
+x-gravitee-request-id: 64a840bb-fdb8-4762-a840-bbfdb88762e4
+cf-cache-status: DYNAMIC
+Nel: {&quot;report_to&quot;:&quot;cf-nel&quot;,&quot;success_fraction&quot;:0.0,&quot;max_age&quot;:604800}
+Report-To: {&quot;group&quot;:&quot;cf-nel&quot;,&quot;max_age&quot;:604800,&quot;endpoints&quot;:[{&quot;url&quot;:&quot;https://a.nel.cloudflare.com/report/v4?s=11VcuGfTUPIb92INc8MaPI%2FAr%2F3QRYb2m5ecff4pflgtMEDSmJzSg%2Fmli5L7n0o%2F%2BCYPrsc%2B1ar3S8z%2Bhe9iBZB3ZinzGJnMh5oqZBNRD003C0JnXQ%3D%3D&quot;}]}
+Server: cloudflare
+CF-RAY: 98fe45b1df152e75-DFW
+alt-svc: h3=&quot;:443&quot;; ma=86400
+
+{
+    &quot;message&quot;: &quot;Unauthorized&quot;,
+    &quot;http_status_code&quot;: 401
+}
+</pre>
+</span>
+</div>
+</div>
+<div id="footer">
+<p>
+<div>
+<label class="hidden" id="label-for-line-wrapping-toggle" for="line-wrapping-toggle">Wrap lines
+<input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
+</label>
+</div>Generated by 
+<a href="https://www.gradle.org">Gradle 9.0.0</a> at 17-Oct-2025, 1:32:11 pm</p>
+</div>
+</div>
+</body>
+</html>

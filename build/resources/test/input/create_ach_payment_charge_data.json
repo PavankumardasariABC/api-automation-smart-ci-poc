@@ -1,0 +1,10 @@
+[
+  {
+    "tokenId": "11f092f8-1139-f15c-91b9-ef36cde23978",
+    "terminalId": "11f0743b-fcfb-85ed-9765-6749eb40ee5d",
+    "effectiveDate": "2026-09-16",
+    "amount": "2300",
+    "descriptor": "success webhook test",
+    "relatedReferenceId": "f58c6195-16bb-42e4-b592-9bcfdc6fff7e"
+  }
+]

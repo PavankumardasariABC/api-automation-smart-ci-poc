@@ -1,0 +1,8 @@
+[
+  {
+    "description": "Terminal description for automation",
+    "name": "Terminal Test",
+    "merchantProcessorId": "11f06c36-466e-b793-99ca-dfe43319475d",
+    "source": "glofox test"
+  }
+]

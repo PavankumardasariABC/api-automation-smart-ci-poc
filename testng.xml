@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+
+<suite name="External APIs Test Suite" parallel="none">
+
+    <listeners>
+        <listener class-name="com.externalAPIs.reporting.AllureTestListener"/>
+    </listeners>
+
+    <test name="Authentication and Merchant Flow">
+        <classes>
+            <!-- 🔐 Authentication Tests -->
+            <class name="com.externalAPIs.tests.auth.Glofox_SecureClientTokenTests"/>
+
+            <!-- 🧩 COMMON APIs -->
+            <class name="com.externalAPIs.tests.common.CreateClientTests"/>
+            <class name="com.externalAPIs.tests.common.CreateOrganizationTests"/>
+            <class name="com.externalAPIs.tests.common.CreateLocationTests"/>
+            <class name="com.externalAPIs.tests.common.CreateCompanyTests"/>
+            <class name="com.externalAPIs.tests.common.CreateMerchantTests"/>
+            <class name="com.externalAPIs.tests.common.UpdateMerchantTests"/>
+            <class name="com.externalAPIs.tests.common.CreateClientProfileTests"/>
+            <class name="com.externalAPIs.tests.common.CreateProcessorTests"/>
+            <class name="com.externalAPIs.tests.common.CreateTerminalTests"/>
+            <class name="com.externalAPIs.tests.common.CreatePaymentSessionConsumerTests"/>
+            <class name="com.externalAPIs.tests.common.CreateBankPaymentTokenTests"/>
+            <class name="com.externalAPIs.tests.common.CreateClientBankAccountTests"/>
+
+            <!-- 💳 CHARGE APIs -->
+            <class name="com.externalAPIs.tests.Charge.CreatePaymentTokenSessionTests"/>
+            <class name="com.externalAPIs.tests.Charge.CreateAchPaymentChargeTests"/>
+            <class name="com.externalAPIs.tests.Charge.CreateRefundPaymentTests"/>
+
+        </classes>
+    </test>
+</suite>

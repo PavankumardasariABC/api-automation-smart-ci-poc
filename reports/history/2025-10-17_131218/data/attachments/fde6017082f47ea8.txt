@@ -1,0 +1,50 @@
+Before:
+{"name":"QA Merchant-1760686912902","description":"Test Merchant for API Automation","supportPhone":"719-491-2633","merchantSupportPhone":{"number":"719-491-2633","countryCode":"US"},"address":{"address":"415 Main Street","address1":"415 Main Street","city":"Sherwood","regionCode":"AR","provinceCode":"AR","postalCode":"72120","countryCode":"US"},"allowsPartialAuthorization":false,"id":"11f0ab2c-c068-f598-95ff-1bc04321ff3b","categoryId":"41424320-4445-4620-4341-544547202020","category":{"name":"DEFAULT","description":"Default merchant-processor category","id":"41424320-4445-4620-4341-544547202020"},"active":true,"linkedToProcessors":{"EFT":false,"CREDIT_CARD":false,"AMEX":false,"WIRE":false},"isAccountUpdateAllowed":false}
+
+After:
+{
+    "name": "QA Merchant-1760686912902 - Updated_1760686926318",
+    "description": "Merchant updated via automation at 1760686926318",
+    "supportPhone": "399890347",
+    "merchantSupportPhone": {
+        "number": "399890347",
+        "countryCode": "US"
+    },
+    "address": {
+        "address": "415 Main Street",
+        "address1": "415 Main Street",
+        "city": "Sherwood",
+        "regionCode": "AR",
+        "provinceCode": "AR",
+        "postalCode": "72120",
+        "countryCode": "US"
+    },
+    "allowsPartialAuthorization": false,
+    "id": "11f0ab2c-c068-f598-95ff-1bc04321ff3b",
+    "categoryId": "41424320-4445-4620-4341-544547202020",
+    "category": {
+        "name": "DEFAULT",
+        "description": "Default merchant-processor category",
+        "id": "41424320-4445-4620-4341-544547202020"
+    },
+    "active": true,
+    "linkedToProcessors": {
+        "EFT": true,
+        "CREDIT_CARD": false,
+        "AMEX": false,
+        "WIRE": false
+    },
+    "processors": [
+        {
+            "id": "11f0ab2c-c86e-ca81-95ff-1bc04321ff3b",
+            "processorId": "11f0ab2c-c5fc-4439-95ff-1bc04321ff3b",
+            "providerSpecificMId": "364801462",
+            "isPrimary": true,
+            "isDefaultRealtime": false,
+            "name": "Regions Bank QA-4607b6",
+            "status": "READY",
+            "paymentType": "EFT"
+        }
+    ],
+    "isAccountUpdateAllowed": false
+}

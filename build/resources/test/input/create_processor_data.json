@@ -1,0 +1,71 @@
+[
+  {
+    "countryCode": "US",
+    "paymentType": "EFT",
+    "isManualApprovalRequired": false,
+    "fileFormatType": "NACHA",
+    "platform": "REGIONS BANK",
+    "provider": "REGIONS_BANK",
+    "fileNamingPattern": "{cv:counter}_{dv:dd-MM-yy}",
+    "fileExtension": "ach",
+    "maxBatchPerFile": 100,
+    "maxTransactionPerBatch": 9999,
+    "maxTransactionPerFile": 9999,
+    "maxBatchingTxTimeout": 20,
+    "tinLength": 15,
+    "generalDetails": {
+      "originator.companyIdentification": "G710602737",
+      "destination.fileIdModifier": "P",
+      "maxPendingPaymentFileResponseTimeInMinutes": 4,
+      "originator.originatorStatusCode": "1",
+      "destination.destinationBankName": "REGIONS BANK",
+      "destination.referenceCode": "XXXXXXXX",
+      "originator.immediateOriginName": "ABC FINANCIAL SVCSXXXXX",
+      "originator.originatorDFIIdentifier": "06200019",
+      "destination.priorityCode": "01",
+      "depositEntryDescription": "EARLY",
+      "destination.blockingFactor": "10",
+      "refundEntryDescription": "CLUBCHARGE",
+      "destination.immediateDestination": "062000019",
+      "chargeEntryDescription": "CLUB FEES",
+      "originator.immediateOrigin": "1710602737",
+      "batchFile.blocking": "TRUE",
+      "destination.formatCode": "1",
+      "customerCarePhone": "8888279262"
+    },
+    "storageDetails": {
+      "receive": {
+        "protocolType": "S3",
+        "bucketName": "abcfinancial-qa-payment-files-us-eft",
+        "region": "us-west-2",
+        "initFolder": true
+      },
+      "send": {
+        "protocolType": "S3",
+        "bucketName": "abcfinancial-qa-payment-files-us-eft",
+        "region": "us-west-2",
+        "initFolder": true
+      }
+    },
+    "communicationDetails": {
+      "receiveEndpoint": {
+        "password": "SevOyquecNaryecGobPis",
+        "protocolType": "SFTP",
+        "deleteAfterReceive": false,
+        "batchFileRenameOnCopy": true,
+        "url": "mocksftp.qa.30preprod.com",
+        "batchFileExtension": "*",
+        "username": "qabank"
+      },
+      "sendEndpoint": {
+        "password": "SevOyquecNaryecGobPis",
+        "deleteAfterSend": false,
+        "protocolType": "SFTP",
+        "batchFileRenameOnCopy": true,
+        "url": "mocksftp.qa.30preprod.com",
+        "batchFileExtension": "ach",
+        "username": "qabank"
+      }
+    }
+  }
+]

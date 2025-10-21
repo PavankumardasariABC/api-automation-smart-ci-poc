@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=edge"/>
+<title>Test results - Class com.externalAPIs.tests.Charge.CreatePaymentTokenSessionTests</title>
+<link href="../css/base-style.css" rel="stylesheet" type="text/css"/>
+<link href="../css/style.css" rel="stylesheet" type="text/css"/>
+<script src="../js/report.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="content">
+<h1>Class com.externalAPIs.tests.Charge.CreatePaymentTokenSessionTests</h1>
+<div class="breadcrumbs">
+<a href="../index.html">all</a> &gt; 
+<a href="../packages/com.externalAPIs.tests.Charge.html">com.externalAPIs.tests.Charge</a> &gt; CreatePaymentTokenSessionTests</div>
+<div id="summary">
+<table>
+<tr>
+<td>
+<div class="summaryGroup">
+<table>
+<tr>
+<td>
+<div class="infoBox" id="tests">
+<div class="counter">1</div>
+<p>tests</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="failures">
+<div class="counter">0</div>
+<p>failures</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="ignored">
+<div class="counter">0</div>
+<p>ignored</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="duration">
+<div class="counter">3.423s</div>
+<p>duration</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</td>
+<td>
+<div class="infoBox success" id="successRate">
+<div class="percent">100%</div>
+<p>successful</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="tab-container">
+<ul class="tabLinks">
+<li>
+<a href="#">Tests</a>
+</li>
+<li>
+<a href="#">Standard output</a>
+</li>
+</ul>
+<div class="tab">
+<h2>Tests</h2>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Duration</th>
+<th>Result</th>
+</tr>
+</thead>
+<tr>
+<td class="success">createPaymentTokenSession[0]({ownerType=PAYOR, consumerOrigin=https://dev.30preprod.com, metadata={limitedPrimaryPaymentMethod=ANY}, cvvRequired=false, consumerId=11f092f7-dbfc-7cd4-8232-cb5e67f264fc})</td>
+<td class="success">3.423s</td>
+<td class="success">passed</td>
+</tr>
+</table>
+</div>
+<div class="tab">
+<h2>Standard output</h2>
+<span class="code">
+<pre>&#x1f511; Generating new GlofoxClientToken...
+Request method:	POST
+Request URI:	https://dev.30preprod.com/api/token
+Proxy:			&lt;none&gt;
+Request params:	&lt;none&gt;
+Query params:	&lt;none&gt;
+Form params:	grant_type=client_credentials
+Path params:	&lt;none&gt;
+Headers:		Authorization=Basic R0xPRk9YX0FVVEg6R0xPRk9YX0FVVEg=
+				Accept=application/json
+				User-Agent=RestAssured-Automation/1.0
+				Content-Type=application/x-www-form-urlencoded; charset=ISO-8859-1
+Cookies:		&lt;none&gt;
+Multiparts:		&lt;none&gt;
+Body:			&lt;none&gt;
+HTTP/1.1 200 OK
+Date: Fri, 17 Oct 2025 08:02:03 GMT
+Content-Type: application/json;charset=UTF-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+X-Frame-Options: DENY
+Content-Language: en-US
+
+{
+    &quot;access_token&quot;: &quot;eyJraWQiOiIzcFI3ODNBOWFEdVpobHV1IiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiJHTE9GT1hfQVVUSCIsImF1ZCI6Im9yZGVyLXNlc3Npb24iLCJuYmYiOjE3NjA2ODgxMjMsIl90IjoiQ0xJRU5UX09OTFkiLCJzY29wZSI6WyJwbGF0Zm9ybTpwcm90ZWN0ZWQiXSwiaXNzIjoiaHR0cHM6Ly9kZXYuMzBwcmVwcm9kLmNvbSIsImV4cCI6MTc2MDc3NDUyMywiaWF0IjoxNzYwNjg4MTIzLCJqdGkiOiI3ZDg5MjAzZC0zZDU0LTQxZTgtYmRiMy0wYzRhOWZlODlkOTciLCJjbGllbnRfaWQiOiJHTE9GT1hfQVVUSCIsImF1dGhvcml0aWVzIjpbInBheW1lbnQtdG9rZW4tc2Vzc2lvbjpjbGllbnQtY3JlYXRlIiwiY2xpZW50LXByb2ZpbGU6Y2xpZW50LWNyZWF0ZSJdfQ.mL7ISrtnoSbfe-8HPM3cpSsWzokn1n0prejFjcitsvKNbEWtxSH-nBUefxzyGlwd4lNH70gBlM3xLIw_E9W_Kl_coeOc5yORa8f5Lloj635RCSQhGnfnhDG_RuMBfkwV3gz91xBux0j5uYdtcmOA-pLu_Oeun0Ya3FawPWSrMFE9moWCCcQDuDXhTlfCKxAXQ3fHtKJ7CgF17P4ElgyjddLWrfK0ls0yVgVWhnjf9fc094fN0fiFqvHh1DJmltEbIfvycVF9aSx7PVnGo3jhHVOc1onkPAbJigkrPPAq74B4mZWbL5ktA8Mn_SkYwWqx9lF0wuuBTLdwEYFthzGi7A&quot;,
+    &quot;token_type&quot;: &quot;Bearer&quot;,
+    &quot;expires_in&quot;: 86399
+}
+✅ GlofoxClientToken generated successfully
+Request method:	POST
+Request URI:	https://dev.30preprod.com/api/ors/payment-token/session/add-token
+Proxy:			&lt;none&gt;
+Request params:	&lt;none&gt;
+Query params:	&lt;none&gt;
+Form params:	&lt;none&gt;
+Path params:	&lt;none&gt;
+Headers:		Authorization=Bearer eyJraWQiOiIzcFI3ODNBOWFEdVpobHV1IiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiJHTE9GT1hfQVVUSCIsImF1ZCI6Im9yZGVyLXNlc3Npb24iLCJuYmYiOjE3NjA2ODgxMjMsIl90IjoiQ0xJRU5UX09OTFkiLCJzY29wZSI6WyJwbGF0Zm9ybTpwcm90ZWN0ZWQiXSwiaXNzIjoiaHR0cHM6Ly9kZXYuMzBwcmVwcm9kLmNvbSIsImV4cCI6MTc2MDc3NDUyMywiaWF0IjoxNzYwNjg4MTIzLCJqdGkiOiI3ZDg5MjAzZC0zZDU0LTQxZTgtYmRiMy0wYzRhOWZlODlkOTciLCJjbGllbnRfaWQiOiJHTE9GT1hfQVVUSCIsImF1dGhvcml0aWVzIjpbInBheW1lbnQtdG9rZW4tc2Vzc2lvbjpjbGllbnQtY3JlYXRlIiwiY2xpZW50LXByb2ZpbGU6Y2xpZW50LWNyZWF0ZSJdfQ.mL7ISrtnoSbfe-8HPM3cpSsWzokn1n0prejFjcitsvKNbEWtxSH-nBUefxzyGlwd4lNH70gBlM3xLIw_E9W_Kl_coeOc5yORa8f5Lloj635RCSQhGnfnhDG_RuMBfkwV3gz91xBux0j5uYdtcmOA-pLu_Oeun0Ya3FawPWSrMFE9moWCCcQDuDXhTlfCKxAXQ3fHtKJ7CgF17P4ElgyjddLWrfK0ls0yVgVWhnjf9fc094fN0fiFqvHh1DJmltEbIfvycVF9aSx7PVnGo3jhHVOc1onkPAbJigkrPPAq74B4mZWbL5ktA8Mn_SkYwWqx9lF0wuuBTLdwEYFthzGi7A
+				ABCFS-TENANT-ID=e60edc0d-fa76-4012-a501-3ce9732e37f7
+				User-Agent=Automation-Test
+				Accept=*/*
+				Content-Type=application/json
+Cookies:		&lt;none&gt;
+Multiparts:		&lt;none&gt;
+Body:
+{
+    &quot;ownerType&quot;: &quot;PAYOR&quot;,
+    &quot;consumerOrigin&quot;: &quot;https://dev.30preprod.com&quot;,
+    &quot;metadata&quot;: {
+        &quot;limitedPrimaryPaymentMethod&quot;: &quot;ANY&quot;
+    },
+    &quot;cvvRequired&quot;: false,
+    &quot;consumerId&quot;: &quot;11f0ab2f-88f4-272c-b839-5d1f0421e66f&quot;
+}
+HTTP/1.1 201 Created
+Date: Fri, 17 Oct 2025 08:02:04 GMT
+Content-Type: application/json
+Transfer-Encoding: chunked
+Connection: keep-alive
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+X-Frame-Options: DENY
+Location: https://dev.30preprod.com/api/ors/payment-token/session/add-token/11f0ab2f-91ec-4bad-b839-5d1f0421e66f
+
+{
+    &quot;metadata&quot;: {
+        &quot;limitedPrimaryPaymentMethod&quot;: &quot;ANY&quot;
+    },
+    &quot;consumerOrigin&quot;: &quot;https://dev.30preprod.com&quot;,
+    &quot;workstationManualEntryAllowed&quot;: false,
+    &quot;cvvRequired&quot;: false,
+    &quot;expirationType&quot;: &quot;DYNAMIC&quot;,
+    &quot;p2pe&quot;: false,
+    &quot;id&quot;: &quot;11f0ab2f-91ec-4bad-b839-5d1f0421e66f&quot;,
+    &quot;mode&quot;: &quot;ADD_TOKEN&quot;,
+    &quot;status&quot;: &quot;CREATED&quot;,
+    &quot;statusCheckState&quot;: &quot;NONE&quot;,
+    &quot;extensionCounter&quot;: 0,
+    &quot;consumerId&quot;: &quot;11f0ab2f-88f4-272c-b839-5d1f0421e66f&quot;,
+    &quot;nextAction&quot;: &quot;NONE&quot;,
+    &quot;organizationId&quot;: &quot;e60edc0d-fa76-4012-a501-3ce9732e37f7&quot;,
+    &quot;expirationTime&quot;: &quot;2025-10-17T08:13:00Z&quot;,
+    &quot;token&quot;: &quot;eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIxMWYwYWIyZi05MWVjLTRiYWQtYjgzOS01ZDFmMDQyMWU2NmYiLCJhdWQiOiJFTVBMT1lFRSIsInRyYW5zZmVycmVkIjpmYWxzZSwiZXhwIjoxNzYwNzc0NTI0LCJpYXQiOjE3NjA2ODgxMjR9.Kkh4Bv_wz6pMbQ_pH_rMqTEwsZWyTICqdRVx0XKrJ77GJcIJjdsHdbhbjIlH_NIN_Av8zaFNN8t-IdSExtDfkVFM-vvVAWlYo-ynrtMgDbbohMI-Sy5WCAZBae7wliIBZD8L3pGmyhZwHAkF2QNILUZtHWKm-XbkrbS0cMjBkMFWjLAr-R3J4jcC5O_ZqB6ArD8yroE_HPnPxRT8KpE1wkm6gTbjd0lynHr97tJ-guniFyU3QFOUsmv2DnXOIhdhl9VDXssDhD5sgHAftgi36mMzj1SPKaP0eeL99ltlt1TZ79kRiNsELR9Vsn_gC3vnaTwtsY-dSCxxreYBbSlWrw&quot;,
+    &quot;url&quot;: &quot;https://pay.dev.aws.abcfinancial.net/add-token?token=eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIxMWYwYWIyZi05MWVjLTRiYWQtYjgzOS01ZDFmMDQyMWU2NmYiLCJhdWQiOiJFTVBMT1lFRSIsInRyYW5zZmVycmVkIjpmYWxzZSwiZXhwIjoxNzYwNzc0NTI0LCJpYXQiOjE3NjA2ODgxMjR9.Kkh4Bv_wz6pMbQ_pH_rMqTEwsZWyTICqdRVx0XKrJ77GJcIJjdsHdbhbjIlH_NIN_Av8zaFNN8t-IdSExtDfkVFM-vvVAWlYo-ynrtMgDbbohMI-Sy5WCAZBae7wliIBZD8L3pGmyhZwHAkF2QNILUZtHWKm-XbkrbS0cMjBkMFWjLAr-R3J4jcC5O_ZqB6ArD8yroE_HPnPxRT8KpE1wkm6gTbjd0lynHr97tJ-guniFyU3QFOUsmv2DnXOIhdhl9VDXssDhD5sgHAftgi36mMzj1SPKaP0eeL99ltlt1TZ79kRiNsELR9Vsn_gC3vnaTwtsY-dSCxxreYBbSlWrw&quot;,
+    &quot;modified&quot;: &quot;2025-10-17T08:02:04Z&quot;,
+    &quot;created&quot;: &quot;2025-10-17T08:02:04Z&quot;,
+    &quot;ownerType&quot;: &quot;PAYOR&quot;,
+    &quot;manualEntryAllowed&quot;: false
+}
+</pre>
+</span>
+</div>
+</div>
+<div id="footer">
+<p>
+<div>
+<label class="hidden" id="label-for-line-wrapping-toggle" for="line-wrapping-toggle">Wrap lines
+<input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
+</label>
+</div>Generated by 
+<a href="https://www.gradle.org">Gradle 9.0.0</a> at 17-Oct-2025, 1:32:11 pm</p>
+</div>
+</div>
+</body>
+</html>
