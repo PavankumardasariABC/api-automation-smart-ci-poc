@@ -1,227 +1,130 @@
-plugins {
-    id 'java'
-    id 'io.qameta.allure' version '2.11.2'
-}
+# 🚀 Smart API Automation CI Workflow (Chrome & Offline Ready)
+name: 🚀 API Automation CI
 
-group = 'com.externalAPIs'
-version = '1.0'
+on:
+pull_request:
+branches: [ main, develop ]
+workflow_dispatch:
+inputs:
+branch:
+description: "Select branch to run tests"
+required: true
+default: "feature/github-actions-poc-"
+test_group:
+description: "Test group (Sanity, Integration, Regression, All)"
+required: true
+default: "All"
+test_class:
+description: "Optional: Run only specific API test class"
+required: false
+default: ""
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
-}
+permissions:
+contents: read
 
-repositories {
-    mavenCentral()
-}
+jobs:
+api-tests:
+runs-on: self-hosted
 
-ext {
-    allureVersion = '2.27.0'
-    restAssuredVersion = '5.4.0'
-    testngVersion = '7.10.2'
-}
+steps:
+# -----------------------------------------
+        - name: 📥 Checkout repository
+uses: actions/checkout@v4
+        with:
+ref: ${{ github.event.inputs.branch || github.ref_name || 'feature/github-actions-poc-' }}
+token: ${{ secrets.GITHUB_TOKEN }}
 
-dependencies {
-    implementation "io.rest-assured:rest-assured:${restAssuredVersion}"
-    implementation "io.rest-assured:json-path:${restAssuredVersion}"
+# -----------------------------------------
+        - name: ☕ Setup JDK
+uses: actions/setup-java@v4
+        with:
+distribution: 'temurin'
+java-version: '21'
 
-    implementation "io.qameta.allure:allure-testng:${allureVersion}"
-    implementation "io.qameta.allure:allure-rest-assured:${allureVersion}"
+# -----------------------------------------
+        - name: ⚡ Cache Gradle dependencies (lightweight)
+uses: actions/cache@v4
+        with:
+path: |
+~/.gradle/caches/modules-2
+~/.gradle/wrapper
+key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+restore-keys: |
+${{ runner.os }}-gradle-
 
-    implementation "org.testng:testng:${testngVersion}"
+# -----------------------------------------
+        - name: 🧠 Smart Test Selection
+id: smart
+run: |
+echo "Detecting changed test files..."
+CHANGED=$(git diff --name-only origin/feature/github-actions-poc-...HEAD | grep 'src/test/java' || true)
+if [ -n "$CHANGED" ]; then
+echo "group=Custom" >> $GITHUB_OUTPUT
+else
+echo "group=${{ github.event.inputs.test_group }}" >> $GITHUB_OUTPUT
+fi
 
-    implementation 'com.googlecode.json-simple:json-simple:1.1.1'
-    implementation 'com.google.code.gson:gson:2.11.0'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.0'
+# -----------------------------------------
+        - name: 🧪 Run Tests
+run: |
+echo "Running tests for: ${{ github.event.inputs.test_class || 'All tests' }}"
+if [ "${{ github.event.inputs.test_class }}" != "" ]; then
+        ./gradlew clean test --tests "${{ github.event.inputs.test_class }}" --info
+          elif [ "${{ github.event.inputs.test_group }}" != "" ] && [ "${{ github.event.inputs.test_group }}" != "All" ]; then
+            ./gradlew clean test -Dgroups="${{ github.event.inputs.test_group }}" --info
+else
+./gradlew clean test --info
+          fi
 
-    implementation 'org.slf4j:slf4j-simple:2.0.12'
-    implementation 'org.apache.logging.log4j:log4j-core:2.22.1'
-    implementation 'org.apache.logging.log4j:log4j-api:2.22.1'
-}
+      # -----------------------------------------
+      - name: 📊 Generate Embedded Allure Report
+        run: |
+          echo "⚙️ Generating Chrome-compatible offline report..."
+          ./gradlew generateAllureReport
+echo "✅ Allure report → reports/current/index.html"
 
-/////////////////////////////////////////////////////////////
-// ✅ REPORT GENERATION TASKS (OFFLINE EMBEDDED ALLURE)
-/////////////////////////////////////////////////////////////
-tasks.register('runAllureReport') {
-    group = "reporting"
-    description = "Safely generate Allure report after tests"
-    dependsOn 'generateAllureReport'
-}
+# -----------------------------------------
+        - name: 🗜️ Zip Self-Contained HTML Report
+if: always()
+run: |
+cd reports/current
+zip -r ../../Allure-Offline-Report.zip .
+        cd ../..
+          echo "✅ Zipped offline report → Allure-Offline-Report.zip"
 
-tasks.register('generateAllureReport') {
-    group = "reporting"
-    description = "Generate a self-contained Allure HTML report (offline mode)"
+      # -----------------------------------------
+      - name: 📦 Upload Offline Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+name: Allure-Offline-Report-${{ github.run_number }}
+path: Allure-Offline-Report.zip
+retention-days: 15
 
-    doLast {
-        def resultsDir = file("$buildDir/allure-results")
-        def outputDir = file("$projectDir/reports/current")
-        def timestamp = new Date().format("yyyy-MM-dd_HHmmss_SSS")
+# -----------------------------------------
+        - name: 💬 Comment PR (if applicable)
+if: ${{ github.event_name == 'pull_request' }}
+uses: actions/github-script@v7
+        with:
+github-token: ${{ secrets.GITHUB_TOKEN }}
+script: |
+const runUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+const message = `
+✅ **Allure Offline Report Generated**
+📦 [Download Report Artifact](${runUrl})
 
-        println "\n🧹 Cleaning old report folders..."
-        if (outputDir.exists()) outputDir.deleteDir()
+💡 Extract and open \`index.html\` — works directly in Chrome & Safari 🚀
+            `;
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: message
+            });
 
-        println "🧹 Removing stale Allure metadata..."
-        fileTree(dir: resultsDir, include: ['*.json']).matching {
-            include 'executor.json', 'environment.json'
-        }.each { it.delete() }
-
-        println "⏳ Waiting 5s for Allure results to flush..."
-        sleep(5000)
-
-        if (!resultsDir.exists() || resultsDir.listFiles().length == 0) {
-            println "❌ No allure-results found — skipping report."
-            return
-        }
-
-        println "⚙️ Generating Allure report..."
-        def cmd = "allure generate '${resultsDir}' --clean -o '${outputDir}'"
-        def process = ["bash", "-c", cmd].execute()
-        process.waitForProcessOutput(System.out, System.err)
-
-        if (process.exitValue() != 0) {
-            println "❌ Allure CLI exited with code ${process.exitValue()}"
-            return
-        }
-
-        println "✅ Allure report generated → ${outputDir}/index.html"
-
-        //////////////////////////////////////////////////////////////////
-        // 🧩 OFFLINE EMBEDDING: Merge all JSON data into index.html
-        //////////////////////////////////////////////////////////////////
-        try {
-            def dataDir = new File("${outputDir}/data")
-            def indexFile = new File("${outputDir}/index.html")
-
-            if (!indexFile.exists() || !dataDir.exists()) {
-                println "⚠️ Skipping embedding (no data folder or index.html)."
-                return
-            }
-
-            println "🧩 Embedding Allure JSON + JS for offline use..."
-
-            // Read all JSON files from data/
-            def dataFiles = fileTree(dir: dataDir, include: '**/*.json').files
-            def jsonMap = [:]
-            dataFiles.each { f ->
-                jsonMap[f.name] = f.text
-            }
-
-            def jsonContent = new groovy.json.JsonBuilder(jsonMap).toPrettyString()
-
-            // Patch fetch() in the HTML to serve embedded JSON
-            def scriptBlock = """
-<script>
-(function() {
-  // 🧩 Offline Allure Loader (Full Safari + Chrome + Edge support)
-  const jsonData = ${jsonContent};
-
-  // Override fetch for JSON files
-  const originalFetch = window.fetch;
-  window.fetch = (url) => {
-    if (url && url.includes('/data/')) {
-      const file = url.split('/').pop();
-      const data = jsonData[file];
-      if (data) {
-        console.log('📦 Loading embedded JSON:', file);
-        return Promise.resolve({
-          json: () => Promise.resolve(JSON.parse(data))
-        });
-      }
-    }
-    return originalFetch(url);
-  };
-
-  // Block service workers and external JS errors in offline mode
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.getRegistrations().then(regs => regs.forEach(r => r.unregister()));
-  }
-
-  console.log('✅ Allure Offline Mode enabled');
-})();
-</script>
-"""
-
-            def htmlContent = indexFile.text.replaceFirst('(?i)</body>', "${scriptBlock}\n</body>")
-            indexFile.text = htmlContent
-
-            println "✅ Embedded ${dataFiles.size()} JSON files. Report works 100% offline."
-        } catch (Exception e) {
-            println "⚠️ Failed to embed Allure JSON: ${e.message}"
-        }
-
-        // Archive history
-        copy {
-            from outputDir
-            into "$projectDir/reports/history/${timestamp}"
-        }
-        println "🗂 Archived → reports/history/${timestamp}"
-
-        // Auto-open on macOS
-        if (System.getProperty("os.name").toLowerCase().contains("mac")) {
-            try {
-                ["bash", "-c", "open '${outputDir}/index.html'"].execute()
-                println "🖥️ Opened latest report automatically."
-            } catch (ignored) {}
-        }
-    }
-}
-
-/////////////////////////////////////////////////////////////
-// ✅ TEST CONFIGURATION (AFTER REPORT TASKS)
-/////////////////////////////////////////////////////////////
-test {
-    useTestNG {
-        suites 'testng.xml'
-    }
-
-    maxParallelForks = 1
-    failFast = false
-    ignoreFailures = true
-    outputs.upToDateWhen { false }
-
-    testLogging {
-        events "passed", "failed", "skipped", "standardOut", "standardError"
-        showStandardStreams = true
-        exceptionFormat = 'full'
-    }
-
-    doFirst {
-        def resultsDir = file("$buildDir/allure-results")
-        if (resultsDir.exists()) resultsDir.deleteDir()
-        resultsDir.mkdirs()
-        println "🧹 Purged old build/allure-results"
-        println "🕓 Test cycle started at " + new Date().format("yyyy-MM-dd HH:mm:ss")
-    }
-
-    finalizedBy 'runAllureReport'
-}
-
-/////////////////////////////////////////////////////////////
-// ✅ ALLURE ADAPTER CONFIGURATION
-/////////////////////////////////////////////////////////////
-allure {
-    version = allureVersion
-    adapter {
-        frameworks {
-            testng {
-                adapterVersion = allureVersion
-            }
-        }
-        autoconfigure = true
-        aspectjWeaver = true
-    }
-}
-
-/////////////////////////////////////////////////////////////
-// ✅ ENVIRONMENT INFO
-/////////////////////////////////////////////////////////////
-tasks.register('printEnv') {
-    doLast {
-        println "\n===== ENVIRONMENT INFO ====="
-        println "Environment: " + System.getProperty("env", "dev")
-        println "Java Version: " + JavaVersion.current()
-        println "Allure Version: ${allureVersion}"
-        println "RestAssured Version: ${restAssuredVersion}"
-        println "============================\n"
-    }
-}
+      # -----------------------------------------
+      - name: 🛑 Fail Build on Test Failure
+        if: failure()
+        run: |
+          echo "❌ Tests failed! Build will be marked as failed."
+          exit 1
