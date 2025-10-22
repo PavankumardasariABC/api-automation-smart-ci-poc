@@ -59,47 +59,30 @@ jobs:
           rm -rf ~/.gradle/daemon/* || true
 
       # -----------------------------------------
-      # 4️⃣ Smart Test Selection
+      # 4️⃣ Run Tests and Generate Allure Report (Combined)
       # -----------------------------------------
-      - name: 🧠 Smart Test Selection
-        id: smart
+      - name: 🧪 Run Tests & Generate Allure Report
         run: |
-          echo "Detecting changed test files..."
-          CHANGED=$(git diff --name-only origin/main...HEAD | grep 'src/test/java' || true)
-          if [ -n "$CHANGED" ]; then
-            echo "group=Custom" >> $GITHUB_OUTPUT
-          else
-            echo "group=${{ github.event.inputs.test_group }}" >> $GITHUB_OUTPUT
-          fi
+          echo "🧪 Running tests and generating Allure report..."
+          ./gradlew --no-daemon clean test --info
+          echo "📊 Generating Safari-safe Allure report..."
+          ./gradlew --no-daemon generateAllureReport --info
 
       # -----------------------------------------
-      # 5️⃣ Run API Tests
+      # 5️⃣ Verify Allure Results
       # -----------------------------------------
-      - name: 🧪 Run API Tests
-        run: |
-          echo "Running tests for: ${{ github.event.inputs.test_class || 'All tests' }}"
-          if [ "${{ github.event.inputs.test_class }}" != "" ]; then
-            ./gradlew --no-daemon clean test --tests "${{ github.event.inputs.test_class }}" --info
-          elif [ "${{ github.event.inputs.test_group }}" != "" ] && [ "${{ github.event.inputs.test_group }}" != "All" ]; then
-            ./gradlew --no-daemon clean test -Dgroups="${{ github.event.inputs.test_group }}" --info
-          else
-            ./gradlew --no-daemon clean test --info
-          fi
-
-      # -----------------------------------------
-      # 6️⃣ Generate Safari-Safe Allure Report
-      # -----------------------------------------
-      - name: 📊 Generate Offline Allure Report
+      - name: 🕵️ Verify Allure Results Existence
         if: always()
         run: |
-          echo "⚙️ Generating Safari-safe single-file Allure report..."
-          ./gradlew --no-daemon generateAllureReport
-          echo "✅ Report generated → reports/current/Allure_Offline_Single_Safe.html"
+          echo "Checking Allure results directory..."
+          ls -R build/allure-results || echo "❌ No allure-results found!"
+          echo "Count of result JSON files:"
+          find build/allure-results -name "*.json" | wc -l
 
       # -----------------------------------------
-      # 7️⃣ Upload Artifact (Corrected Path)
+      # 6️⃣ Upload Safari-safe Report Artifact
       # -----------------------------------------
-      - name: 📦 Upload Safari-Safe Allure Report
+      - name: 📦 Upload Safari-safe Allure Report
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -108,7 +91,7 @@ jobs:
           retention-days: 10
 
       # -----------------------------------------
-      # 🔟 Fail Build on Test Failure
+      # 7️⃣ Fail Build on Test Failure
       # -----------------------------------------
       - name: 🛑 Fail Build on Test Failure
         if: failure()

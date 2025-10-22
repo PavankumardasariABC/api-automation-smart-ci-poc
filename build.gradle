@@ -11,9 +11,7 @@ java {
     targetCompatibility = JavaVersion.VERSION_17
 }
 
-repositories {
-    mavenCentral()
-}
+repositories { mavenCentral() }
 
 ext {
     allureVersion = '2.27.0'
@@ -22,14 +20,11 @@ ext {
 }
 
 dependencies {
-    // ✅ Core Testing Libraries
     implementation "io.rest-assured:rest-assured:${restAssuredVersion}"
     implementation "io.rest-assured:json-path:${restAssuredVersion}"
     implementation "io.qameta.allure:allure-testng:${allureVersion}"
     implementation "io.qameta.allure:allure-rest-assured:${allureVersion}"
     implementation "org.testng:testng:${testngVersion}"
-
-    // ✅ Utilities
     implementation 'com.googlecode.json-simple:json-simple:1.1.1'
     implementation 'com.google.code.gson:gson:2.11.0'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.0'
@@ -39,23 +34,17 @@ dependencies {
 }
 
 /////////////////////////////////////////////////////////////
-// ✅ OFFLINE ALLURE REPORT GENERATION (Safari & Chrome Safe)
+// ✅ SAFARI-SAFE OFFLINE ALLURE REPORT
 /////////////////////////////////////////////////////////////
-tasks.register('runAllureReport') {
-    group = "reporting"
-    description = "Safely generate Allure report after tests"
-    dependsOn 'generateAllureReport'
-}
-
 tasks.register('generateAllureReport') {
     group = "reporting"
-    description = "Generate fully offline Allure report (Safari-safe single HTML)"
+    description = "Generate offline Allure report with embedded JSON (Safari-safe)"
 
     doLast {
-        def resultsDir = file("$buildDir/allure-results")
-        def outputDir = file("$projectDir/reports/current")
-        def timestamp = new Date().format("yyyy-MM-dd_HHmmss_SSS")
-        def isCI = System.getenv("GITHUB_ACTIONS") != null
+        def resultsDir = new File("${project.projectDir}/build/allure-results")
+        def outputDir  = new File("${project.projectDir}/reports/current")
+        def timestamp  = new Date().format("yyyy-MM-dd_HHmmss_SSS")
+        def isCI       = System.getenv("GITHUB_ACTIONS") != null
 
         println "\n🧹 Cleaning old Allure reports..."
         if (outputDir.exists()) outputDir.deleteDir()
@@ -63,7 +52,7 @@ tasks.register('generateAllureReport') {
         println "⚙️ Generating Allure report..."
         def cmd = "allure generate '${resultsDir}' --clean -o '${outputDir}'"
         def process = ["bash", "-c", cmd].execute()
-        process.waitForProcessOutput(System.out, System.err)
+        process.waitFor()
 
         if (process.exitValue() != 0) {
             println "❌ Allure CLI exited with code ${process.exitValue()}"
@@ -71,48 +60,43 @@ tasks.register('generateAllureReport') {
         }
         println "✅ Allure report generated → ${outputDir}/index.html"
 
-        //////////////////////////////////////////////////////////////////
-        // 🧩 Safari-safe JSON embedding using Base64
-        //////////////////////////////////////////////////////////////////
+        // 🧩 Base64-embed JSON (UTF-8 safe)
         try {
-            def dataDir = new File("${outputDir}/data")
+            def dataDir  = new File("${outputDir}/data")
             def indexFile = new File("${outputDir}/index.html")
-
             if (!indexFile.exists() || !dataDir.exists()) {
-                println "⚠️ Skipping embedding (missing data folder or index.html)"
+                println "⚠️ Missing index.html or data folder, skipping embedding."
                 return
             }
 
-            println "🧩 Embedding Allure JSON data as Base64 (Safari-safe)..."
-
+            println "🧩 Embedding JSON files into HTML (UTF-8 safe)..."
             def dataFiles = fileTree(dir: dataDir, include: '**/*.json').files
             def jsonMap = [:]
             dataFiles.each { f ->
-                def encoded = f.text.bytes.encodeBase64().toString()
+                def encoded = f.getText('UTF-8').bytes.encodeBase64().toString()
                 jsonMap[f.name] = encoded
             }
 
             def jsonContent = new groovy.json.JsonBuilder(jsonMap).toPrettyString()
             def finalHtml = new File("${outputDir}/Allure_Offline_Single_Safe.html")
+            def indexHtml = indexFile.getText('UTF-8')
 
-            def indexHtml = indexFile.text
             def embeddedData = """
 <script id='embedded-json' type='application/json'>
 ${jsonContent}
 </script>
 <script>
 (function(){
-  const embedded = document.getElementById('embedded-json');
-  if(!embedded){console.error('❌ Embedded JSON not found');return;}
-  const jsonData = JSON.parse(embedded.textContent);
-  const originalFetch = window.fetch;
+  const el = document.getElementById('embedded-json');
+  if(!el){console.error('❌ Embedded JSON not found');return;}
+  const data = JSON.parse(el.textContent);
+  const origFetch = window.fetch;
   window.fetch = (url)=>{
     if(url && url.includes('/data/')){
       const file=url.split('/').pop();
-      const b64=jsonData[file];
+      const b64=data[file];
       if(b64){
-        const decoded=atob(b64);
-        console.log('📦 Loaded embedded file:',file);
+        const decoded = decodeURIComponent(escape(atob(b64)));
         return Promise.resolve({
           ok:true,status:200,
           json:async()=>JSON.parse(decoded),
@@ -120,35 +104,33 @@ ${jsonContent}
         });
       }
     }
-    return Promise.resolve({ok:false,status:404});
+    return origFetch(url);
   };
   if('serviceWorker' in navigator){
     navigator.serviceWorker.getRegistrations().then(r=>r.forEach(s=>s.unregister()));
   }
-  console.log('✅ Allure Offline Mode (Safari-safe)');
+  console.log('✅ Allure Offline Mode Activated');
 })();
 </script>
 """
             def mergedHtml = indexHtml.replaceFirst('(?i)</body>', "${embeddedData}\n</body>")
-            finalHtml.text = mergedHtml
+            finalHtml.setText(mergedHtml, 'UTF-8')
             println "✅ Created Safari-safe report → ${finalHtml.absolutePath}"
         } catch (Exception e) {
             println "⚠️ Embedding failed: ${e.message}"
         }
 
-        // 🗂 Archive history
         copy {
             from outputDir
-            into "$projectDir/reports/history/${timestamp}"
+            into "${project.projectDir}/reports/history/${timestamp}"
         }
         println "🗂 Archived → reports/history/${timestamp}"
 
         if (!isCI && System.getProperty("os.name").toLowerCase().contains("mac")) {
             try {
                 ["bash", "-c", "open '${outputDir}/Allure_Offline_Single_Safe.html'"].execute()
-                println "🖥️ Opened Safari-safe report automatically on macOS."
             } catch (ignored) {}
-        } else println "🏗️ CI detected — skipping auto-open."
+        }
     }
 }
 
@@ -168,17 +150,17 @@ test {
     }
 
     doFirst {
-        def resultsDir = file("$buildDir/allure-results")
+        def resultsDir = new File("${project.projectDir}/build/allure-results")
         if (resultsDir.exists()) resultsDir.deleteDir()
         resultsDir.mkdirs()
         println "🧹 Cleared old allure-results"
     }
 
-    finalizedBy 'runAllureReport'
+    finalizedBy 'generateAllureReport'
 }
 
 /////////////////////////////////////////////////////////////
-// ✅ ALLURE ADAPTER CONFIGURATION
+// ✅ ALLURE ADAPTER CONFIG
 /////////////////////////////////////////////////////////////
 allure {
     version = allureVersion
@@ -191,9 +173,6 @@ allure {
     }
 }
 
-/////////////////////////////////////////////////////////////
-// ✅ ENVIRONMENT INFO
-/////////////////////////////////////////////////////////////
 tasks.register('printEnv') {
     doLast {
         println "\n===== ENVIRONMENT INFO ====="
