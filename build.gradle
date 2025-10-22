@@ -39,7 +39,7 @@ dependencies {
 }
 
 /////////////////////////////////////////////////////////////
-// ✅ OFFLINE ALLURE REPORT GENERATION (Single HTML – No Server)
+// ✅ OFFLINE ALLURE REPORT GENERATION (Safari & Chrome Safe)
 /////////////////////////////////////////////////////////////
 tasks.register('runAllureReport') {
     group = "reporting"
@@ -49,7 +49,7 @@ tasks.register('runAllureReport') {
 
 tasks.register('generateAllureReport') {
     group = "reporting"
-    description = "Generate fully offline Allure report (single HTML, Safari & Chrome safe)"
+    description = "Generate fully offline Allure report (Safari-safe single HTML)"
 
     doLast {
         def resultsDir = file("$buildDir/allure-results")
@@ -59,7 +59,6 @@ tasks.register('generateAllureReport') {
 
         println "\n🧹 Cleaning old Allure reports..."
         if (outputDir.exists()) outputDir.deleteDir()
-        outputDir.mkdirs()
 
         println "⚙️ Generating Allure report..."
         def cmd = "allure generate '${resultsDir}' --clean -o '${outputDir}'"
@@ -73,7 +72,7 @@ tasks.register('generateAllureReport') {
         println "✅ Allure report generated → ${outputDir}/index.html"
 
         //////////////////////////////////////////////////////////////////
-        // 🧩 Merge JSON into Single HTML for True Offline Viewing
+        // 🧩 Safari-safe JSON embedding using Base64
         //////////////////////////////////////////////////////////////////
         try {
             def dataDir = new File("${outputDir}/data")
@@ -84,14 +83,17 @@ tasks.register('generateAllureReport') {
                 return
             }
 
-            println "🧩 Embedding Allure JSON data directly inside HTML..."
+            println "🧩 Embedding Allure JSON data as Base64 (Safari-safe)..."
 
             def dataFiles = fileTree(dir: dataDir, include: '**/*.json').files
             def jsonMap = [:]
-            dataFiles.each { f -> jsonMap[f.name] = f.text }
+            dataFiles.each { f ->
+                def encoded = f.text.bytes.encodeBase64().toString()
+                jsonMap[f.name] = encoded
+            }
 
             def jsonContent = new groovy.json.JsonBuilder(jsonMap).toPrettyString()
-            def finalHtml = new File("${outputDir}/Allure_Offline_Single.html")
+            def finalHtml = new File("${outputDir}/Allure_Offline_Single_Safe.html")
 
             def indexHtml = indexFile.text
             def embeddedData = """
@@ -106,14 +108,15 @@ ${jsonContent}
   const originalFetch = window.fetch;
   window.fetch = (url)=>{
     if(url && url.includes('/data/')){
-      const file = url.split('/').pop();
-      const data = jsonData[file];
-      if(data){
-        console.log('📦 Serving embedded file:', file);
+      const file=url.split('/').pop();
+      const b64=jsonData[file];
+      if(b64){
+        const decoded=atob(b64);
+        console.log('📦 Loaded embedded file:',file);
         return Promise.resolve({
           ok:true,status:200,
-          json:async()=>JSON.parse(data),
-          text:async()=>data
+          json:async()=>JSON.parse(decoded),
+          text:async()=>decoded
         });
       }
     }
@@ -122,28 +125,28 @@ ${jsonContent}
   if('serviceWorker' in navigator){
     navigator.serviceWorker.getRegistrations().then(r=>r.forEach(s=>s.unregister()));
   }
-  console.log('✅ Allure Offline Mode ready (Single HTML).');
+  console.log('✅ Allure Offline Mode (Safari-safe)');
 })();
 </script>
 """
             def mergedHtml = indexHtml.replaceFirst('(?i)</body>', "${embeddedData}\n</body>")
             finalHtml.text = mergedHtml
-
-            println "✅ Created single-file Allure report → ${finalHtml.absolutePath}"
+            println "✅ Created Safari-safe report → ${finalHtml.absolutePath}"
         } catch (Exception e) {
             println "⚠️ Embedding failed: ${e.message}"
         }
 
-        // 🗂 Archive old report
+        // 🗂 Archive history
         copy {
             from outputDir
             into "$projectDir/reports/history/${timestamp}"
         }
+        println "🗂 Archived → reports/history/${timestamp}"
 
         if (!isCI && System.getProperty("os.name").toLowerCase().contains("mac")) {
             try {
-                ["bash", "-c", "open '${outputDir}/Allure_Offline_Single.html'"].execute()
-                println "🖥️ Opened offline report automatically on macOS."
+                ["bash", "-c", "open '${outputDir}/Allure_Offline_Single_Safe.html'"].execute()
+                println "🖥️ Opened Safari-safe report automatically on macOS."
             } catch (ignored) {}
         } else println "🏗️ CI detected — skipping auto-open."
     }
