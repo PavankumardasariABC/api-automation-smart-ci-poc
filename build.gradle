@@ -11,7 +11,9 @@ java {
     targetCompatibility = JavaVersion.VERSION_17
 }
 
-repositories { mavenCentral() }
+repositories {
+    mavenCentral()
+}
 
 ext {
     allureVersion = '2.27.0'
@@ -20,11 +22,14 @@ ext {
 }
 
 dependencies {
+    // ✅ Core Dependencies
     implementation "io.rest-assured:rest-assured:${restAssuredVersion}"
     implementation "io.rest-assured:json-path:${restAssuredVersion}"
     implementation "io.qameta.allure:allure-testng:${allureVersion}"
     implementation "io.qameta.allure:allure-rest-assured:${allureVersion}"
     implementation "org.testng:testng:${testngVersion}"
+
+    // ✅ Utility Libraries
     implementation 'com.googlecode.json-simple:json-simple:1.1.1'
     implementation 'com.google.code.gson:gson:2.11.0'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.0'
@@ -34,7 +39,7 @@ dependencies {
 }
 
 /////////////////////////////////////////////////////////////
-// ✅ SAFARI-SAFE OFFLINE ALLURE REPORT
+// ✅ SAFARI-SAFE OFFLINE ALLURE REPORT (CI + LOCAL)
 /////////////////////////////////////////////////////////////
 tasks.register('generateAllureReport') {
     group = "reporting"
@@ -49,10 +54,25 @@ tasks.register('generateAllureReport') {
         println "\n🧹 Cleaning old Allure reports..."
         if (outputDir.exists()) outputDir.deleteDir()
 
-        println "⚙️ Generating Allure report..."
-        def cmd = "allure generate '${resultsDir}' --clean -o '${outputDir}'"
+        // 🧩 Auto-install Allure CLI if missing
+        def allureCmd = "allure"
+        def checkAllure = ["bash", "-c", "command -v allure"].execute()
+        checkAllure.waitFor()
+        if (checkAllure.exitValue() != 0) {
+            println "⚙️ Installing Allure CLI locally (missing)..."
+            def allureZip = new File("${project.projectDir}/allure.zip")
+            ["bash", "-c", """
+                wget -q https://github.com/allure-framework/allure2/releases/download/2.27.0/allure-2.27.0.zip -O ${allureZip}
+                unzip -q -o ${allureZip} -d ${project.projectDir}
+                chmod +x ${project.projectDir}/allure-2.27.0/bin/allure
+            """].execute().waitFor()
+            allureCmd = "${project.projectDir}/allure-2.27.0/bin/allure"
+        }
+
+        println "⚙️ Generating Allure report using CLI..."
+        def cmd = "${allureCmd} generate '${resultsDir}' --clean -o '${outputDir}'"
         def process = ["bash", "-c", cmd].execute()
-        process.waitFor()
+        process.waitForProcessOutput(System.out, System.err)
 
         if (process.exitValue() != 0) {
             println "❌ Allure CLI exited with code ${process.exitValue()}"
@@ -60,21 +80,33 @@ tasks.register('generateAllureReport') {
         }
         println "✅ Allure report generated → ${outputDir}/index.html"
 
-        // 🧩 Base64-embed JSON (UTF-8 safe)
+        // 🧩 Base64 embed JSONs for Safari-safe HTML
         try {
-            def dataDir  = new File("${outputDir}/data")
+            def dataDir = new File("${outputDir}/data")
+            def widgetDir = new File("${outputDir}/widgets")
             def indexFile = new File("${outputDir}/index.html")
-            if (!indexFile.exists() || !dataDir.exists()) {
-                println "⚠️ Missing index.html or data folder, skipping embedding."
+
+            if (!indexFile.exists()) {
+                println "⚠️ Missing index.html — skipping embedding."
                 return
             }
 
-            println "🧩 Embedding JSON files into HTML (UTF-8 safe)..."
-            def dataFiles = fileTree(dir: dataDir, include: '**/*.json').files
+            def allJsonFiles = []
+            [dataDir, widgetDir].each { dir ->
+                if (dir.exists()) {
+                    allJsonFiles.addAll(fileTree(dir: dir, include: '**/*.json').files)
+                }
+            }
+
+            if (allJsonFiles.isEmpty()) {
+                println "⚠️ No JSON files found to embed — report may appear blank!"
+                return
+            }
+
+            println "🧩 Embedding ${allJsonFiles.size()} JSON files..."
             def jsonMap = [:]
-            dataFiles.each { f ->
-                def encoded = f.getText('UTF-8').bytes.encodeBase64().toString()
-                jsonMap[f.name] = encoded
+            allJsonFiles.each { f ->
+                jsonMap[f.name] = f.getText('UTF-8').bytes.encodeBase64().toString()
             }
 
             def jsonContent = new groovy.json.JsonBuilder(jsonMap).toPrettyString()
@@ -92,11 +124,11 @@ ${jsonContent}
   const data = JSON.parse(el.textContent);
   const origFetch = window.fetch;
   window.fetch = (url)=>{
-    if(url && url.includes('/data/')){
+    if(url && (url.includes('/data/') || url.includes('/widgets/'))){
       const file=url.split('/').pop();
       const b64=data[file];
       if(b64){
-        const decoded = decodeURIComponent(escape(atob(b64)));
+        const decoded=atob(b64);
         return Promise.resolve({
           ok:true,status:200,
           json:async()=>JSON.parse(decoded),
@@ -115,11 +147,12 @@ ${jsonContent}
 """
             def mergedHtml = indexHtml.replaceFirst('(?i)</body>', "${embeddedData}\n</body>")
             finalHtml.setText(mergedHtml, 'UTF-8')
-            println "✅ Created Safari-safe report → ${finalHtml.absolutePath}"
+            println "✅ Safari-safe report created → ${finalHtml.absolutePath}"
         } catch (Exception e) {
             println "⚠️ Embedding failed: ${e.message}"
         }
 
+        // 🗂 Archive history
         copy {
             from outputDir
             into "${project.projectDir}/reports/history/${timestamp}"
@@ -160,7 +193,7 @@ test {
 }
 
 /////////////////////////////////////////////////////////////
-// ✅ ALLURE ADAPTER CONFIG
+// ✅ ALLURE ADAPTER CONFIGURATION
 /////////////////////////////////////////////////////////////
 allure {
     version = allureVersion
@@ -173,6 +206,9 @@ allure {
     }
 }
 
+/////////////////////////////////////////////////////////////
+// ✅ ENVIRONMENT INFO
+/////////////////////////////////////////////////////////////
 tasks.register('printEnv') {
     doLast {
         println "\n===== ENVIRONMENT INFO ====="

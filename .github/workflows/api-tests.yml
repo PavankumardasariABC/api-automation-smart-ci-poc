@@ -59,6 +59,20 @@ jobs:
           rm -rf ~/.gradle/daemon/* || true
 
       # -----------------------------------------
+      # 3️⃣.5 🧩 Install Allure CLI (Required for report generation)
+      # -----------------------------------------
+      - name: 🧩 Install Allure CLI
+        run: |
+          echo "Installing Allure CLI..."
+          sudo apt-get update -y
+          sudo apt-get install -y wget unzip default-jdk
+          wget https://github.com/allure-framework/allure2/releases/download/2.27.0/allure-2.27.0.zip -O allure.zip
+          unzip -q allure.zip -d /opt/
+          sudo mv /opt/allure-2.27.0 /opt/allure
+          sudo ln -sf /opt/allure/bin/allure /usr/bin/allure
+          allure --version
+
+      # -----------------------------------------
       # 4️⃣ Run Tests and Generate Allure Report
       # -----------------------------------------
       - name: 🧪 Run Tests & Generate Allure Report
