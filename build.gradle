@@ -76,7 +76,6 @@ tasks.register('generateAllureReport') {
 
         println "⚙️ Generating fresh Allure report..."
 
-        // --- FIX: use Groovy’s Process execution instead of Gradle exec() ---
         try {
             def cmd = "allure generate '${resultsDir}' --clean -o '${outputDir}'"
             println "💻 Running command: ${cmd}"
@@ -90,6 +89,38 @@ tasks.register('generateAllureReport') {
                 println "❌ Allure CLI exited with code ${process.exitValue()}"
                 println "💡 Try manually: allure generate ${resultsDir} --clean -o ${outputDir}"
             }
+
+            ///////////////////////////////////////////////////////////
+            // 🧩 EMBED JSON DATA FOR OFFLINE ACCESS (New Enhancement)
+            ///////////////////////////////////////////////////////////
+            try {
+                def dataDir = new File("${outputDir}/data")
+                def indexFile = new File("${outputDir}/index.html")
+
+                if (indexFile.exists() && dataDir.exists()) {
+                    println "🧩 Embedding Allure JSON data into index.html for offline use..."
+
+                    def dataFiles = fileTree(dir: dataDir, include: '**/*.json').files
+                    def jsonMap = [:]
+                    dataFiles.each { f ->
+                        jsonMap[f.name] = f.text
+                    }
+
+                    def jsonContent = new groovy.json.JsonBuilder(jsonMap).toPrettyString()
+                    def htmlContent = indexFile.text.replace(
+                            '</body>',
+                            "<script>window.embeddedAllureData = ${jsonContent};</script>\n</body>"
+                    )
+                    indexFile.text = htmlContent
+
+                    println "✅ Embedded ${dataFiles.size()} JSON files into index.html"
+                } else {
+                    println "⚠️ Skipping embedding: index.html or data folder missing."
+                }
+            } catch (Exception e) {
+                println "⚠️ Failed to embed Allure JSON offline data: ${e.message}"
+            }
+
         } catch (Exception e) {
             println "❌ Allure CLI failed — ${e.message}"
             println "💡 Try manually: allure generate ${resultsDir} --clean -o ${outputDir}"
