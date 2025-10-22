@@ -9,7 +9,7 @@ on:
       branch:
         description: "Select branch to run tests"
         required: true
-        default: "feature/github-actions-poc-"   # 👈 branch with dash
+        default: "feature/github-actions-poc-"   # 👈 updated with dash
       test_group:
         description: "Test group (Sanity, Integration, Regression, All)"
         required: true
@@ -24,13 +24,13 @@ permissions:
 
 jobs:
   api-tests:
-    runs-on: self-hosted  # ✅ executes inside your internal network runner
+    runs-on: ubuntu-latest
 
     steps:
       - name: 📥 Checkout repository
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.inputs.branch || github.ref_name || 'feature/github-actions-poc-' }}
+          ref: ${{ github.event.inputs.branch || github.ref_name || 'feature/github-actions-poc-' }}  # 👈 updated with dash
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: ☕ Setup JDK
@@ -39,17 +39,11 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
-      - name: 🧹 Clean Gradle Cache
-                 - run: |
-                 - echo "🧹 Cleaning Gradle cache..."
-                 - rm -rf ~/.gradle/caches/build-cache-* || true
-                 - rm -rf ~/.gradle/daemon/* || true
-
       - name: 🧠 Smart Test Selection
         id: smart
         run: |
           echo "Detecting changed test files..."
-          CHANGED=$(git diff --name-only origin/feature/github-actions-poc-...HEAD | grep 'src/test/java' || true)
+          CHANGED=$(git diff --name-only origin/feature/github-actions-poc-...HEAD | grep 'src/test/java' || true)  # 👈 updated with dash
           if [ -n "$CHANGED" ]; then
             echo "Changed test files:"
             echo "$CHANGED"
@@ -58,7 +52,6 @@ jobs:
             echo "No specific changes; running default group."
             echo "group=${{ github.event.inputs.test_group }}" >> $GITHUB_OUTPUT
           fi
-
       - name: 🧪 Run Tests
         run: |
           if [ "${{ github.event.inputs.test_class }}" != "" ]; then
@@ -69,16 +62,7 @@ jobs:
             ./gradlew clean test -Dgroups=${{ github.event.inputs.test_group }}
           else
             echo "🧩 Running full regression suite..."
-            ./gradlew test
-          fi
-
-      - name: 🧰 Ensure Allure CLI Installed (macOS-safe)
-        run: |
-          if ! command -v allure &> /dev/null; then
-            echo "Installing Allure CLI..."
-            brew install allure || echo "⚠️ Skipping Allure install (already handled by Gradle)"
-          else
-            echo "✅ Allure CLI already installed"
+            ./gradlew clean test
           fi
 
 
@@ -109,7 +93,6 @@ jobs:
               repo: context.repo.repo,
               body: message
             });
-
       - name: 🛑 Fail Build on Test Failure
         if: failure()
         run: |
