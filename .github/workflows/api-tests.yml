@@ -1,4 +1,4 @@
-# 🚀 Smart API Automation CI Workflow
+# 🚀 Smart API Automation CI Workflow (Optimized)
 name: 🚀 API Automation CI
 
 on:
@@ -46,13 +46,22 @@ jobs:
           java-version: '21'
 
       # -----------------------------------------
-      # 3️⃣ Cache Gradle dependencies
+      # 3️⃣ Prepare lightweight Gradle cache
       # -----------------------------------------
-      - name: 🧱 Cache Gradle dependencies
+      - name: 🧹 Clean transient Gradle cache
+        run: |
+          echo "🧹 Cleaning up old Gradle cache to speed up restore..."
+          mkdir -p ~/.gradle/caches
+          rm -rf ~/.gradle/caches/*/fileHashes || true
+          rm -rf ~/.gradle/caches/*/scripts* || true
+          rm -rf ~/.gradle/caches/journal-* || true
+          echo "✅ Gradle cache trimmed."
+
+      - name: ⚡ Cache Gradle dependencies (lightweight)
         uses: actions/cache@v4
         with:
           path: |
-            ~/.gradle/caches
+            ~/.gradle/caches/modules-2
             ~/.gradle/wrapper
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
