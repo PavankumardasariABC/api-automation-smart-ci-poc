@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.externalAPIs.tests.auth.Glofox_SecureClientTokenTests" tests="1" skipped="0" failures="0" errors="0" timestamp="2025-10-22T04:48:49.209Z" hostname="corp-gwil01.abcfinancial.net" time="1.601">
+<testsuite name="com.externalAPIs.tests.auth.Glofox_SecureClientTokenTests" tests="1" skipped="0" failures="0" errors="0" timestamp="2025-10-22T05:35:38.052Z" hostname="l115knel010721.abcfinancial.net" time="1.586">
   <properties/>
-  <testcase name="getGlofoxSecureClientToken" classname="com.externalAPIs.tests.auth.Glofox_SecureClientTokenTests" time="1.601"/>
+  <testcase name="getGlofoxSecureClientToken" classname="com.externalAPIs.tests.auth.Glofox_SecureClientTokenTests" time="1.586"/>
   <system-out><![CDATA[Request method:	POST
 Request URI:	https://secure.dev.30preprod.com/api/token
 Proxy:			<none>
@@ -17,7 +17,7 @@ Cookies:		<none>
 Multiparts:		<none>
 Body:			<none>
 HTTP/1.1 200 OK
-Date: Wed, 22 Oct 2025 04:48:50 GMT
+Date: Wed, 22 Oct 2025 05:35:39 GMT
 Content-Type: application/json;charset=UTF-8
 Transfer-Encoding: chunked
 Connection: keep-alive
@@ -34,7 +34,7 @@ X-Frame-Options: DENY
 Content-Language: en-US
 
 {
-    "access_token": "eyJraWQiOiJYOGw3MGhWWjI2R1AzUWwyIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiJHTE9GT1hfU0VDVVJFX0FVVEgiLCJhdWQiOiJhYmMtcGF5bWVudC1nYXRld2F5IiwibmJmIjoxNzYxMTA4NTMwLCJfdCI6IkNMSUVOVF9PTkxZIiwic2NvcGUiOlsic2VjdXJlOnByb3RlY3RlZCJdLCJpc3MiOiJodHRwczovL3NlY3VyZS5kZXYuMzBwcmVwcm9kLmNvbSIsImV4cCI6MTc2MTE5NDkzMCwiaWF0IjoxNzYxMTA4NTMwLCJqdGkiOiIxYjA3ZTE5OC05M2IzLTQyNDItODZjNi05NWJmMzc0MzkwZTQiLCJjbGllbnRfaWQiOiJHTE9GT1hfU0VDVVJFX0FVVEgiLCJhdXRob3JpdGllcyI6WyJ0cmFuc2FjdGlvbjpjbGllbnQtcmVhZCIsInBnLXBheW1lbnQ6Y2xpZW50LWNyZWF0ZSJdfQ.SxFxvQQj4dnvs-xQsnVJMj4wOjMzMENDRlesB-ZNwHEpNtpkqF8M4_qBQrsPlBse_KuM12PqROZsX5O_NUI5vLglrSzFvCZCUEStbhkerM_794TdQ66-BLvHKW-b-dQ2DohQXv-vCsDzpu5jCDs7LzdGeeWmvf6evx_-c10o6aALAzGU43Zk3k1FVM17BdsoPhBG8Wg8bA1gLJ500QlG4gMfJWZXpFrRWcwa37pm-f66hkApoWtx3vyFToZ7oegJ70uTNq0uZjg3tEjx_JjsUQN6AgzoIMjS0Lbcrffgs4rjzrZvHq06TS2dl6EDxCIykdToV0iuuPDSeMMBkwpckQ",
+    "access_token": "eyJraWQiOiJYOGw3MGhWWjI2R1AzUWwyIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiJHTE9GT1hfU0VDVVJFX0FVVEgiLCJhdWQiOiJhYmMtcGF5bWVudC1nYXRld2F5IiwibmJmIjoxNzYxMTExMzM5LCJfdCI6IkNMSUVOVF9PTkxZIiwic2NvcGUiOlsic2VjdXJlOnByb3RlY3RlZCJdLCJpc3MiOiJodHRwczovL3NlY3VyZS5kZXYuMzBwcmVwcm9kLmNvbSIsImV4cCI6MTc2MTE5NzczOSwiaWF0IjoxNzYxMTExMzM5LCJqdGkiOiI5NmU1N2ZjOS01MmI5LTQ1ZjUtYTk3MS05MGFhMmEyOWZjNDgiLCJjbGllbnRfaWQiOiJHTE9GT1hfU0VDVVJFX0FVVEgiLCJhdXRob3JpdGllcyI6WyJ0cmFuc2FjdGlvbjpjbGllbnQtcmVhZCIsInBnLXBheW1lbnQ6Y2xpZW50LWNyZWF0ZSJdfQ.aB_Ompb5w1yUrtttbHGttGZ7j6I6DbfEyRapV5V_enAkv5IaBmivV7KcBKB8iPDB_XoWNSO3CSjEAsd7UnNvaqLAfxMXoZYRWkHfGHPzf-BcVMSNVA8clbUXkq9ofTnL9JQoGh6VkutHxYIZA8q7Zx-xhDI0Kg2GBWM9OYq_AdeeSoU3SLrzf9JwxU1So_HAKWNp3Kx1caFROCE2fmMYce0NY63-l9jVG4ufuxb7tBDsuoGi0ljlVZFow1fyTLMKxLhSut0X3A95XUIGzS59WcVomrxUJzpp1C0x_Xkujiamlan-N_pot2JohGhWmIRjIanxISwRx8YOisSN9YFDpw",
     "token_type": "Bearer",
     "expires_in": 86399
 }

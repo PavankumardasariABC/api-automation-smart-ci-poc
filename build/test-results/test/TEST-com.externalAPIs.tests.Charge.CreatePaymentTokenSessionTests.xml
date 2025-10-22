@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.externalAPIs.tests.Charge.CreatePaymentTokenSessionTests" tests="1" skipped="0" failures="0" errors="0" timestamp="2025-10-22T04:49:18.540Z" hostname="corp-gwil01.abcfinancial.net" time="1.615">
+<testsuite name="com.externalAPIs.tests.Charge.CreatePaymentTokenSessionTests" tests="1" skipped="0" failures="0" errors="0" timestamp="2025-10-22T05:36:06.424Z" hostname="l115knel010721.abcfinancial.net" time="1.607">
   <properties/>
-  <testcase name="createPaymentTokenSession[0]({ownerType=PAYOR, consumerOrigin=https://dev.30preprod.com, metadata={limitedPrimaryPaymentMethod=ANY}, cvvRequired=false, consumerId=11f092f7-dbfc-7cd4-8232-cb5e67f264fc})" classname="com.externalAPIs.tests.Charge.CreatePaymentTokenSessionTests" time="1.615"/>
+  <testcase name="createPaymentTokenSession[0]({ownerType=PAYOR, consumerOrigin=https://dev.30preprod.com, metadata={limitedPrimaryPaymentMethod=ANY}, cvvRequired=false, consumerId=11f092f7-dbfc-7cd4-8232-cb5e67f264fc})" classname="com.externalAPIs.tests.Charge.CreatePaymentTokenSessionTests" time="1.607"/>
   <system-out><![CDATA[Request method:	POST
 Request URI:	https://dev.30preprod.com/api/ors/payment-token/session/add-token
 Proxy:			<none>
@@ -9,8 +9,8 @@ Request params:	<none>
 Query params:	<none>
 Form params:	<none>
 Path params:	<none>
-Headers:		Authorization=Bearer eyJraWQiOiIzcFI3ODNBOWFEdVpobHV1IiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiJHTE9GT1hfQVVUSCIsImF1ZCI6Im9yZGVyLXNlc3Npb24iLCJuYmYiOjE3NjExMDg1MjksIl90IjoiQ0xJRU5UX09OTFkiLCJzY29wZSI6WyJwbGF0Zm9ybTpwcm90ZWN0ZWQiXSwiaXNzIjoiaHR0cHM6Ly9kZXYuMzBwcmVwcm9kLmNvbSIsImV4cCI6MTc2MTE5NDkyOSwiaWF0IjoxNzYxMTA4NTI5LCJqdGkiOiI0M2FmZDRlYi1iNzIzLTQ4YzMtOTkzMS01ZDE5ZmQ3MDQzMGMiLCJjbGllbnRfaWQiOiJHTE9GT1hfQVVUSCIsImF1dGhvcml0aWVzIjpbInBheW1lbnQtdG9rZW4tc2Vzc2lvbjpjbGllbnQtY3JlYXRlIiwiY2xpZW50LXByb2ZpbGU6Y2xpZW50LWNyZWF0ZSJdfQ.BEX1Eaneyvstrge4KcJ4oI5O8pmmnIAh8dRcK2Hyo2iqQ5yktk21MgrOwfPRCpSGw2p-7xWWbvG6xlMyZe8IfcXmLilfkxNsq467RboQ3KOPJk4Z21xYzV66R5FF8B3HCarPuhHA32Xj4ID9udPq_aXW0N3OLW2RbTWg_bbbiSyBJZcWIROHNdaTIak1lySSTZNDSITy5cCd9FFk17V3DiclwoEmXIdEPwexb4aacn9ymYaQaPrRAUf-QLR0xb309a2jRZ5gC29cRJTpPlp-ZlUO2vIMpqqxPKlfzUEl4Z2NvHVKQdYFoJq2s8X6QhfafFhTGlzmXxE1edj7okwJdQ
-				ABCFS-TENANT-ID=6d299bf3-b437-48e5-8bca-089c6ee5bba3
+Headers:		Authorization=Bearer eyJraWQiOiIzcFI3ODNBOWFEdVpobHV1IiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiJHTE9GT1hfQVVUSCIsImF1ZCI6Im9yZGVyLXNlc3Npb24iLCJuYmYiOjE3NjExMTEzMzgsIl90IjoiQ0xJRU5UX09OTFkiLCJzY29wZSI6WyJwbGF0Zm9ybTpwcm90ZWN0ZWQiXSwiaXNzIjoiaHR0cHM6Ly9kZXYuMzBwcmVwcm9kLmNvbSIsImV4cCI6MTc2MTE5NzczOCwiaWF0IjoxNzYxMTExMzM4LCJqdGkiOiJlYzU0ZTA4YS0zZWU2LTQ1YWUtYjE0YS0xZWU2MWY4NzkwYjQiLCJjbGllbnRfaWQiOiJHTE9GT1hfQVVUSCIsImF1dGhvcml0aWVzIjpbInBheW1lbnQtdG9rZW4tc2Vzc2lvbjpjbGllbnQtY3JlYXRlIiwiY2xpZW50LXByb2ZpbGU6Y2xpZW50LWNyZWF0ZSJdfQ.tcei0pT6qgnEQCtlNmN2IhIsyCh6N75PxBWH_Ug7mrezPalIN_ZAZVtHL0G_oZE9-bTkT-NncSD0HoP1tR_BsEfLmq6-M04TUvM-E5BUUHYZ-LJop4b7R6RY4uAAjnYCTPkrXSMyb8gToNGRjabCG3y-U633vATZBeSTucYeatktyLLUL22dzRX0GawwoAyKZobmQicWodJ5Z5uYin1vRvSWbJoRVFpO45-gHLWn29ZWvuyPU44MCVnistWrz4xauv3EAZRNp6MsNBSfF5nUEM8tW8ivhCW2Dw7McB3b2Eio7C4QUwSJsvAdJoFG2FhCDdFZqiUZm8RNIuNgMtW1YQ
+				ABCFS-TENANT-ID=e505534c-5474-4d35-a368-d1537ab53439
 				User-Agent=Automation-Test
 				Accept=*/*
 				Content-Type=application/json
@@ -24,10 +24,10 @@ Body:
         "limitedPrimaryPaymentMethod": "ANY"
     },
     "cvvRequired": false,
-    "consumerId": "11f0af02-70d1-fb01-a3a5-ed3621fc3af8"
+    "consumerId": "11f0af08-fa75-36a2-a3a5-ed3621fc3af8"
 }
 HTTP/1.1 201 Created
-Date: Wed, 22 Oct 2025 04:49:20 GMT
+Date: Wed, 22 Oct 2025 05:36:08 GMT
 Content-Type: application/json
 Transfer-Encoding: chunked
 Connection: keep-alive
@@ -41,7 +41,7 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000; includeSubDomains
 X-Frame-Options: DENY
-Location: https://dev.30preprod.com/api/ors/payment-token/session/add-token/11f0af02-78d9-cbf5-b6b2-c3e97c5b82d2
+Location: https://dev.30preprod.com/api/ors/payment-token/session/add-token/11f0af09-028c-7103-a3a5-ed3621fc3af8
 
 {
     "metadata": {
@@ -52,19 +52,19 @@ Location: https://dev.30preprod.com/api/ors/payment-token/session/add-token/11f0
     "cvvRequired": false,
     "expirationType": "DYNAMIC",
     "p2pe": false,
-    "id": "11f0af02-78d9-cbf5-b6b2-c3e97c5b82d2",
+    "id": "11f0af09-028c-7103-a3a5-ed3621fc3af8",
     "mode": "ADD_TOKEN",
     "status": "CREATED",
     "statusCheckState": "NONE",
     "extensionCounter": 0,
-    "consumerId": "11f0af02-70d1-fb01-a3a5-ed3621fc3af8",
+    "consumerId": "11f0af08-fa75-36a2-a3a5-ed3621fc3af8",
     "nextAction": "NONE",
-    "organizationId": "6d299bf3-b437-48e5-8bca-089c6ee5bba3",
-    "expirationTime": "2025-10-22T05:00:00Z",
-    "token": "eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIxMWYwYWYwMi03OGQ5LWNiZjUtYjZiMi1jM2U5N2M1YjgyZDIiLCJhdWQiOiJFTVBMT1lFRSIsInRyYW5zZmVycmVkIjpmYWxzZSwiZXhwIjoxNzYxMTk0OTYwLCJpYXQiOjE3NjExMDg1NjB9.gHSuRS-zCMUld5woSqghsaNC464LCzmWLNQOJNpAfUbyKA9Ojk4iyCiO_T0ZGkbUOY4r3sBtHWZ5asw0zrbkFz84W2E6y1nsWDkVCUZ6ypy2oPkNI-5Jv9oz-xcHKIRTX-FUz91qfUl4pkmJkBXnvDYfEogV3EySUqx3cNWHwKfqAD9A1fXuGnz3kk0vPW7N6GfITCqiUROk02kWw_2lHcArLMMiLjs1aoN-D56yISbTbOWbbNRd04h_j2fcEeUrFQsClCevXVL3JB2r4OCIDNgMpd56gYgFfhj45CY6ig5-vqecEgh9KPsOLACmc3lJODSY67tbhSMKuy0QjjizEQ",
-    "url": "https://pay.dev.aws.abcfinancial.net/add-token?token=eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIxMWYwYWYwMi03OGQ5LWNiZjUtYjZiMi1jM2U5N2M1YjgyZDIiLCJhdWQiOiJFTVBMT1lFRSIsInRyYW5zZmVycmVkIjpmYWxzZSwiZXhwIjoxNzYxMTk0OTYwLCJpYXQiOjE3NjExMDg1NjB9.gHSuRS-zCMUld5woSqghsaNC464LCzmWLNQOJNpAfUbyKA9Ojk4iyCiO_T0ZGkbUOY4r3sBtHWZ5asw0zrbkFz84W2E6y1nsWDkVCUZ6ypy2oPkNI-5Jv9oz-xcHKIRTX-FUz91qfUl4pkmJkBXnvDYfEogV3EySUqx3cNWHwKfqAD9A1fXuGnz3kk0vPW7N6GfITCqiUROk02kWw_2lHcArLMMiLjs1aoN-D56yISbTbOWbbNRd04h_j2fcEeUrFQsClCevXVL3JB2r4OCIDNgMpd56gYgFfhj45CY6ig5-vqecEgh9KPsOLACmc3lJODSY67tbhSMKuy0QjjizEQ",
-    "modified": "2025-10-22T04:49:20Z",
-    "created": "2025-10-22T04:49:20Z",
+    "organizationId": "e505534c-5474-4d35-a368-d1537ab53439",
+    "expirationTime": "2025-10-22T05:47:00Z",
+    "token": "eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIxMWYwYWYwOS0wMjhjLTcxMDMtYTNhNS1lZDM2MjFmYzNhZjgiLCJhdWQiOiJFTVBMT1lFRSIsInRyYW5zZmVycmVkIjpmYWxzZSwiZXhwIjoxNzYxMTk3NzY4LCJpYXQiOjE3NjExMTEzNjh9.LUcOCPIJCnI8_qT4SrC4r2dSME0sFqA7Jc76BW4J9cCBQddHodOxyqEgyXq6SNT3uITFyLIuA4VvI2WX6saOmp_5BMDVd_lxIX1dH08jT2PrSFd8uJ5sab4qx5TEBSElDcz9yI-ms-_hYImL3Tvl5btDb6U9zsOJj7NhpbK9YhevMmGHw-Jfs7j5MkHEov8c6ZCui8cnwHsFoayQ_YnjLO6iSLId7xp-UsQlpnaXrpIJBo2_fO3NWKqmxs1x41BGVe9v4KbH6Y4NLKZtRpS5X1L-05Py5vYPcBU4Hz45Fgpp_iXpk1C0etuYQlAmNIewG2LyH21QAtLtIV8a-6Lwhg",
+    "url": "https://pay.dev.aws.abcfinancial.net/add-token?token=eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIxMWYwYWYwOS0wMjhjLTcxMDMtYTNhNS1lZDM2MjFmYzNhZjgiLCJhdWQiOiJFTVBMT1lFRSIsInRyYW5zZmVycmVkIjpmYWxzZSwiZXhwIjoxNzYxMTk3NzY4LCJpYXQiOjE3NjExMTEzNjh9.LUcOCPIJCnI8_qT4SrC4r2dSME0sFqA7Jc76BW4J9cCBQddHodOxyqEgyXq6SNT3uITFyLIuA4VvI2WX6saOmp_5BMDVd_lxIX1dH08jT2PrSFd8uJ5sab4qx5TEBSElDcz9yI-ms-_hYImL3Tvl5btDb6U9zsOJj7NhpbK9YhevMmGHw-Jfs7j5MkHEov8c6ZCui8cnwHsFoayQ_YnjLO6iSLId7xp-UsQlpnaXrpIJBo2_fO3NWKqmxs1x41BGVe9v4KbH6Y4NLKZtRpS5X1L-05Py5vYPcBU4Hz45Fgpp_iXpk1C0etuYQlAmNIewG2LyH21QAtLtIV8a-6Lwhg",
+    "modified": "2025-10-22T05:36:08Z",
+    "created": "2025-10-22T05:36:08Z",
     "ownerType": "PAYOR",
     "manualEntryAllowed": false
 }

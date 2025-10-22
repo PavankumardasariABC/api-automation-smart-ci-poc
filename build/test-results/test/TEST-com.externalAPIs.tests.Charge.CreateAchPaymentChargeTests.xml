@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.externalAPIs.tests.Charge.CreateAchPaymentChargeTests" tests="1" skipped="0" failures="0" errors="0" timestamp="2025-10-22T04:49:20.163Z" hostname="corp-gwil01.abcfinancial.net" time="1.629">
+<testsuite name="com.externalAPIs.tests.Charge.CreateAchPaymentChargeTests" tests="1" skipped="0" failures="0" errors="0" timestamp="2025-10-22T05:36:08.033Z" hostname="l115knel010721.abcfinancial.net" time="1.706">
   <properties/>
-  <testcase name="createAchPaymentCharge[0]({amount=2300, tokenId=11f092f8-1139-f15c-91b9-ef36cde23978, relatedReferenceId=f58c6195-16bb-42e4-b592-9bcfdc6fff7e, terminalId=11f0af02-77e3-3718-ae14-415e2af402ed, descriptor=success webhook test - 1761108560162, effectiveDate=2026-09-16, referenceId=e41d823e-1ad3-4c88-a90b-fd852b7daec3})" classname="com.externalAPIs.tests.Charge.CreateAchPaymentChargeTests" time="1.629"/>
+  <testcase name="createAchPaymentCharge[0]({amount=2300, tokenId=11f092f8-1139-f15c-91b9-ef36cde23978, relatedReferenceId=f58c6195-16bb-42e4-b592-9bcfdc6fff7e, terminalId=11f0af09-0197-139b-ae14-415e2af402ed, descriptor=success webhook test - 1761111368033, effectiveDate=2026-09-16, referenceId=4c79876c-508c-4ea8-b19e-72a87faf7d20})" classname="com.externalAPIs.tests.Charge.CreateAchPaymentChargeTests" time="1.706"/>
   <system-out><![CDATA[]]>&#x1f510;<![CDATA[ Reusing cached GlofoxSecureClientToken
 Request method:	POST
 Request URI:	https://secure.dev.30preprod.com/api/abcpg/payments/charge
@@ -10,7 +10,7 @@ Request params:	<none>
 Query params:	<none>
 Form params:	<none>
 Path params:	<none>
-Headers:		Authorization=Bearer eyJraWQiOiJYOGw3MGhWWjI2R1AzUWwyIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiJHTE9GT1hfU0VDVVJFX0FVVEgiLCJhdWQiOiJhYmMtcGF5bWVudC1nYXRld2F5IiwibmJmIjoxNzYxMTA4NTMwLCJfdCI6IkNMSUVOVF9PTkxZIiwic2NvcGUiOlsic2VjdXJlOnByb3RlY3RlZCJdLCJpc3MiOiJodHRwczovL3NlY3VyZS5kZXYuMzBwcmVwcm9kLmNvbSIsImV4cCI6MTc2MTE5NDkzMCwiaWF0IjoxNzYxMTA4NTMwLCJqdGkiOiIxYjA3ZTE5OC05M2IzLTQyNDItODZjNi05NWJmMzc0MzkwZTQiLCJjbGllbnRfaWQiOiJHTE9GT1hfU0VDVVJFX0FVVEgiLCJhdXRob3JpdGllcyI6WyJ0cmFuc2FjdGlvbjpjbGllbnQtcmVhZCIsInBnLXBheW1lbnQ6Y2xpZW50LWNyZWF0ZSJdfQ.SxFxvQQj4dnvs-xQsnVJMj4wOjMzMENDRlesB-ZNwHEpNtpkqF8M4_qBQrsPlBse_KuM12PqROZsX5O_NUI5vLglrSzFvCZCUEStbhkerM_794TdQ66-BLvHKW-b-dQ2DohQXv-vCsDzpu5jCDs7LzdGeeWmvf6evx_-c10o6aALAzGU43Zk3k1FVM17BdsoPhBG8Wg8bA1gLJ500QlG4gMfJWZXpFrRWcwa37pm-f66hkApoWtx3vyFToZ7oegJ70uTNq0uZjg3tEjx_JjsUQN6AgzoIMjS0Lbcrffgs4rjzrZvHq06TS2dl6EDxCIykdToV0iuuPDSeMMBkwpckQ
+Headers:		Authorization=Bearer eyJraWQiOiJYOGw3MGhWWjI2R1AzUWwyIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiJHTE9GT1hfU0VDVVJFX0FVVEgiLCJhdWQiOiJhYmMtcGF5bWVudC1nYXRld2F5IiwibmJmIjoxNzYxMTExMzM5LCJfdCI6IkNMSUVOVF9PTkxZIiwic2NvcGUiOlsic2VjdXJlOnByb3RlY3RlZCJdLCJpc3MiOiJodHRwczovL3NlY3VyZS5kZXYuMzBwcmVwcm9kLmNvbSIsImV4cCI6MTc2MTE5NzczOSwiaWF0IjoxNzYxMTExMzM5LCJqdGkiOiI5NmU1N2ZjOS01MmI5LTQ1ZjUtYTk3MS05MGFhMmEyOWZjNDgiLCJjbGllbnRfaWQiOiJHTE9GT1hfU0VDVVJFX0FVVEgiLCJhdXRob3JpdGllcyI6WyJ0cmFuc2FjdGlvbjpjbGllbnQtcmVhZCIsInBnLXBheW1lbnQ6Y2xpZW50LWNyZWF0ZSJdfQ.aB_Ompb5w1yUrtttbHGttGZ7j6I6DbfEyRapV5V_enAkv5IaBmivV7KcBKB8iPDB_XoWNSO3CSjEAsd7UnNvaqLAfxMXoZYRWkHfGHPzf-BcVMSNVA8clbUXkq9ofTnL9JQoGh6VkutHxYIZA8q7Zx-xhDI0Kg2GBWM9OYq_AdeeSoU3SLrzf9JwxU1So_HAKWNp3Kx1caFROCE2fmMYce0NY63-l9jVG4ufuxb7tBDsuoGi0ljlVZFow1fyTLMKxLhSut0X3A95XUIGzS59WcVomrxUJzpp1C0x_Xkujiamlan-N_pot2JohGhWmIRjIanxISwRx8YOisSN9YFDpw
 				ABCFS-TENANT-ID=41424320-436f-6d70-616e-792020202020
 				User-Agent=Automation-Test
 				Accept=*/*
@@ -24,15 +24,15 @@ Body:
             "amount": "2300",
             "tokenId": "11f092f8-1139-f15c-91b9-ef36cde23978",
             "relatedReferenceId": "f58c6195-16bb-42e4-b592-9bcfdc6fff7e",
-            "terminalId": "11f0af02-77e3-3718-ae14-415e2af402ed",
-            "descriptor": "success webhook test - 1761108560162",
+            "terminalId": "11f0af09-0197-139b-ae14-415e2af402ed",
+            "descriptor": "success webhook test - 1761111368033",
             "effectiveDate": "2026-09-16",
-            "referenceId": "e41d823e-1ad3-4c88-a90b-fd852b7daec3"
+            "referenceId": "4c79876c-508c-4ea8-b19e-72a87faf7d20"
         }
     ]
 }
 HTTP/1.1 200 OK
-Date: Wed, 22 Oct 2025 04:49:21 GMT
+Date: Wed, 22 Oct 2025 05:36:09 GMT
 Content-Type: application/json
 Transfer-Encoding: chunked
 Connection: keep-alive
@@ -46,21 +46,21 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000; includeSubDomains
 X-Frame-Options: DENY
-Location: https://secure.dev.30preprod.com/abcpg/payments/charge/11f0af02-79d1-4a85-ae14-415e2af402ed
+Location: https://secure.dev.30preprod.com/abcpg/payments/charge/11f0af09-0393-f512-ae14-415e2af402ed
 
 {
     "responses": [
         {
             "amount": 2300,
-            "referenceId": "e41d823e-1ad3-4c88-a90b-fd852b7daec3",
+            "referenceId": "4c79876c-508c-4ea8-b19e-72a87faf7d20",
             "tokenId": "11f092f8-1139-f15c-91b9-ef36cde23978",
-            "terminalId": "11f0af02-77e3-3718-ae14-415e2af402ed",
-            "descriptor": "success webhook test - 1761108560162",
+            "terminalId": "11f0af09-0197-139b-ae14-415e2af402ed",
+            "descriptor": "success webhook test - 1761111368033",
             "metadata": {
                 "uniqueTransactionId": "DV2529500000001",
                 "secCode": "PPD"
             },
-            "transactionId": "11f0af02-79d5-6936-ae14-415e2af402ed",
+            "transactionId": "11f0af09-0397-2963-ae14-415e2af402ed",
             "status": "SUCCESS"
         }
     ]

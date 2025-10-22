@@ -55,7 +55,7 @@ tasks.register('generateAllureReport') {
     doLast {
         def resultsDir = file("$buildDir/allure-results")
         def outputDir  = file("$projectDir/reports/current")
-        def timestamp  = new Date().format("yyyy-MM-dd_HHmmss")
+        def timestamp  = new Date().format("yyyy-MM-dd_HHmmss_SSS")
 
         println "\n🧹 Cleaning old report folders..."
         if (outputDir.exists()) outputDir.deleteDir()
@@ -91,7 +91,7 @@ tasks.register('generateAllureReport') {
             }
 
             ///////////////////////////////////////////////////////////
-            // 🧩 EMBED JSON DATA FOR OFFLINE ACCESS (New Enhancement)
+            // 🧩 EMBED JSON DATA FOR OFFLINE ACCESS (Final Version)
             ///////////////////////////////////////////////////////////
             try {
                 def dataDir = new File("${outputDir}/data")
@@ -107,13 +107,32 @@ tasks.register('generateAllureReport') {
                     }
 
                     def jsonContent = new groovy.json.JsonBuilder(jsonMap).toPrettyString()
-                    def htmlContent = indexFile.text.replace(
-                            '</body>',
-                            "<script>window.embeddedAllureData = ${jsonContent};</script>\n</body>"
-                    )
+
+                    def scriptBlock = """
+<script>
+  // 🧩 Offline Allure Loader: enables Allure report to work without server
+  window.embeddedAllureData = ${jsonContent};
+  const originalFetch = window.fetch;
+  window.fetch = (url) => {
+    if (url && url.includes('/data/')) {
+      const file = url.split('/').pop();
+      const data = window.embeddedAllureData[file];
+      if (data) {
+        return Promise.resolve({
+          json: () => Promise.resolve(JSON.parse(data))
+        });
+      }
+    }
+    return originalFetch(url);
+  };
+</script>
+</body>
+"""
+
+                    def htmlContent = indexFile.text.replace('</body>', scriptBlock)
                     indexFile.text = htmlContent
 
-                    println "✅ Embedded ${dataFiles.size()} JSON files into index.html"
+                    println "✅ Embedded ${dataFiles.size()} JSON files and added fetch override for offline mode."
                 } else {
                     println "⚠️ Skipping embedding: index.html or data folder missing."
                 }
