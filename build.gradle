@@ -22,7 +22,7 @@ ext {
 }
 
 dependencies {
-    // ✅ Core Dependencies
+    // ✅ Core Libraries
     implementation "io.rest-assured:rest-assured:${restAssuredVersion}"
     implementation "io.rest-assured:json-path:${restAssuredVersion}"
     implementation "io.qameta.allure:allure-testng:${allureVersion}"
@@ -39,11 +39,11 @@ dependencies {
 }
 
 /////////////////////////////////////////////////////////////
-// ✅ SAFARI-SAFE OFFLINE ALLURE REPORT (CI + LOCAL)
+// ✅ SAFARI-SAFE OFFLINE ALLURE REPORT (UTF-8 Compatible)
 /////////////////////////////////////////////////////////////
 tasks.register('generateAllureReport') {
     group = "reporting"
-    description = "Generate offline Allure report with embedded JSON (Safari-safe)"
+    description = "Generate offline Allure report with embedded JSON (Safari-safe + UTF-8)"
 
     doLast {
         def resultsDir = new File("${project.projectDir}/build/allure-results")
@@ -69,7 +69,7 @@ tasks.register('generateAllureReport') {
             allureCmd = "${project.projectDir}/allure-2.27.0/bin/allure"
         }
 
-        println "⚙️ Generating Allure report using CLI..."
+        println "⚙️ Generating Allure report..."
         def cmd = "${allureCmd} generate '${resultsDir}' --clean -o '${outputDir}'"
         def process = ["bash", "-c", cmd].execute()
         process.waitForProcessOutput(System.out, System.err)
@@ -80,39 +80,35 @@ tasks.register('generateAllureReport') {
         }
         println "✅ Allure report generated → ${outputDir}/index.html"
 
-        // 🧩 Base64 embed JSONs for Safari-safe HTML
+        // 🧩 Base64-embed JSONs (UTF-8 Safe)
         try {
-            def dataDir = new File("${outputDir}/data")
-            def widgetDir = new File("${outputDir}/widgets")
+            def dataDirs = [
+                    new File("${outputDir}/data"),
+                    new File("${outputDir}/widgets")
+            ]
             def indexFile = new File("${outputDir}/index.html")
-
             if (!indexFile.exists()) {
                 println "⚠️ Missing index.html — skipping embedding."
                 return
             }
 
-            def allJsonFiles = []
-            [dataDir, widgetDir].each { dir ->
-                if (dir.exists()) {
-                    allJsonFiles.addAll(fileTree(dir: dir, include: '**/*.json').files)
-                }
-            }
+            def jsonFiles = []
+            dataDirs.each { dir -> if (dir.exists()) jsonFiles += fileTree(dir: dir, include: '**/*.json').files }
 
-            if (allJsonFiles.isEmpty()) {
-                println "⚠️ No JSON files found to embed — report may appear blank!"
+            if (jsonFiles.isEmpty()) {
+                println "⚠️ No JSON files found — report may appear blank!"
                 return
             }
 
-            println "🧩 Embedding ${allJsonFiles.size()} JSON files..."
+            println "🧩 Embedding ${jsonFiles.size()} JSON files..."
             def jsonMap = [:]
-            allJsonFiles.each { f ->
-                jsonMap[f.name] = f.getText('UTF-8').bytes.encodeBase64().toString()
-            }
+            jsonFiles.each { f -> jsonMap[f.name] = f.getText('UTF-8').bytes.encodeBase64().toString() }
 
             def jsonContent = new groovy.json.JsonBuilder(jsonMap).toPrettyString()
             def finalHtml = new File("${outputDir}/Allure_Offline_Single_Safe.html")
             def indexHtml = indexFile.getText('UTF-8')
 
+            // ✅ UTF-8 safe decoding using TextDecoder
             def embeddedData = """
 <script id='embedded-json' type='application/json'>
 ${jsonContent}
@@ -128,7 +124,9 @@ ${jsonContent}
       const file=url.split('/').pop();
       const b64=data[file];
       if(b64){
-        const decoded=atob(b64);
+        const decoded = new TextDecoder('utf-8').decode(
+            Uint8Array.from(atob(b64), c => c.charCodeAt(0))
+        );
         return Promise.resolve({
           ok:true,status:200,
           json:async()=>JSON.parse(decoded),
@@ -160,9 +158,7 @@ ${jsonContent}
         println "🗂 Archived → reports/history/${timestamp}"
 
         if (!isCI && System.getProperty("os.name").toLowerCase().contains("mac")) {
-            try {
-                ["bash", "-c", "open '${outputDir}/Allure_Offline_Single_Safe.html'"].execute()
-            } catch (ignored) {}
+            ["bash", "-c", "open '${outputDir}/Allure_Offline_Single_Safe.html'"].execute()
         }
     }
 }
@@ -206,9 +202,6 @@ allure {
     }
 }
 
-/////////////////////////////////////////////////////////////
-// ✅ ENVIRONMENT INFO
-/////////////////////////////////////////////////////////////
 tasks.register('printEnv') {
     doLast {
         println "\n===== ENVIRONMENT INFO ====="

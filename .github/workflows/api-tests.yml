@@ -1,4 +1,3 @@
-# Smart API Automation Workflow
 name: 🚀 API Automation CI
 
 on:
@@ -9,7 +8,7 @@ on:
       branch:
         description: "Select branch to run tests"
         required: true
-        default: "feature/github-actions-poc-"   # 👈 updated with dash
+        default: "feature/github-actions-poc-"
       test_group:
         description: "Test group (Sanity, Integration, Regression, All)"
         required: true
@@ -25,25 +24,59 @@ permissions:
 jobs:
   api-tests:
     runs-on: self-hosted
+    env:
+      TZ: "Asia/Kolkata"
+      ALLURE_RESULTS_DIR: build/allure-results
+      ALLURE_REPORT_DIR: reports/current
 
     steps:
+      # -----------------------------------------
+      # 1️⃣ Checkout Repository
+      # -----------------------------------------
       - name: 📥 Checkout repository
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.inputs.branch || github.ref_name || 'feature/github-actions-poc-' }}  # 👈 updated with dash
+          ref: ${{ github.event.inputs.branch || github.ref_name }}
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      # -----------------------------------------
+      # 2️⃣ Setup JDK
+      # -----------------------------------------
       - name: ☕ Setup JDK
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '21'
 
+      # -----------------------------------------
+      # 3️⃣ Clean Gradle cache
+      # -----------------------------------------
+      - name: 🧹 Clean Gradle cache
+        run: |
+          rm -rf ~/.gradle/caches/build-cache-* ~/.gradle/daemon/* || true
+
+      # -----------------------------------------
+      # 4️⃣ Install Allure CLI (macOS-safe)
+      # -----------------------------------------
+      - name: 🧩 Install Allure CLI (non-sudo)
+        run: |
+          echo "📦 Installing Allure CLI (non-sudo)..."
+          BASE_DIR="${{ github.workspace }}/allure-cli"
+          mkdir -p "$BASE_DIR"
+          wget -q https://github.com/allure-framework/allure2/releases/download/2.27.0/allure-2.27.0.zip -O allure.zip
+          unzip -q allure.zip -d "$BASE_DIR"
+          chmod +x "$BASE_DIR/allure-2.27.0/bin/allure"
+          echo "$BASE_DIR/allure-2.27.0/bin" >> $GITHUB_PATH
+          "$BASE_DIR/allure-2.27.0/bin/allure" --version
+
+      # -----------------------------------------
+      # 5️⃣ Smart Test Selection
+      # -----------------------------------------
       - name: 🧠 Smart Test Selection
         id: smart
         run: |
           echo "Detecting changed test files..."
-          CHANGED=$(git diff --name-only origin/feature/github-actions-poc-...HEAD | grep 'src/test/java' || true)  # 👈 updated with dash
+          CHANGED=$(git diff --name-only origin/feature/github-actions-poc-...HEAD | grep 'src/test/java' || true)
           if [ -n "$CHANGED" ]; then
             echo "Changed test files:"
             echo "$CHANGED"
@@ -52,29 +85,58 @@ jobs:
             echo "No specific changes; running default group."
             echo "group=${{ github.event.inputs.test_group }}" >> $GITHUB_OUTPUT
           fi
+
+      # -----------------------------------------
+      # 6️⃣ Run Tests
+      # -----------------------------------------
       - name: 🧪 Run Tests
         run: |
+          echo "🧪 Starting Test Execution..."
           if [ "${{ github.event.inputs.test_class }}" != "" ]; then
             echo "🎯 Running specific test class: ${{ github.event.inputs.test_class }}"
-            ./gradlew clean test --tests "${{ github.event.inputs.test_class }}"
+            ./gradlew --no-daemon clean test --tests "${{ github.event.inputs.test_class }}" --info
           elif [ "${{ github.event.inputs.test_group }}" != "" ] && [ "${{ github.event.inputs.test_group }}" != "All" ]; then
             echo "🏷️ Running specific TestNG group: ${{ github.event.inputs.test_group }}"
-            ./gradlew clean test -Dgroups=${{ github.event.inputs.test_group }}
+            ./gradlew --no-daemon clean test -Dgroups=${{ github.event.inputs.test_group }} --info
           else
             echo "🧩 Running full regression suite..."
-            ./gradlew clean test
+            ./gradlew --no-daemon clean test --info
           fi
 
-
+      # -----------------------------------------
+      # 7️⃣ Generate Allure Report (Safari Safe)
+      # -----------------------------------------
       - name: 📊 Generate Allure Report
-        run: ./gradlew allureReport
+        run: ./gradlew --no-daemon generateAllureReport --info
 
-      - name: 🚨 Upload Allure Artifacts
+      # -----------------------------------------
+      # 8️⃣ Verify Allure Results
+      # -----------------------------------------
+      - name: 🕵️ Verify Allure Results
+        if: always()
+        run: |
+          echo "🔎 Checking Allure results directory..."
+          if [ -d "build/allure-results" ]; then
+            echo "✅ Found allure-results:"
+            find build/allure-results -name "*.json" | wc -l
+          else
+            echo "❌ No allure-results found!"
+          fi
+
+      # -----------------------------------------
+      # 9️⃣ Upload Complete Report Folder
+      # -----------------------------------------
+      - name: 📦 Upload Allure Report Folder
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: allure-results
-          path: reports/current
+          name: Allure-Full-Report-${{ github.run_number }}
+          path: reports/current/
+          retention-days: 10
 
+      # -----------------------------------------
+      # 🔟 Comment on PR
+      # -----------------------------------------
       - name: 💬 Comment on PR
         if: ${{ github.event_name == 'pull_request' }}
         uses: actions/github-script@v7
@@ -86,6 +148,7 @@ jobs:
             ✅ API tests executed for this PR
             - **Branch:** ${{ github.ref_name }}
             - **Group:** ${{ github.event.inputs.test_group || 'All' }}
+            - 📊 Allure report uploaded as artifact: Allure-Full-Report-${{ github.run_number }}
             `;
             await github.rest.issues.createComment({
               issue_number: prNumber,
@@ -93,8 +156,12 @@ jobs:
               repo: context.repo.repo,
               body: message
             });
+
+      # -----------------------------------------
+      # 11️⃣ Fail Build on Test Failure
+      # -----------------------------------------
       - name: 🛑 Fail Build on Test Failure
         if: failure()
         run: |
-          echo "❌ Tests failed! Build will be marked as failed."
+          echo "❌ Tests failed! Marking build as failed."
           exit 1
