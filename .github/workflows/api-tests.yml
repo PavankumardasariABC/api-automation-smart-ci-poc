@@ -41,14 +41,14 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       # -----------------------------------------
-      # 2️⃣ Setup JDK (No Heavy Gradle Cache)
+      # 2️⃣ Setup JDK (No Heavy Cache)
       # -----------------------------------------
       - name: ☕ Setup JDK
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '21'
-          cache: minimal
+      # ⚡ cache removed → faster runs & no tar delay
 
       # -----------------------------------------
       # 3️⃣ Quick Gradle Cache Cleanup
@@ -99,7 +99,7 @@ jobs:
           echo "✅ Single-file report ready → reports/current/Allure_Offline_Single.html"
 
       # -----------------------------------------
-      # 7️⃣ Upload Only Single HTML Artifact
+      # 7️⃣ Upload Single HTML Artifact
       # -----------------------------------------
       - name: 📦 Upload Offline Report
         if: always()
