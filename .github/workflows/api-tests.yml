@@ -19,7 +19,7 @@ on:
         default: ""
 
 permissions:
-  contents: read
+  contents: write   # 👈 changed to write (needed for gh-pages push)
 
 jobs:
   api-tests:
@@ -56,7 +56,7 @@ jobs:
           rm -rf ~/.gradle/caches/build-cache-* ~/.gradle/daemon/* || true
 
       # -----------------------------------------
-      # 4️⃣ Install Allure CLI (macOS-safe)
+      # 4️⃣ Install Allure CLI (cross-platform)
       # -----------------------------------------
       - name: 🧩 Install Allure CLI (cross-platform)
         run: |
@@ -75,7 +75,6 @@ jobs:
 
           echo "✅ Allure CLI installed successfully"
           "$BASE_DIR/allure-2.27.0/bin/allure" --version
-      
 
       # -----------------------------------------
       # 5️⃣ Smart Test Selection
@@ -143,7 +142,20 @@ jobs:
           retention-days: 10
 
       # -----------------------------------------
-      # 🔟 Comment on PR
+      # 🔟 Publish to GitHub Pages (Live Allure Report)
+      # -----------------------------------------
+      - name: 🌐 Publish Allure Report to GitHub Pages
+        if: always()
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: reports/current
+          destination_dir: reports/latest
+          keep_files: true
+          commit_message: "📊 Publish Allure Report #${{ github.run_number }}"
+
+      # -----------------------------------------
+      # 11️⃣ Comment on PR
       # -----------------------------------------
       - name: 💬 Comment on PR
         if: ${{ github.event_name == 'pull_request' }}
@@ -156,7 +168,8 @@ jobs:
             ✅ API tests executed for this PR
             - **Branch:** ${{ github.ref_name }}
             - **Group:** ${{ github.event.inputs.test_group || 'All' }}
-            - 📊 Allure report uploaded as artifact: Allure-Full-Report-${{ github.run_number }}
+            - 📊 [View Allure Report (Live)](https://pavankumardasariabc.github.io/api-automation-smart-ci-poc/reports/latest/)
+            - 💾 Artifact: Allure-Full-Report-${{ github.run_number }}
             `;
             await github.rest.issues.createComment({
               issue_number: prNumber,
@@ -166,7 +179,7 @@ jobs:
             });
 
       # -----------------------------------------
-      # 11️⃣ Fail Build on Test Failure
+      # 12️⃣ Fail Build on Test Failure
       # -----------------------------------------
       - name: 🛑 Fail Build on Test Failure
         if: failure()
