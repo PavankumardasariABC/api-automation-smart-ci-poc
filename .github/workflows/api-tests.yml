@@ -59,21 +59,20 @@ jobs:
           rm -rf ~/.gradle/daemon/* || true
 
       # -----------------------------------------
-      # 3️⃣.5 🧩 Install Allure CLI (Required for report generation)
+      # 4️⃣ Install Allure CLI (Non-sudo for self-hosted)
       # -----------------------------------------
-      - name: 🧩 Install Allure CLI
+      - name: 🧩 Install Allure CLI (Non-sudo)
         run: |
-          echo "Installing Allure CLI..."
-          sudo apt-get update -y
-          sudo apt-get install -y wget unzip default-jdk
-          wget https://github.com/allure-framework/allure2/releases/download/2.27.0/allure-2.27.0.zip -O allure.zip
-          unzip -q allure.zip -d /opt/
-          sudo mv /opt/allure-2.27.0 /opt/allure
-          sudo ln -sf /opt/allure/bin/allure /usr/bin/allure
-          allure --version
+          echo "📦 Installing Allure CLI (non-sudo)..."
+          mkdir -p /home/runner/work/allure-cli
+          wget -q https://github.com/allure-framework/allure2/releases/download/2.27.0/allure-2.27.0.zip -O allure.zip
+          unzip -q allure.zip -d /home/runner/work/allure-cli/
+          chmod +x /home/runner/work/allure-cli/allure-2.27.0/bin/allure
+          echo "/home/runner/work/allure-cli/allure-2.27.0/bin" >> $GITHUB_PATH
+          /home/runner/work/allure-cli/allure-2.27.0/bin/allure --version
 
       # -----------------------------------------
-      # 4️⃣ Run Tests and Generate Allure Report
+      # 5️⃣ Run Tests and Generate Allure Report
       # -----------------------------------------
       - name: 🧪 Run Tests & Generate Allure Report
         run: |
@@ -93,7 +92,7 @@ jobs:
           ./gradlew --no-daemon generateAllureReport --info
 
       # -----------------------------------------
-      # 5️⃣ Verify Allure Results Exist
+      # 6️⃣ Verify Allure Results Existence
       # -----------------------------------------
       - name: 🕵️ Verify Allure Results Existence
         if: always()
@@ -107,7 +106,7 @@ jobs:
           fi
 
       # -----------------------------------------
-      # 6️⃣ Upload Safari-safe Allure Report
+      # 7️⃣ Upload Safari-safe Allure Report
       # -----------------------------------------
       - name: 📦 Upload Safari-safe Allure Report
         if: always()
@@ -118,7 +117,7 @@ jobs:
           retention-days: 10
 
       # -----------------------------------------
-      # 7️⃣ Fail Build on Test Failure
+      # 8️⃣ Fail Build on Test Failure
       # -----------------------------------------
       - name: 🛑 Fail Build on Test Failure
         if: failure()
