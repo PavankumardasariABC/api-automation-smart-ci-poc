@@ -19,7 +19,7 @@ on:
         default: ""
 
 permissions:
-  contents: write   # 👈 changed to write (needed for gh-pages push)
+  contents: write
 
 jobs:
   api-tests:
@@ -28,6 +28,8 @@ jobs:
       TZ: "Asia/Kolkata"
       ALLURE_RESULTS_DIR: build/allure-results
       ALLURE_REPORT_DIR: reports/current
+      AUTH_USERNAME: ${{ secrets.AUTH_USERNAME }}
+      AUTH_PASSWORD: ${{ secrets.AUTH_PASSWORD }}
 
     steps:
       # -----------------------------------------
@@ -40,7 +42,20 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       # -----------------------------------------
-      # 2️⃣ Setup JDK
+      # 2️⃣ Cache Gradle dependencies
+      # -----------------------------------------
+      - name: ⚡ Cache Gradle dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      # -----------------------------------------
+      # 3️⃣ Setup JDK
       # -----------------------------------------
       - name: ☕ Setup JDK
         uses: actions/setup-java@v4
@@ -49,32 +64,22 @@ jobs:
           java-version: '21'
 
       # -----------------------------------------
-      # 3️⃣ Clean Gradle cache
+      # 4️⃣ Install Allure CLI (if not present)
       # -----------------------------------------
-      - name: 🧹 Clean Gradle cache
+      - name: 🧩 Install Allure CLI (cached)
         run: |
-          rm -rf ~/.gradle/caches/build-cache-* ~/.gradle/daemon/* || true
-
-      # -----------------------------------------
-      # 4️⃣ Install Allure CLI (cross-platform)
-      # -----------------------------------------
-      - name: 🧩 Install Allure CLI (cross-platform)
-        run: |
-          echo "📦 Installing Allure CLI (cross-platform)..."
           BASE_DIR="${{ github.workspace }}/allure-cli"
-          mkdir -p "$BASE_DIR"
-
-          echo "⬇️ Downloading Allure 2.27.0..."
-          curl -L -o allure.zip https://github.com/allure-framework/allure2/releases/download/2.27.0/allure-2.27.0.zip
-
-          echo "📦 Extracting..."
-          unzip -q allure.zip -d "$BASE_DIR"
-
-          chmod +x "$BASE_DIR/allure-2.27.0/bin/allure"
+          if [ ! -d "$BASE_DIR/allure-2.27.0" ]; then
+            echo "⬇️ Installing Allure CLI..."
+            mkdir -p "$BASE_DIR"
+            curl -L -o "$BASE_DIR/allure.zip" https://github.com/allure-framework/allure2/releases/download/2.27.0/allure-2.27.0.zip
+            unzip -q "$BASE_DIR/allure.zip" -d "$BASE_DIR"
+            chmod +x "$BASE_DIR/allure-2.27.0/bin/allure"
+          else
+            echo "✅ Allure CLI already cached"
+          fi
           echo "$BASE_DIR/allure-2.27.0/bin" >> $GITHUB_PATH
-
-          echo "✅ Allure CLI installed successfully"
-          "$BASE_DIR/allure-2.27.0/bin/allure" --version
+          allure --version
 
       # -----------------------------------------
       # 5️⃣ Smart Test Selection
@@ -101,20 +106,20 @@ jobs:
           echo "🧪 Starting Test Execution..."
           if [ "${{ github.event.inputs.test_class }}" != "" ]; then
             echo "🎯 Running specific test class: ${{ github.event.inputs.test_class }}"
-            ./gradlew --no-daemon clean test --tests "${{ github.event.inputs.test_class }}" --info
+            ./gradlew clean test --tests "${{ github.event.inputs.test_class }}" --info
           elif [ "${{ github.event.inputs.test_group }}" != "" ] && [ "${{ github.event.inputs.test_group }}" != "All" ]; then
             echo "🏷️ Running specific TestNG group: ${{ github.event.inputs.test_group }}"
-            ./gradlew --no-daemon clean test -Dgroups=${{ github.event.inputs.test_group }} --info
+            ./gradlew clean test -Dgroups=${{ github.event.inputs.test_group }} --info
           else
             echo "🧩 Running full regression suite..."
-            ./gradlew --no-daemon clean test --info
+            ./gradlew clean test --info
           fi
 
       # -----------------------------------------
-      # 7️⃣ Generate Allure Report (Safari Safe)
+      # 7️⃣ Generate Allure Report
       # -----------------------------------------
       - name: 📊 Generate Allure Report
-        run: ./gradlew --no-daemon generateAllureReport --info
+        run: ./gradlew generateAllureReport --info
 
       # -----------------------------------------
       # 8️⃣ Verify Allure Results
@@ -122,7 +127,6 @@ jobs:
       - name: 🕵️ Verify Allure Results
         if: always()
         run: |
-          echo "🔎 Checking Allure results directory..."
           if [ -d "build/allure-results" ]; then
             echo "✅ Found allure-results:"
             find build/allure-results -name "*.json" | wc -l
@@ -131,7 +135,7 @@ jobs:
           fi
 
       # -----------------------------------------
-      # 9️⃣ Upload Complete Report Folder
+      # 9️⃣ Upload Report Artifact
       # -----------------------------------------
       - name: 📦 Upload Allure Report Folder
         if: always()
@@ -142,7 +146,7 @@ jobs:
           retention-days: 10
 
       # -----------------------------------------
-      # 🔟 Publish to GitHub Pages (Live Allure Report)
+      # 🔟 Publish to GitHub Pages
       # -----------------------------------------
       - name: 🌐 Publish Allure Report to GitHub Pages
         if: always()
@@ -183,6 +187,4 @@ jobs:
       # -----------------------------------------
       - name: 🛑 Fail Build on Test Failure
         if: failure()
-        run: |
-          echo "❌ Tests failed! Marking build as failed."
-          exit 1
+        run: exit 1
