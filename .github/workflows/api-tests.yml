@@ -1,4 +1,4 @@
-# Smart API Automation Workflow
+# 🚀 Smart API Automation CI Workflow
 name: 🚀 API Automation CI
 
 on:
@@ -9,7 +9,7 @@ on:
       branch:
         description: "Select branch to run tests"
         required: true
-        default: "feature/github-actions-poc-"   # 👈 branch with dash
+        default: "feature/github-actions-poc-"
       test_group:
         description: "Test group (Sanity, Integration, Regression, All)"
         required: true
@@ -24,21 +24,24 @@ permissions:
 
 jobs:
   api-tests:
-    runs-on: self-hosted  # ✅ executes inside your internal network runner
+    runs-on: self-hosted   # ✅ Executes on your internal macOS runner
 
     steps:
+      # 🧩 Checkout source code
       - name: 📥 Checkout repository
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.inputs.branch || github.ref_name || 'feature/github-actions-poc-' }}
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      # ☕ Setup Java environment
       - name: ☕ Setup JDK
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '21'
 
+      # ⚡ Cache Gradle dependencies
       - name: 🧱 Cache Gradle dependencies
         uses: actions/cache@v4
         with:
@@ -49,13 +52,14 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
+      # 🧠 Smart Test Selector
       - name: 🧠 Smart Test Selection
         id: smart
         run: |
           echo "Detecting changed test files..."
           CHANGED=$(git diff --name-only origin/feature/github-actions-poc-...HEAD | grep 'src/test/java' || true)
           if [ -n "$CHANGED" ]; then
-            echo "Changed test files:"
+            echo "Detected test files:"
             echo "$CHANGED"
             echo "group=Custom" >> $GITHUB_OUTPUT
           else
@@ -63,49 +67,67 @@ jobs:
             echo "group=${{ github.event.inputs.test_group }}" >> $GITHUB_OUTPUT
           fi
 
+      # 🧪 Execute Tests
       - name: 🧪 Run Tests
         run: |
           if [ "${{ github.event.inputs.test_class }}" != "" ]; then
             echo "🎯 Running specific test class: ${{ github.event.inputs.test_class }}"
-            ./gradlew clean test --tests "${{ github.event.inputs.test_class }}"
+            ./gradlew clean test --tests "${{ github.event.inputs.test_class }}" --info
           elif [ "${{ github.event.inputs.test_group }}" != "" ] && [ "${{ github.event.inputs.test_group }}" != "All" ]; then
-            echo "🏷️ Running specific TestNG group: ${{ github.event.inputs.test_group }}"
-            ./gradlew clean test -Dgroups=${{ github.event.inputs.test_group }}
+            echo "🏷️ Running TestNG group: ${{ github.event.inputs.test_group }}"
+            ./gradlew clean test -Dgroups=${{ github.event.inputs.test_group }} --info
           else
             echo "🧩 Running full regression suite..."
-            ./gradlew test
+            ./gradlew clean test --info
           fi
 
+      # 🧰 Verify Allure CLI
       - name: 🧰 Ensure Allure CLI Installed (macOS-safe)
         run: |
           if ! command -v allure &> /dev/null; then
-            echo "Installing Allure CLI..."
-            brew install allure || echo "⚠️ Skipping Allure install (already handled by Gradle)"
+            echo "⚙️ Installing Allure CLI via Gradle..."
+            ./gradlew downloadAllure
           else
-            echo "✅ Allure CLI already installed"
+            echo "✅ Allure CLI already available."
           fi
-      
 
+      # 📊 Generate Allure Report
       - name: 📊 Generate Allure Report
         run: ./gradlew allureReport
 
-      - name: 🚨 Upload Allure Artifacts
+      # 📦 Upload Allure report + history + analytics
+      - name: 📦 Upload Allure Artifacts
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: allure-results
-          path: reports/current
+          name: Allure-Report-${{ github.run_number }}
+          path: |
+            reports/current
+            reports/history
+            reports/analytics
+          retention-days: 10
 
-      - name: 💬 Comment on PR
+      # 💬 Comment PR with dynamic Allure link
+      - name: 💬 Comment on PR with Allure Info
         if: ${{ github.event_name == 'pull_request' }}
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const prNumber = context.issue.number;
+            const runUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
             const message = `
-            ✅ API tests executed for this PR
-            - **Branch:** ${{ github.ref_name }}
+            ✅ **API Tests Executed**
+            - **Branch:** ${context.ref}
             - **Group:** ${{ github.event.inputs.test_group || 'All' }}
+            - **Artifact:** [Allure Report Download Link](${runUrl})
+            
+            💡 *To view locally:*
+            \`\`\`bash
+            cd reports/current
+            python3 -m http.server 8080
+            \`\`\`
+            Then open [http://localhost:8080](http://localhost:8080)
             `;
             await github.rest.issues.createComment({
               issue_number: prNumber,
@@ -114,6 +136,7 @@ jobs:
               body: message
             });
 
+      # 🛑 Fail build if any test failed
       - name: 🛑 Fail Build on Test Failure
         if: failure()
         run: |
