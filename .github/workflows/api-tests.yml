@@ -42,17 +42,23 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       # -----------------------------------------
-      # 2️⃣ Cache Gradle dependencies
+      # 2️⃣ Split Gradle Caches (Wrapper + Dependencies)
       # -----------------------------------------
-      - name: ⚡ Cache Gradle dependencies
+      - name: ⚡ Cache Gradle Wrapper
         uses: actions/cache@v4
         with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          path: ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('**/gradle-wrapper.properties') }}
           restore-keys: |
-            ${{ runner.os }}-gradle-
+            ${{ runner.os }}-gradle-wrapper-
+
+      - name: ⚡ Cache Gradle Dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-caches-${{ hashFiles('**/*.gradle*') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-caches-
 
       # -----------------------------------------
       # 3️⃣ Setup JDK
@@ -64,7 +70,7 @@ jobs:
           java-version: '21'
 
       # -----------------------------------------
-      # 4️⃣ Install Allure CLI (if not present)
+      # 4️⃣ Install Allure CLI (cached)
       # -----------------------------------------
       - name: 🧩 Install Allure CLI (cached)
         run: |
@@ -99,27 +105,33 @@ jobs:
           fi
 
       # -----------------------------------------
-      # 6️⃣ Run Tests
+      # 6️⃣ Run Tests (no clean for speed)
       # -----------------------------------------
       - name: 🧪 Run Tests
         run: |
           echo "🧪 Starting Test Execution..."
           if [ "${{ github.event.inputs.test_class }}" != "" ]; then
             echo "🎯 Running specific test class: ${{ github.event.inputs.test_class }}"
-            ./gradlew clean test --tests "${{ github.event.inputs.test_class }}" --info
+            ./gradlew test --tests "${{ github.event.inputs.test_class }}" --info
           elif [ "${{ github.event.inputs.test_group }}" != "" ] && [ "${{ github.event.inputs.test_group }}" != "All" ]; then
             echo "🏷️ Running specific TestNG group: ${{ github.event.inputs.test_group }}"
-            ./gradlew clean test -Dgroups=${{ github.event.inputs.test_group }} --info
+            ./gradlew test -Dgroups=${{ github.event.inputs.test_group }} --info
           else
             echo "🧩 Running full regression suite..."
-            ./gradlew clean test --info
+            ./gradlew test --info
           fi
 
       # -----------------------------------------
-      # 7️⃣ Generate Allure Report
+      # 7️⃣ Generate Allure Report (with result check)
       # -----------------------------------------
       - name: 📊 Generate Allure Report
-        run: ./gradlew generateAllureReport --info
+        if: always()
+        run: |
+          if [ -d "build/allure-results" ] && [ "$(find build/allure-results -name '*.json' | wc -l)" -gt 0 ]; then
+            ./gradlew generateAllureReport --info
+          else
+            echo "⚠️ No allure-results found — skipping report generation."
+          fi
 
       # -----------------------------------------
       # 8️⃣ Verify Allure Results
