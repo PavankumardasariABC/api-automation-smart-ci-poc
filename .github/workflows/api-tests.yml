@@ -46,17 +46,13 @@ jobs:
           java-version: '21'
 
       # -----------------------------------------
-      # 3️⃣ Cache Gradle dependencies
+      # 3️⃣ Gradle Environment Setup (Optimized)
       # -----------------------------------------
-      - name: 🧱 Cache Gradle dependencies
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
+      - name: 🧱 Prepare Gradle Environment
+        run: |
+          echo "Using self-hosted runner — skipping heavy Gradle cache restore"
+          mkdir -p ~/.gradle/caches ~/.gradle/wrapper
+          echo "✅ Gradle directories initialized."
 
       # -----------------------------------------
       # 4️⃣ Smart Test Selection
@@ -67,8 +63,10 @@ jobs:
           echo "Detecting changed test files..."
           CHANGED=$(git diff --name-only origin/feature/github-actions-poc-...HEAD | grep 'src/test/java' || true)
           if [ -n "$CHANGED" ]; then
+            echo "Changed test files detected — running Custom group"
             echo "group=Custom" >> $GITHUB_OUTPUT
           else
+            echo "No specific changes; running group: ${{ github.event.inputs.test_group }}"
             echo "group=${{ github.event.inputs.test_group }}" >> $GITHUB_OUTPUT
           fi
 
@@ -78,15 +76,18 @@ jobs:
       - name: 🧪 Run Tests
         run: |
           if [ "${{ github.event.inputs.test_class }}" != "" ]; then
+            echo "🎯 Running specific test class: ${{ github.event.inputs.test_class }}"
             ./gradlew clean test --tests "${{ github.event.inputs.test_class }}" --info
           elif [ "${{ github.event.inputs.test_group }}" != "" ] && [ "${{ github.event.inputs.test_group }}" != "All" ]; then
+            echo "🏷️ Running specific TestNG group: ${{ github.event.inputs.test_group }}"
             ./gradlew clean test -Dgroups=${{ github.event.inputs.test_group }} --info
           else
+            echo "🧩 Running full regression suite..."
             ./gradlew clean test --info
           fi
 
       # -----------------------------------------
-      # 6️⃣ Generate Allure Report (same as IntelliJ)
+      # 6️⃣ Generate Allure Report
       # -----------------------------------------
       - name: 📊 Generate Allure Report
         run: |
@@ -95,20 +96,29 @@ jobs:
           echo "✅ Allure report available → reports/current/index.html"
 
       # -----------------------------------------
-      # 7️⃣ Upload report as downloadable artifact
+      # 7️⃣ Package as Single-File Offline HTML
       # -----------------------------------------
-      - name: 📦 Upload Allure Report Artifact
+      - name: 🧩 Package Offline HTML Report
+        run: |
+          echo "📦 Creating single-file Allure HTML report..."
+          ./gradlew packageAllureSingleHtml
+          echo "✅ Offline report ready → reports/current/AllureReport_Offline.html"
+
+      # -----------------------------------------
+      # 8️⃣ Upload Single-File Report as Artifact
+      # -----------------------------------------
+      - name: 📦 Upload Offline Allure Report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: Allure-HTML-Report-${{ github.run_number }}
-          path: reports/current
+          name: Allure-Offline-HTML-${{ github.run_number }}
+          path: reports/current/AllureReport_Offline.html
           retention-days: 15
 
       # -----------------------------------------
-      # 8️⃣ Comment on PR with download link
+      # 9️⃣ Comment on PR with Download Link
       # -----------------------------------------
-      - name: 💬 Comment Allure Report Link
+      - name: 💬 Comment Offline Report Link
         if: ${{ github.event_name == 'pull_request' }}
         uses: actions/github-script@v7
         with:
@@ -116,12 +126,12 @@ jobs:
           script: |
             const runUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
             const message = `
-            ✅ **Allure Report Generated**
-            📂 [Download Offline HTML Report](${runUrl})
+            ✅ **Allure Report Generated (Offline Compatible)**
+            📂 [Download Single HTML Report](${runUrl})
 
             💡 Once downloaded, open:
-            \`reports/current/index.html\`
-            (works directly without any server)
+            \`AllureReport_Offline.html\`
+            — opens instantly without any server or fetch() calls.
             `;
             await github.rest.issues.createComment({
               issue_number: context.issue.number,
@@ -131,7 +141,7 @@ jobs:
             });
 
       # -----------------------------------------
-      # 9️⃣ Fail Build on Test Failure
+      # 🔟 Fail Build on Test Failure
       # -----------------------------------------
       - name: 🛑 Fail Build on Test Failure
         if: failure()
