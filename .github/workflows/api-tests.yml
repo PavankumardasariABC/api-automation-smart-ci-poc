@@ -59,17 +59,18 @@ jobs:
           rm -rf ~/.gradle/daemon/* || true
 
       # -----------------------------------------
-      # 4️⃣ Install Allure CLI (Non-sudo for self-hosted)
+      # 4️⃣ Install Allure CLI (macOS-compatible, non-sudo)
       # -----------------------------------------
-      - name: 🧩 Install Allure CLI (Non-sudo)
+      - name: 🧩 Install Allure CLI (macOS-compatible)
         run: |
-          echo "📦 Installing Allure CLI (non-sudo)..."
-          mkdir -p /home/runner/work/allure-cli
+          echo "📦 Installing Allure CLI (macOS non-sudo)..."
+          BASE_DIR="${{ github.workspace }}/allure-cli"
+          mkdir -p "$BASE_DIR"
           wget -q https://github.com/allure-framework/allure2/releases/download/2.27.0/allure-2.27.0.zip -O allure.zip
-          unzip -q allure.zip -d /home/runner/work/allure-cli/
-          chmod +x /home/runner/work/allure-cli/allure-2.27.0/bin/allure
-          echo "/home/runner/work/allure-cli/allure-2.27.0/bin" >> $GITHUB_PATH
-          /home/runner/work/allure-cli/allure-2.27.0/bin/allure --version
+          unzip -q allure.zip -d "$BASE_DIR"
+          chmod +x "$BASE_DIR/allure-2.27.0/bin/allure"
+          echo "$BASE_DIR/allure-2.27.0/bin" >> $GITHUB_PATH
+          "$BASE_DIR/allure-2.27.0/bin/allure" --version
 
       # -----------------------------------------
       # 5️⃣ Run Tests and Generate Allure Report
