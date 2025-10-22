@@ -22,12 +22,14 @@ ext {
 }
 
 dependencies {
+    // ✅ Core Testing Libraries
     implementation "io.rest-assured:rest-assured:${restAssuredVersion}"
     implementation "io.rest-assured:json-path:${restAssuredVersion}"
     implementation "io.qameta.allure:allure-testng:${allureVersion}"
     implementation "io.qameta.allure:allure-rest-assured:${allureVersion}"
     implementation "org.testng:testng:${testngVersion}"
 
+    // ✅ Utilities
     implementation 'com.googlecode.json-simple:json-simple:1.1.1'
     implementation 'com.google.code.gson:gson:2.11.0'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.0'
@@ -37,7 +39,7 @@ dependencies {
 }
 
 /////////////////////////////////////////////////////////////
-// ✅ OFFLINE ALLURE REPORT GENERATION
+// ✅ OFFLINE ALLURE REPORT GENERATION (Works in CI + Local)
 /////////////////////////////////////////////////////////////
 tasks.register('runAllureReport') {
     group = "reporting"
@@ -47,20 +49,19 @@ tasks.register('runAllureReport') {
 
 tasks.register('generateAllureReport') {
     group = "reporting"
-    description = "Generate a self-contained Allure HTML report (offline)"
+    description = "Generate fully offline Allure HTML report (Chrome/Safari safe)"
 
     doLast {
         def resultsDir = file("$buildDir/allure-results")
         def outputDir = file("$projectDir/reports/current")
         def timestamp = new Date().format("yyyy-MM-dd_HHmmss_SSS")
+        def isCI = System.getenv("GITHUB_ACTIONS") != null  // Detect GitHub Actions
 
-        println "\n🧹 Cleaning old reports..."
+        println "\n🧹 Cleaning old Allure reports..."
         if (outputDir.exists()) outputDir.deleteDir()
 
         println "🧹 Removing stale Allure metadata..."
-        fileTree(dir: resultsDir, include: ['*.json']).matching {
-            include 'executor.json', 'environment.json'
-        }.each { it.delete() }
+        fileTree(dir: resultsDir, include: ['executor.json', 'environment.json']).each { it.delete() }
 
         println "⏳ Waiting 5s for Allure results to flush..."
         sleep(5000)
@@ -79,80 +80,81 @@ tasks.register('generateAllureReport') {
             println "❌ Allure CLI exited with code ${process.exitValue()}"
             return
         }
-
         println "✅ Allure report generated → ${outputDir}/index.html"
 
         //////////////////////////////////////////////////////////////////
-        // 🧩 Embed all JSON files for true offline use (Chrome fix)
+        // 🧩 Embed JSON into HTML for true offline mode
         //////////////////////////////////////////////////////////////////
         try {
             def dataDir = new File("${outputDir}/data")
             def indexFile = new File("${outputDir}/index.html")
+
             if (!indexFile.exists() || !dataDir.exists()) {
                 println "⚠️ Skipping embedding (no data folder or index.html)."
                 return
             }
 
-            println "🧩 Embedding Allure JSON + JS for offline use..."
+            println "🧩 Embedding Allure JSON directly into HTML (offline mode)..."
 
             def dataFiles = fileTree(dir: dataDir, include: '**/*.json').files
             def jsonMap = [:]
-            dataFiles.each { f ->
-                jsonMap[f.name] = f.text
-            }
+            dataFiles.each { f -> jsonMap[f.name] = f.text }
 
             def jsonContent = new groovy.json.JsonBuilder(jsonMap).toPrettyString()
 
             def scriptBlock = """
 <script>
 (function() {
-  // 🧩 Full Chrome + Safari Offline Support
   const jsonData = ${jsonContent};
   const originalFetch = window.fetch;
-
   window.fetch = (url) => {
     if (url && url.includes('/data/')) {
       const file = url.split('/').pop();
       const data = jsonData[file];
       if (data) {
-        console.log('📦 Embedded Allure JSON:', file);
+        console.log('📦 Embedded JSON:', file);
         return Promise.resolve({
           ok: true,
+          status: 200,
           json: async () => JSON.parse(data),
           text: async () => data
         });
       }
     }
-    return originalFetch(url);
+    return Promise.reject(new Error('Offline data not found: ' + url));
   };
 
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.getRegistrations().then(r => r.forEach(s => s.unregister()));
   }
-  console.log('✅ Allure Offline Mode fully enabled.');
+  console.log('✅ Allure Offline Mode ready.');
 })();
 </script>
 """
             def htmlContent = indexFile.text.replaceFirst('(?i)</body>', "${scriptBlock}\n</body>")
             indexFile.text = htmlContent
-            println "✅ Embedded ${dataFiles.size()} JSON files – fully offline compatible."
+            println "✅ Embedded ${dataFiles.size()} JSON files — Chrome & Safari ready."
         } catch (Exception e) {
-            println "⚠️ Failed to embed JSON: ${e.message}"
+            println "⚠️ JSON embedding failed: ${e.message}"
         }
 
-        // Archive report history
+        // 🗂 Archive history
         copy {
             from outputDir
             into "$projectDir/reports/history/${timestamp}"
         }
         println "🗂 Archived → reports/history/${timestamp}"
 
-        // Auto-open for Mac
-        if (System.getProperty("os.name").toLowerCase().contains("mac")) {
+        // 🖥️ Auto-open only for local Mac (not in CI)
+        if (!isCI && System.getProperty("os.name").toLowerCase().contains("mac")) {
             try {
                 ["bash", "-c", "open '${outputDir}/index.html'"].execute()
-                println "🖥️ Opened report automatically."
-            } catch (ignored) {}
+                println "🖥️ Report auto-opened on macOS."
+            } catch (ignored) {
+                println "⚠️ Unable to auto-open report."
+            }
+        } else {
+            println "🏗️ CI detected — skipping auto-open."
         }
     }
 }
@@ -177,8 +179,8 @@ test {
         def resultsDir = file("$buildDir/allure-results")
         if (resultsDir.exists()) resultsDir.deleteDir()
         resultsDir.mkdirs()
-        println "🧹 Purged old allure-results"
-        println "🕓 Test cycle started at " + new Date().format("yyyy-MM-dd HH:mm:ss")
+        println "🧹 Cleared old allure-results"
+        println "🕓 Test cycle started: " + new Date().format("yyyy-MM-dd HH:mm:ss")
     }
 
     finalizedBy 'runAllureReport'

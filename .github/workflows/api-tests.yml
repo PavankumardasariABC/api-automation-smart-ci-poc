@@ -1,4 +1,4 @@
-# 🚀 Smart API Automation CI Workflow (Ultra Fast)
+# 🚀 Smart API Automation CI Workflow (Local + GitHub Ready)
 name: 🚀 API Automation CI
 
 on:
@@ -25,12 +25,16 @@ permissions:
 jobs:
   api-tests:
     runs-on: self-hosted
+    env:
+      ALLURE_RESULTS_DIR: build/allure-results
+      ALLURE_REPORT_DIR: reports/current
+      TZ: "Asia/Kolkata"
 
     steps:
       # -----------------------------------------
-      # 1️⃣ Checkout repository
+      # 1️⃣ Checkout Repository
       # -----------------------------------------
-      - name: 📥 Checkout repository
+      - name: 📥 Checkout Repository
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.inputs.branch || github.ref_name || 'feature/github-actions-poc-' }}
@@ -44,17 +48,17 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '21'
-          cache: gradle   # ✅ Use built-in lightweight Gradle cache (not full 1 GB restore)
+          cache: gradle   # ✅ Lightweight Gradle cache
 
       # -----------------------------------------
-      # 3️⃣ Quick Cache Cleanup (Optional)
+      # 3️⃣ Quick Gradle Cache Cleanup
       # -----------------------------------------
-      - name: 🧹 Clean Gradle temp files (fast)
+      - name: 🧹 Clean Gradle Temp Files
         run: |
-          echo "🧹 Cleaning minimal Gradle leftovers..."
+          echo "🧹 Cleaning temporary Gradle files..."
           rm -rf ~/.gradle/caches/build-cache-* || true
           rm -rf ~/.gradle/daemon/* || true
-          echo "✅ Light cleanup complete."
+          echo "✅ Cleanup done."
 
       # -----------------------------------------
       # 4️⃣ Smart Test Selection
@@ -63,7 +67,7 @@ jobs:
         id: smart
         run: |
           echo "Detecting changed test files..."
-          CHANGED=$(git diff --name-only origin/feature/github-actions-poc-...HEAD | grep 'src/test/java' || true)
+          CHANGED=$(git diff --name-only origin/main...HEAD | grep 'src/test/java' || true)
           if [ -n "$CHANGED" ]; then
             echo "group=Custom" >> $GITHUB_OUTPUT
           else
@@ -71,9 +75,9 @@ jobs:
           fi
 
       # -----------------------------------------
-      # 5️⃣ Run Tests
+      # 5️⃣ Run API Tests
       # -----------------------------------------
-      - name: 🧪 Run Tests
+      - name: 🧪 Run API Tests
         run: |
           echo "Running tests for: ${{ github.event.inputs.test_class || 'All tests' }}"
           if [ "${{ github.event.inputs.test_class }}" != "" ]; then
@@ -85,35 +89,58 @@ jobs:
           fi
 
       # -----------------------------------------
-      # 6️⃣ Generate Allure Report
+      # 6️⃣ Generate Allure Offline Report
       # -----------------------------------------
       - name: 📊 Generate Offline Allure Report
+        if: always()
         run: |
           echo "⚙️ Generating offline Allure report..."
           ./gradlew --no-daemon generateAllureReport
-          echo "✅ Allure report ready → reports/current/index.html"
+          echo "✅ Report generated → reports/current/index.html"
 
       # -----------------------------------------
-      # 7️⃣ Zip Self-Contained HTML Report
+      # 7️⃣ Zip the Allure HTML (with versioning)
       # -----------------------------------------
-      - name: 🗜️ Zip Allure HTML
+      - name: 🗜️ Zip Allure HTML Report
         if: always()
         run: |
+          DATE_TAG=$(date +'%Y-%m-%d_%H-%M')
+          VERSIONED_NAME="Allure-Offline-Report_${DATE_TAG}_${{ github.run_number }}.zip"
           cd reports/current
-          zip -r ../../Allure-Offline-Report.zip .
+          zip -r "../../${VERSIONED_NAME}" .
           cd ../..
-          echo "✅ Allure offline report zipped."
+          echo "✅ Created zip: ${VERSIONED_NAME}"
+          echo "ZIP_NAME=${VERSIONED_NAME}" >> $GITHUB_ENV
 
       # -----------------------------------------
-      # 8️⃣ Upload Report Artifact
+      # 8️⃣ Upload as GitHub Artifact
       # -----------------------------------------
-      - name: 📦 Upload Offline Report
+      - name: 📦 Upload Offline Report Artifact
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: Allure-Offline-Report-${{ github.run_number }}
-          path: Allure-Offline-Report.zip
-          retention-days: 10
+          name: ${{ env.ZIP_NAME }}
+          path: ${{ env.ZIP_NAME }}
+          retention-days: 15
+
+      # -----------------------------------------
+      # 9️⃣ (Optional) Slack / Email Notification
+      # -----------------------------------------
+      # - name: 📩 Notify via Email (Optional)
+      #   if: failure()
+      #   uses: dawidd6/action-send-mail@v3
+      #   with:
+      #     server_address: smtp.gmail.com
+      #     server_port: 465
+      #     username: ${{ secrets.EMAIL_USER }}
+      #     password: ${{ secrets.EMAIL_PASS }}
+      #     subject: "❌ API Test Failure - Run #${{ github.run_number }}"
+      #     to: "qa-team@yourdomain.com"
+      #     from: "GitHub Actions QA Bot"
+      #     body: |
+      #       Hi Team,
+      #       The latest API test run failed. Please check the attached Allure report.
+      #       Download: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
       # -----------------------------------------
       # 🔟 Fail Build on Test Failure
@@ -121,5 +148,5 @@ jobs:
       - name: 🛑 Fail Build on Test Failure
         if: failure()
         run: |
-          echo "❌ Tests failed! Build will be marked as failed."
+          echo "❌ Tests failed! Marking build as failed."
           exit 1
