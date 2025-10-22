@@ -59,6 +59,7 @@ tasks.register('generateAllureReport') {
 
         println "\n🧹 Cleaning old Allure reports..."
         if (outputDir.exists()) outputDir.deleteDir()
+        outputDir.mkdirs()
 
         println "⚙️ Generating Allure report..."
         def cmd = "allure generate '${resultsDir}' --clean -o '${outputDir}'"

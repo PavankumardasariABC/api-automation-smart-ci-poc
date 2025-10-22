@@ -1,4 +1,4 @@
-# 🚀 Smart API Automation CI Workflow (Local + GitHub Ready)
+# 🚀 Smart API Automation CI Workflow (Fast + Offline Ready)
 name: 🚀 API Automation CI
 
 on:
@@ -41,14 +41,14 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       # -----------------------------------------
-      # 2️⃣ Setup JDK
+      # 2️⃣ Setup JDK (No Heavy Gradle Cache)
       # -----------------------------------------
       - name: ☕ Setup JDK
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '21'
-          cache: gradle   # ✅ Lightweight Gradle cache
+          cache: minimal
 
       # -----------------------------------------
       # 3️⃣ Quick Gradle Cache Cleanup
@@ -89,58 +89,25 @@ jobs:
           fi
 
       # -----------------------------------------
-      # 6️⃣ Generate Allure Offline Report
+      # 6️⃣ Generate Allure Single HTML Report
       # -----------------------------------------
       - name: 📊 Generate Offline Allure Report
         if: always()
         run: |
-          echo "⚙️ Generating offline Allure report..."
+          echo "⚙️ Generating single-file Allure report..."
           ./gradlew --no-daemon generateAllureReport
-          echo "✅ Report generated → reports/current/index.html"
+          echo "✅ Single-file report ready → reports/current/Allure_Offline_Single.html"
 
       # -----------------------------------------
-      # 7️⃣ Zip the Allure HTML (with versioning)
+      # 7️⃣ Upload Only Single HTML Artifact
       # -----------------------------------------
-      - name: 🗜️ Zip Allure HTML Report
-        if: always()
-        run: |
-          DATE_TAG=$(date +'%Y-%m-%d_%H-%M')
-          VERSIONED_NAME="Allure-Offline-Report_${DATE_TAG}_${{ github.run_number }}.zip"
-          cd reports/current
-          zip -r "../../${VERSIONED_NAME}" .
-          cd ../..
-          echo "✅ Created zip: ${VERSIONED_NAME}"
-          echo "ZIP_NAME=${VERSIONED_NAME}" >> $GITHUB_ENV
-
-      # -----------------------------------------
-      # 8️⃣ Upload as GitHub Artifact
-      # -----------------------------------------
-      - name: 📦 Upload Offline Report Artifact
+      - name: 📦 Upload Offline Report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.ZIP_NAME }}
-          path: ${{ env.ZIP_NAME }}
-          retention-days: 15
-
-      # -----------------------------------------
-      # 9️⃣ (Optional) Slack / Email Notification
-      # -----------------------------------------
-      # - name: 📩 Notify via Email (Optional)
-      #   if: failure()
-      #   uses: dawidd6/action-send-mail@v3
-      #   with:
-      #     server_address: smtp.gmail.com
-      #     server_port: 465
-      #     username: ${{ secrets.EMAIL_USER }}
-      #     password: ${{ secrets.EMAIL_PASS }}
-      #     subject: "❌ API Test Failure - Run #${{ github.run_number }}"
-      #     to: "qa-team@yourdomain.com"
-      #     from: "GitHub Actions QA Bot"
-      #     body: |
-      #       Hi Team,
-      #       The latest API test run failed. Please check the attached Allure report.
-      #       Download: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          name: Allure-Report-${{ github.run_number }}
+          path: reports/current/Allure_Offline_Single.html
+          retention-days: 10
 
       # -----------------------------------------
       # 🔟 Fail Build on Test Failure
