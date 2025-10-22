@@ -1,5 +1,0 @@
-{
-    "name": "QA Automation Company 1760688102856",
-    "shortCode": "QACOMP176068",
-    "id": "0c41a745-22f5-4dcc-924c-a7f9aa2e11b6"
-}

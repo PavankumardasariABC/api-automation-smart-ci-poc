@@ -1,54 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.externalAPIs.tests.Charge.CreatePaymentTokenSessionTests" tests="1" skipped="0" failures="0" errors="0" timestamp="2025-10-17T08:02:01.693Z" hostname="corp-gwil01.abcfinancial.net" time="3.423">
+<testsuite name="com.externalAPIs.tests.Charge.CreatePaymentTokenSessionTests" tests="1" skipped="0" failures="0" errors="0" timestamp="2025-10-22T04:49:18.540Z" hostname="corp-gwil01.abcfinancial.net" time="1.615">
   <properties/>
-  <testcase name="createPaymentTokenSession[0]({ownerType=PAYOR, consumerOrigin=https://dev.30preprod.com, metadata={limitedPrimaryPaymentMethod=ANY}, cvvRequired=false, consumerId=11f092f7-dbfc-7cd4-8232-cb5e67f264fc})" classname="com.externalAPIs.tests.Charge.CreatePaymentTokenSessionTests" time="3.423"/>
-  <system-out><![CDATA[]]>&#x1f511;<![CDATA[ Generating new GlofoxClientToken...
-Request method:	POST
-Request URI:	https://dev.30preprod.com/api/token
-Proxy:			<none>
-Request params:	<none>
-Query params:	<none>
-Form params:	grant_type=client_credentials
-Path params:	<none>
-Headers:		Authorization=Basic R0xPRk9YX0FVVEg6R0xPRk9YX0FVVEg=
-				Accept=application/json
-				User-Agent=RestAssured-Automation/1.0
-				Content-Type=application/x-www-form-urlencoded; charset=ISO-8859-1
-Cookies:		<none>
-Multiparts:		<none>
-Body:			<none>
-HTTP/1.1 200 OK
-Date: Fri, 17 Oct 2025 08:02:03 GMT
-Content-Type: application/json;charset=UTF-8
-Transfer-Encoding: chunked
-Connection: keep-alive
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 0
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-Strict-Transport-Security: max-age=31536000; includeSubDomains
-X-Frame-Options: DENY
-Content-Language: en-US
-
-{
-    "access_token": "eyJraWQiOiIzcFI3ODNBOWFEdVpobHV1IiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiJHTE9GT1hfQVVUSCIsImF1ZCI6Im9yZGVyLXNlc3Npb24iLCJuYmYiOjE3NjA2ODgxMjMsIl90IjoiQ0xJRU5UX09OTFkiLCJzY29wZSI6WyJwbGF0Zm9ybTpwcm90ZWN0ZWQiXSwiaXNzIjoiaHR0cHM6Ly9kZXYuMzBwcmVwcm9kLmNvbSIsImV4cCI6MTc2MDc3NDUyMywiaWF0IjoxNzYwNjg4MTIzLCJqdGkiOiI3ZDg5MjAzZC0zZDU0LTQxZTgtYmRiMy0wYzRhOWZlODlkOTciLCJjbGllbnRfaWQiOiJHTE9GT1hfQVVUSCIsImF1dGhvcml0aWVzIjpbInBheW1lbnQtdG9rZW4tc2Vzc2lvbjpjbGllbnQtY3JlYXRlIiwiY2xpZW50LXByb2ZpbGU6Y2xpZW50LWNyZWF0ZSJdfQ.mL7ISrtnoSbfe-8HPM3cpSsWzokn1n0prejFjcitsvKNbEWtxSH-nBUefxzyGlwd4lNH70gBlM3xLIw_E9W_Kl_coeOc5yORa8f5Lloj635RCSQhGnfnhDG_RuMBfkwV3gz91xBux0j5uYdtcmOA-pLu_Oeun0Ya3FawPWSrMFE9moWCCcQDuDXhTlfCKxAXQ3fHtKJ7CgF17P4ElgyjddLWrfK0ls0yVgVWhnjf9fc094fN0fiFqvHh1DJmltEbIfvycVF9aSx7PVnGo3jhHVOc1onkPAbJigkrPPAq74B4mZWbL5ktA8Mn_SkYwWqx9lF0wuuBTLdwEYFthzGi7A",
-    "token_type": "Bearer",
-    "expires_in": 86399
-}
-✅ GlofoxClientToken generated successfully
-Request method:	POST
+  <testcase name="createPaymentTokenSession[0]({ownerType=PAYOR, consumerOrigin=https://dev.30preprod.com, metadata={limitedPrimaryPaymentMethod=ANY}, cvvRequired=false, consumerId=11f092f7-dbfc-7cd4-8232-cb5e67f264fc})" classname="com.externalAPIs.tests.Charge.CreatePaymentTokenSessionTests" time="1.615"/>
+  <system-out><![CDATA[Request method:	POST
 Request URI:	https://dev.30preprod.com/api/ors/payment-token/session/add-token
 Proxy:			<none>
 Request params:	<none>
 Query params:	<none>
 Form params:	<none>
 Path params:	<none>
-Headers:		Authorization=Bearer eyJraWQiOiIzcFI3ODNBOWFEdVpobHV1IiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiJHTE9GT1hfQVVUSCIsImF1ZCI6Im9yZGVyLXNlc3Npb24iLCJuYmYiOjE3NjA2ODgxMjMsIl90IjoiQ0xJRU5UX09OTFkiLCJzY29wZSI6WyJwbGF0Zm9ybTpwcm90ZWN0ZWQiXSwiaXNzIjoiaHR0cHM6Ly9kZXYuMzBwcmVwcm9kLmNvbSIsImV4cCI6MTc2MDc3NDUyMywiaWF0IjoxNzYwNjg4MTIzLCJqdGkiOiI3ZDg5MjAzZC0zZDU0LTQxZTgtYmRiMy0wYzRhOWZlODlkOTciLCJjbGllbnRfaWQiOiJHTE9GT1hfQVVUSCIsImF1dGhvcml0aWVzIjpbInBheW1lbnQtdG9rZW4tc2Vzc2lvbjpjbGllbnQtY3JlYXRlIiwiY2xpZW50LXByb2ZpbGU6Y2xpZW50LWNyZWF0ZSJdfQ.mL7ISrtnoSbfe-8HPM3cpSsWzokn1n0prejFjcitsvKNbEWtxSH-nBUefxzyGlwd4lNH70gBlM3xLIw_E9W_Kl_coeOc5yORa8f5Lloj635RCSQhGnfnhDG_RuMBfkwV3gz91xBux0j5uYdtcmOA-pLu_Oeun0Ya3FawPWSrMFE9moWCCcQDuDXhTlfCKxAXQ3fHtKJ7CgF17P4ElgyjddLWrfK0ls0yVgVWhnjf9fc094fN0fiFqvHh1DJmltEbIfvycVF9aSx7PVnGo3jhHVOc1onkPAbJigkrPPAq74B4mZWbL5ktA8Mn_SkYwWqx9lF0wuuBTLdwEYFthzGi7A
-				ABCFS-TENANT-ID=e60edc0d-fa76-4012-a501-3ce9732e37f7
+Headers:		Authorization=Bearer eyJraWQiOiIzcFI3ODNBOWFEdVpobHV1IiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiJHTE9GT1hfQVVUSCIsImF1ZCI6Im9yZGVyLXNlc3Npb24iLCJuYmYiOjE3NjExMDg1MjksIl90IjoiQ0xJRU5UX09OTFkiLCJzY29wZSI6WyJwbGF0Zm9ybTpwcm90ZWN0ZWQiXSwiaXNzIjoiaHR0cHM6Ly9kZXYuMzBwcmVwcm9kLmNvbSIsImV4cCI6MTc2MTE5NDkyOSwiaWF0IjoxNzYxMTA4NTI5LCJqdGkiOiI0M2FmZDRlYi1iNzIzLTQ4YzMtOTkzMS01ZDE5ZmQ3MDQzMGMiLCJjbGllbnRfaWQiOiJHTE9GT1hfQVVUSCIsImF1dGhvcml0aWVzIjpbInBheW1lbnQtdG9rZW4tc2Vzc2lvbjpjbGllbnQtY3JlYXRlIiwiY2xpZW50LXByb2ZpbGU6Y2xpZW50LWNyZWF0ZSJdfQ.BEX1Eaneyvstrge4KcJ4oI5O8pmmnIAh8dRcK2Hyo2iqQ5yktk21MgrOwfPRCpSGw2p-7xWWbvG6xlMyZe8IfcXmLilfkxNsq467RboQ3KOPJk4Z21xYzV66R5FF8B3HCarPuhHA32Xj4ID9udPq_aXW0N3OLW2RbTWg_bbbiSyBJZcWIROHNdaTIak1lySSTZNDSITy5cCd9FFk17V3DiclwoEmXIdEPwexb4aacn9ymYaQaPrRAUf-QLR0xb309a2jRZ5gC29cRJTpPlp-ZlUO2vIMpqqxPKlfzUEl4Z2NvHVKQdYFoJq2s8X6QhfafFhTGlzmXxE1edj7okwJdQ
+				ABCFS-TENANT-ID=6d299bf3-b437-48e5-8bca-089c6ee5bba3
 				User-Agent=Automation-Test
 				Accept=*/*
 				Content-Type=application/json
@@ -62,10 +24,10 @@ Body:
         "limitedPrimaryPaymentMethod": "ANY"
     },
     "cvvRequired": false,
-    "consumerId": "11f0ab2f-88f4-272c-b839-5d1f0421e66f"
+    "consumerId": "11f0af02-70d1-fb01-a3a5-ed3621fc3af8"
 }
 HTTP/1.1 201 Created
-Date: Fri, 17 Oct 2025 08:02:04 GMT
+Date: Wed, 22 Oct 2025 04:49:20 GMT
 Content-Type: application/json
 Transfer-Encoding: chunked
 Connection: keep-alive
@@ -79,7 +41,7 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000; includeSubDomains
 X-Frame-Options: DENY
-Location: https://dev.30preprod.com/api/ors/payment-token/session/add-token/11f0ab2f-91ec-4bad-b839-5d1f0421e66f
+Location: https://dev.30preprod.com/api/ors/payment-token/session/add-token/11f0af02-78d9-cbf5-b6b2-c3e97c5b82d2
 
 {
     "metadata": {
@@ -90,19 +52,19 @@ Location: https://dev.30preprod.com/api/ors/payment-token/session/add-token/11f0
     "cvvRequired": false,
     "expirationType": "DYNAMIC",
     "p2pe": false,
-    "id": "11f0ab2f-91ec-4bad-b839-5d1f0421e66f",
+    "id": "11f0af02-78d9-cbf5-b6b2-c3e97c5b82d2",
     "mode": "ADD_TOKEN",
     "status": "CREATED",
     "statusCheckState": "NONE",
     "extensionCounter": 0,
-    "consumerId": "11f0ab2f-88f4-272c-b839-5d1f0421e66f",
+    "consumerId": "11f0af02-70d1-fb01-a3a5-ed3621fc3af8",
     "nextAction": "NONE",
-    "organizationId": "e60edc0d-fa76-4012-a501-3ce9732e37f7",
-    "expirationTime": "2025-10-17T08:13:00Z",
-    "token": "eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIxMWYwYWIyZi05MWVjLTRiYWQtYjgzOS01ZDFmMDQyMWU2NmYiLCJhdWQiOiJFTVBMT1lFRSIsInRyYW5zZmVycmVkIjpmYWxzZSwiZXhwIjoxNzYwNzc0NTI0LCJpYXQiOjE3NjA2ODgxMjR9.Kkh4Bv_wz6pMbQ_pH_rMqTEwsZWyTICqdRVx0XKrJ77GJcIJjdsHdbhbjIlH_NIN_Av8zaFNN8t-IdSExtDfkVFM-vvVAWlYo-ynrtMgDbbohMI-Sy5WCAZBae7wliIBZD8L3pGmyhZwHAkF2QNILUZtHWKm-XbkrbS0cMjBkMFWjLAr-R3J4jcC5O_ZqB6ArD8yroE_HPnPxRT8KpE1wkm6gTbjd0lynHr97tJ-guniFyU3QFOUsmv2DnXOIhdhl9VDXssDhD5sgHAftgi36mMzj1SPKaP0eeL99ltlt1TZ79kRiNsELR9Vsn_gC3vnaTwtsY-dSCxxreYBbSlWrw",
-    "url": "https://pay.dev.aws.abcfinancial.net/add-token?token=eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIxMWYwYWIyZi05MWVjLTRiYWQtYjgzOS01ZDFmMDQyMWU2NmYiLCJhdWQiOiJFTVBMT1lFRSIsInRyYW5zZmVycmVkIjpmYWxzZSwiZXhwIjoxNzYwNzc0NTI0LCJpYXQiOjE3NjA2ODgxMjR9.Kkh4Bv_wz6pMbQ_pH_rMqTEwsZWyTICqdRVx0XKrJ77GJcIJjdsHdbhbjIlH_NIN_Av8zaFNN8t-IdSExtDfkVFM-vvVAWlYo-ynrtMgDbbohMI-Sy5WCAZBae7wliIBZD8L3pGmyhZwHAkF2QNILUZtHWKm-XbkrbS0cMjBkMFWjLAr-R3J4jcC5O_ZqB6ArD8yroE_HPnPxRT8KpE1wkm6gTbjd0lynHr97tJ-guniFyU3QFOUsmv2DnXOIhdhl9VDXssDhD5sgHAftgi36mMzj1SPKaP0eeL99ltlt1TZ79kRiNsELR9Vsn_gC3vnaTwtsY-dSCxxreYBbSlWrw",
-    "modified": "2025-10-17T08:02:04Z",
-    "created": "2025-10-17T08:02:04Z",
+    "organizationId": "6d299bf3-b437-48e5-8bca-089c6ee5bba3",
+    "expirationTime": "2025-10-22T05:00:00Z",
+    "token": "eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIxMWYwYWYwMi03OGQ5LWNiZjUtYjZiMi1jM2U5N2M1YjgyZDIiLCJhdWQiOiJFTVBMT1lFRSIsInRyYW5zZmVycmVkIjpmYWxzZSwiZXhwIjoxNzYxMTk0OTYwLCJpYXQiOjE3NjExMDg1NjB9.gHSuRS-zCMUld5woSqghsaNC464LCzmWLNQOJNpAfUbyKA9Ojk4iyCiO_T0ZGkbUOY4r3sBtHWZ5asw0zrbkFz84W2E6y1nsWDkVCUZ6ypy2oPkNI-5Jv9oz-xcHKIRTX-FUz91qfUl4pkmJkBXnvDYfEogV3EySUqx3cNWHwKfqAD9A1fXuGnz3kk0vPW7N6GfITCqiUROk02kWw_2lHcArLMMiLjs1aoN-D56yISbTbOWbbNRd04h_j2fcEeUrFQsClCevXVL3JB2r4OCIDNgMpd56gYgFfhj45CY6ig5-vqecEgh9KPsOLACmc3lJODSY67tbhSMKuy0QjjizEQ",
+    "url": "https://pay.dev.aws.abcfinancial.net/add-token?token=eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIxMWYwYWYwMi03OGQ5LWNiZjUtYjZiMi1jM2U5N2M1YjgyZDIiLCJhdWQiOiJFTVBMT1lFRSIsInRyYW5zZmVycmVkIjpmYWxzZSwiZXhwIjoxNzYxMTk0OTYwLCJpYXQiOjE3NjExMDg1NjB9.gHSuRS-zCMUld5woSqghsaNC464LCzmWLNQOJNpAfUbyKA9Ojk4iyCiO_T0ZGkbUOY4r3sBtHWZ5asw0zrbkFz84W2E6y1nsWDkVCUZ6ypy2oPkNI-5Jv9oz-xcHKIRTX-FUz91qfUl4pkmJkBXnvDYfEogV3EySUqx3cNWHwKfqAD9A1fXuGnz3kk0vPW7N6GfITCqiUROk02kWw_2lHcArLMMiLjs1aoN-D56yISbTbOWbbNRd04h_j2fcEeUrFQsClCevXVL3JB2r4OCIDNgMpd56gYgFfhj45CY6ig5-vqecEgh9KPsOLACmc3lJODSY67tbhSMKuy0QjjizEQ",
+    "modified": "2025-10-22T04:49:20Z",
+    "created": "2025-10-22T04:49:20Z",
     "ownerType": "PAYOR",
     "manualEntryAllowed": false
 }

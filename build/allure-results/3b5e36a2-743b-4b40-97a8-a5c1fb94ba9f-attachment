@@ -1,6 +1,0 @@
-https://dev.30preprod.com/api/token
-Headers:
-{ Authorization=****, Content-Type=application/x-www-form-urlencoded;charset=UTF-8, Accept=application/json, User-Agent=RestAssured-Automation/1.0,  }
-
-Body:
-{grant_type=client_credentials}
