@@ -40,7 +40,7 @@ dependencies {
 }
 
 /////////////////////////////////////////////////////////////
-// ✅ REPORT GENERATION TASKS (Define FIRST)
+// ✅ REPORT GENERATION TASKS (OFFLINE EMBEDDED ALLURE)
 /////////////////////////////////////////////////////////////
 tasks.register('runAllureReport') {
     group = "reporting"
@@ -50,75 +50,79 @@ tasks.register('runAllureReport') {
 
 tasks.register('generateAllureReport') {
     group = "reporting"
-    description = "Generate a brand-new Allure HTML report"
+    description = "Generate a self-contained Allure HTML report (offline mode)"
 
     doLast {
         def resultsDir = file("$buildDir/allure-results")
-        def outputDir  = file("$projectDir/reports/current")
-        def timestamp  = new Date().format("yyyy-MM-dd_HHmmss_SSS")
+        def outputDir = file("$projectDir/reports/current")
+        def timestamp = new Date().format("yyyy-MM-dd_HHmmss_SSS")
 
         println "\n🧹 Cleaning old report folders..."
         if (outputDir.exists()) outputDir.deleteDir()
 
-        // Remove stale metadata files that cause timestamp caching
+        println "🧹 Removing stale Allure metadata..."
         fileTree(dir: resultsDir, include: ['*.json']).matching {
-            include 'executor.json', '.executor.json', 'environment.json'
+            include 'executor.json', 'environment.json'
         }.each { it.delete() }
-        println "🧹 Removed stale Allure executor/environment metadata."
 
-        println "⏳ Waiting 7 seconds for Allure to flush results..."
-        sleep(7000)
+        println "⏳ Waiting 5s for Allure results to flush..."
+        sleep(5000)
 
         if (!resultsDir.exists() || resultsDir.listFiles().length == 0) {
-            println "❌ No allure-results found — report skipped."
+            println "❌ No allure-results found — skipping report."
             return
         }
 
-        println "⚙️ Generating fresh Allure report..."
+        println "⚙️ Generating Allure report..."
+        def cmd = "allure generate '${resultsDir}' --clean -o '${outputDir}'"
+        def process = ["bash", "-c", cmd].execute()
+        process.waitForProcessOutput(System.out, System.err)
 
+        if (process.exitValue() != 0) {
+            println "❌ Allure CLI exited with code ${process.exitValue()}"
+            return
+        }
+
+        println "✅ Allure report generated → ${outputDir}/index.html"
+
+        //////////////////////////////////////////////////////////////////
+        // 🧩 OFFLINE EMBEDDING: Merge all JSON data into index.html
+        //////////////////////////////////////////////////////////////////
         try {
-            def cmd = "allure generate '${resultsDir}' --clean -o '${outputDir}'"
-            println "💻 Running command: ${cmd}"
+            def dataDir = new File("${outputDir}/data")
+            def indexFile = new File("${outputDir}/index.html")
 
-            def process = ["bash", "-c", cmd].execute()
-            process.waitForProcessOutput(System.out, System.err)
-
-            if (process.exitValue() == 0) {
-                println "✅ Allure report generated → ${outputDir}/index.html"
-            } else {
-                println "❌ Allure CLI exited with code ${process.exitValue()}"
-                println "💡 Try manually: allure generate ${resultsDir} --clean -o ${outputDir}"
+            if (!indexFile.exists() || !dataDir.exists()) {
+                println "⚠️ Skipping embedding (no data folder or index.html)."
+                return
             }
 
-            ///////////////////////////////////////////////////////////
-            // 🧩 EMBED JSON DATA FOR OFFLINE ACCESS (Safari-compatible)
-            ///////////////////////////////////////////////////////////
-            try {
-                def dataDir = new File("${outputDir}/data")
-                def indexFile = new File("${outputDir}/index.html")
+            println "🧩 Embedding Allure JSON + JS for offline use..."
 
-                if (indexFile.exists() && dataDir.exists()) {
-                    println "🧩 Embedding Allure JSON data into index.html for offline use..."
+            // Read all JSON files from data/
+            def dataFiles = fileTree(dir: dataDir, include: '**/*.json').files
+            def jsonMap = [:]
+            dataFiles.each { f ->
+                jsonMap[f.name] = f.text
+            }
 
-                    def dataFiles = fileTree(dir: dataDir, include: '**/*.json').files
-                    def jsonMap = [:]
-                    dataFiles.each { f ->
-                        jsonMap[f.name] = f.text
-                    }
+            def jsonContent = new groovy.json.JsonBuilder(jsonMap).toPrettyString()
 
-                    def jsonContent = new groovy.json.JsonBuilder(jsonMap).toPrettyString()
-
-                    def scriptBlock = """
+            // Patch fetch() in the HTML to serve embedded JSON
+            def scriptBlock = """
 <script>
 (function() {
-  // 🧩 Offline Allure Loader – works in Safari, Chrome, Edge
+  // 🧩 Offline Allure Loader (Full Safari + Chrome + Edge support)
   const jsonData = ${jsonContent};
+
+  // Override fetch for JSON files
   const originalFetch = window.fetch;
   window.fetch = (url) => {
     if (url && url.includes('/data/')) {
       const file = url.split('/').pop();
       const data = jsonData[file];
       if (data) {
+        console.log('📦 Loading embedded JSON:', file);
         return Promise.resolve({
           json: () => Promise.resolve(JSON.parse(data))
         });
@@ -126,50 +130,44 @@ tasks.register('generateAllureReport') {
     }
     return originalFetch(url);
   };
-  console.log("✅ Offline Allure mode enabled");
+
+  // Block service workers and external JS errors in offline mode
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then(regs => regs.forEach(r => r.unregister()));
+  }
+
+  console.log('✅ Allure Offline Mode enabled');
 })();
 </script>
 """
 
-                    // inject before </body> (Safari requires this position)
-                    def htmlContent = indexFile.text.replaceFirst('(?i)</body>', "${scriptBlock}\n</body>")
-                    indexFile.text = htmlContent
+            def htmlContent = indexFile.text.replaceFirst('(?i)</body>', "${scriptBlock}\n</body>")
+            indexFile.text = htmlContent
 
-                    println "✅ Embedded ${dataFiles.size()} JSON files and added fetch override for offline mode."
-                } else {
-                    println "⚠️ Skipping embedding: index.html or data folder missing."
-                }
-            } catch (Exception e) {
-                println "⚠️ Failed to embed Allure JSON offline data: ${e.message}"
-            }
-
+            println "✅ Embedded ${dataFiles.size()} JSON files. Report works 100% offline."
         } catch (Exception e) {
-            println "❌ Allure CLI failed — ${e.message}"
-            println "💡 Try manually: allure generate ${resultsDir} --clean -o ${outputDir}"
+            println "⚠️ Failed to embed Allure JSON: ${e.message}"
         }
 
-        // Archive each run
-        if (outputDir.exists()) {
-            copy {
-                from outputDir
-                into "$projectDir/reports/history/${timestamp}"
-            }
-            println "🗂 Archived → reports/history/${timestamp}"
+        // Archive history
+        copy {
+            from outputDir
+            into "$projectDir/reports/history/${timestamp}"
+        }
+        println "🗂 Archived → reports/history/${timestamp}"
 
-            // Automatically open latest report on macOS
-            if (System.getProperty("os.name").toLowerCase().contains("mac")) {
-                try {
-                    def openCmd = "open '${outputDir}/index.html'"
-                    ["bash", "-c", openCmd].execute()
-                    println "🖥️ Opened latest report automatically."
-                } catch (ignored) {}
-            }
+        // Auto-open on macOS
+        if (System.getProperty("os.name").toLowerCase().contains("mac")) {
+            try {
+                ["bash", "-c", "open '${outputDir}/index.html'"].execute()
+                println "🖥️ Opened latest report automatically."
+            } catch (ignored) {}
         }
     }
 }
 
 /////////////////////////////////////////////////////////////
-// ✅ TEST CONFIGURATION (Define AFTER Allure Tasks)
+// ✅ TEST CONFIGURATION (AFTER REPORT TASKS)
 /////////////////////////////////////////////////////////////
 test {
     useTestNG {
@@ -192,7 +190,7 @@ test {
         if (resultsDir.exists()) resultsDir.deleteDir()
         resultsDir.mkdirs()
         println "🧹 Purged old build/allure-results"
-        println "🕓 Started test cycle at " + new Date().format("yyyy-MM-dd HH:mm:ss")
+        println "🕓 Test cycle started at " + new Date().format("yyyy-MM-dd HH:mm:ss")
     }
 
     finalizedBy 'runAllureReport'
@@ -215,7 +213,7 @@ allure {
 }
 
 /////////////////////////////////////////////////////////////
-// ✅ ENVIRONMENT INFO (Optional)
+// ✅ ENVIRONMENT INFO
 /////////////////////////////////////////////////////////////
 tasks.register('printEnv') {
     doLast {

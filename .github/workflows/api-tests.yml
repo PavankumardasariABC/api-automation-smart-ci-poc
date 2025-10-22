@@ -27,27 +27,27 @@ jobs:
     runs-on: self-hosted
 
     steps:
+      # -----------------------------------------
+      # 1️⃣ Checkout repository
+      # -----------------------------------------
       - name: 📥 Checkout repository
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.inputs.branch || github.ref_name || 'feature/github-actions-poc-' }}
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      # -----------------------------------------
+      # 2️⃣ Setup JDK
+      # -----------------------------------------
       - name: ☕ Setup JDK
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '21'
 
-      - name: 🧹 Trim Gradle cache (avoid 1 GB downloads)
-        run: |
-          mkdir -p ~/.gradle/caches
-          rm -rf ~/.gradle/caches/*/fileHashes
-          rm -rf ~/.gradle/caches/*/scripts
-          rm -rf ~/.gradle/caches/*/scripts-remapped
-          echo "✅ Cleaned transient Gradle cache directories"
-
-      # Optional cache step – can comment out if slow
+      # -----------------------------------------
+      # 3️⃣ Cache Gradle dependencies
+      # -----------------------------------------
       - name: 🧱 Cache Gradle dependencies
         uses: actions/cache@v4
         with:
@@ -58,6 +58,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
+      # -----------------------------------------
+      # 4️⃣ Smart Test Selection
+      # -----------------------------------------
       - name: 🧠 Smart Test Selection
         id: smart
         run: |
@@ -69,8 +72,12 @@ jobs:
             echo "group=${{ github.event.inputs.test_group }}" >> $GITHUB_OUTPUT
           fi
 
+      # -----------------------------------------
+      # 5️⃣ Execute Tests
+      # -----------------------------------------
       - name: 🧪 Run Tests
         run: |
+          echo "Running tests for: ${{ github.event.inputs.test_class || 'All tests' }}"
           if [ "${{ github.event.inputs.test_class }}" != "" ]; then
             ./gradlew clean test --tests "${{ github.event.inputs.test_class }}" --info
           elif [ "${{ github.event.inputs.test_group }}" != "" ] && [ "${{ github.event.inputs.test_group }}" != "All" ]; then
@@ -79,28 +86,67 @@ jobs:
             ./gradlew clean test --info
           fi
 
+      # -----------------------------------------
+      # 6️⃣ Generate Self-Contained Allure Report
+      # -----------------------------------------
       - name: 📊 Generate Allure Report
         run: |
+          echo "⚙️ Generating Allure Report..."
           ./gradlew generateAllureReport
-          echo "✅ Allure report generated → reports/current/index.html"
+          echo "✅ Allure report available → reports/current/index.html"
 
-      - name: 📦 Upload Allure Report Artifact
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: Allure-HTML-Report-${{ github.run_number }}
-          path: reports/current/
-          retention-days: 15
-
-      - name: 🌐 Serve Allure Report for demo
+      # -----------------------------------------
+      # 7️⃣ Zip the Report for Download
+      # -----------------------------------------
+      - name: 🗜️ Zip Self-Contained HTML Report
         if: always()
         run: |
           cd reports/current
-          python3 -m http.server 8080 &
-          echo "🌍 Access locally at → http://localhost:8080"
+          zip -r ../../Allure-Offline-Report.zip .
+          cd ../..
+          echo "✅ Zipped offline report → Allure-Offline-Report.zip"
 
+      # -----------------------------------------
+      # 8️⃣ Upload Report as Artifact
+      # -----------------------------------------
+      - name: 📦 Upload Allure Offline HTML Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Allure-Offline-Report-${{ github.run_number }}
+          path: Allure-Offline-Report.zip
+          retention-days: 15
+
+      # -----------------------------------------
+      # 9️⃣ Comment on PR (if applicable)
+      # -----------------------------------------
+      - name: 💬 Comment Allure Report Link
+        if: ${{ github.event_name == 'pull_request' }}
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const runUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            const message = `
+            ✅ **Allure Report Generated (Offline Mode)**
+            📦 [Download Zipped HTML Report](${runUrl})
+
+            💡 Once downloaded, extract and open:
+            \`index.html\`
+            (Works directly — no server needed 🚀)
+            `;
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: message
+            });
+
+      # -----------------------------------------
+      # 🔟 Fail Build on Test Failure
+      # -----------------------------------------
       - name: 🛑 Fail Build on Test Failure
         if: failure()
         run: |
-          echo "❌ Tests failed!"
+          echo "❌ Tests failed! Build will be marked as failed."
           exit 1
