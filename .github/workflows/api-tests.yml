@@ -1,4 +1,4 @@
-# 🚀 Smart API Automation CI Workflow (Fast + Offline Ready)
+# 🚀 Smart API Automation CI Workflow (Safari-safe + Single HTML Report)
 name: 🚀 API Automation CI
 
 on:
@@ -41,24 +41,22 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       # -----------------------------------------
-      # 2️⃣ Setup JDK (No Heavy Cache)
+      # 2️⃣ Setup JDK
       # -----------------------------------------
       - name: ☕ Setup JDK
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '21'
-      # ⚡ cache removed → faster runs & no tar delay
 
       # -----------------------------------------
-      # 3️⃣ Quick Gradle Cache Cleanup
+      # 3️⃣ Clean Gradle Cache
       # -----------------------------------------
-      - name: 🧹 Clean Gradle Temp Files
+      - name: 🧹 Clean Gradle Cache
         run: |
-          echo "🧹 Cleaning temporary Gradle files..."
+          echo "🧹 Cleaning Gradle cache..."
           rm -rf ~/.gradle/caches/build-cache-* || true
           rm -rf ~/.gradle/daemon/* || true
-          echo "✅ Cleanup done."
 
       # -----------------------------------------
       # 4️⃣ Smart Test Selection
@@ -89,24 +87,24 @@ jobs:
           fi
 
       # -----------------------------------------
-      # 6️⃣ Generate Allure Single HTML Report
+      # 6️⃣ Generate Safari-Safe Allure Report
       # -----------------------------------------
       - name: 📊 Generate Offline Allure Report
         if: always()
         run: |
-          echo "⚙️ Generating single-file Allure report..."
+          echo "⚙️ Generating Safari-safe single-file Allure report..."
           ./gradlew --no-daemon generateAllureReport
-          echo "✅ Single-file report ready → reports/current/Allure_Offline_Single.html"
+          echo "✅ Report generated → reports/current/Allure_Offline_Single_Safe.html"
 
       # -----------------------------------------
-      # 7️⃣ Upload Single HTML Artifact
+      # 7️⃣ Upload Artifact (Corrected Path)
       # -----------------------------------------
-      - name: 📦 Upload Offline Report
+      - name: 📦 Upload Safari-Safe Allure Report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: Allure-Report-${{ github.run_number }}
-          path: reports/current/Allure_Offline_Single.html
+          name: Allure-Offline-Report-${{ github.run_number }}
+          path: reports/current/Allure_Offline_Single_Safe.html
           retention-days: 10
 
       # -----------------------------------------
