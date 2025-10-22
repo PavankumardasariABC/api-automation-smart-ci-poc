@@ -58,16 +58,24 @@ jobs:
       # -----------------------------------------
       # 4️⃣ Install Allure CLI (macOS-safe)
       # -----------------------------------------
-      - name: 🧩 Install Allure CLI (non-sudo)
+      - name: 🧩 Install Allure CLI (cross-platform)
         run: |
-          echo "📦 Installing Allure CLI (non-sudo)..."
+          echo "📦 Installing Allure CLI (cross-platform)..."
           BASE_DIR="${{ github.workspace }}/allure-cli"
           mkdir -p "$BASE_DIR"
-          wget -q https://github.com/allure-framework/allure2/releases/download/2.27.0/allure-2.27.0.zip -O allure.zip
+
+          echo "⬇️ Downloading Allure 2.27.0..."
+          curl -L -o allure.zip https://github.com/allure-framework/allure2/releases/download/2.27.0/allure-2.27.0.zip
+
+          echo "📦 Extracting..."
           unzip -q allure.zip -d "$BASE_DIR"
+
           chmod +x "$BASE_DIR/allure-2.27.0/bin/allure"
           echo "$BASE_DIR/allure-2.27.0/bin" >> $GITHUB_PATH
+
+          echo "✅ Allure CLI installed successfully"
           "$BASE_DIR/allure-2.27.0/bin/allure" --version
+      
 
       # -----------------------------------------
       # 5️⃣ Smart Test Selection
