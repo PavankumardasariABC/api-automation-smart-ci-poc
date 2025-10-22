@@ -91,7 +91,7 @@ tasks.register('generateAllureReport') {
             }
 
             ///////////////////////////////////////////////////////////
-            // 🧩 EMBED JSON DATA FOR OFFLINE ACCESS (Final Version)
+            // 🧩 EMBED JSON DATA FOR OFFLINE ACCESS (Safari-compatible)
             ///////////////////////////////////////////////////////////
             try {
                 def dataDir = new File("${outputDir}/data")
@@ -110,13 +110,14 @@ tasks.register('generateAllureReport') {
 
                     def scriptBlock = """
 <script>
-  // 🧩 Offline Allure Loader: enables Allure report to work without server
-  window.embeddedAllureData = ${jsonContent};
+(function() {
+  // 🧩 Offline Allure Loader – works in Safari, Chrome, Edge
+  const jsonData = ${jsonContent};
   const originalFetch = window.fetch;
   window.fetch = (url) => {
     if (url && url.includes('/data/')) {
       const file = url.split('/').pop();
-      const data = window.embeddedAllureData[file];
+      const data = jsonData[file];
       if (data) {
         return Promise.resolve({
           json: () => Promise.resolve(JSON.parse(data))
@@ -125,11 +126,13 @@ tasks.register('generateAllureReport') {
     }
     return originalFetch(url);
   };
+  console.log("✅ Offline Allure mode enabled");
+})();
 </script>
-</body>
 """
 
-                    def htmlContent = indexFile.text.replace('</body>', scriptBlock)
+                    // inject before </body> (Safari requires this position)
+                    def htmlContent = indexFile.text.replaceFirst('(?i)</body>', "${scriptBlock}\n</body>")
                     indexFile.text = htmlContent
 
                     println "✅ Embedded ${dataFiles.size()} JSON files and added fetch override for offline mode."
@@ -192,7 +195,7 @@ test {
         println "🕓 Started test cycle at " + new Date().format("yyyy-MM-dd HH:mm:ss")
     }
 
-    finalizedBy 'runAllureReport'   // ✅ works now since it’s defined above
+    finalizedBy 'runAllureReport'
 }
 
 /////////////////////////////////////////////////////////////
