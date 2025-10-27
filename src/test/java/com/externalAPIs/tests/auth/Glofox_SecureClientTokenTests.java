@@ -22,7 +22,7 @@ import java.util.*;
 public class Glofox_SecureClientTokenTests {
 
     @Story("As a Glofox secure service, I can authenticate with secure credentials and obtain a valid OAuth token.")
-    @Test(priority = 1, groups = {"Sanity})
+    @Test(priority = 1, groups = {"Sanity"})
     @Description("Ensures Glofox Secure Client Token can be retrieved using Base64-encoded credentials for secure payment APIs.")
 
     public void getGlofoxSecureClientToken() {
