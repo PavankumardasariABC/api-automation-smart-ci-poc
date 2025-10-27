@@ -140,7 +140,7 @@ jobs:
           fi
 
       # -----------------------------------------
-      # 7.1️⃣ Embed Allure Report into Single HTML (Safe)
+      # 7.1️⃣ Embed Allure Report into Single HTML (Base64 Safe)
       # -----------------------------------------
       - name: 🧩 Embed Allure Report as Single HTML
         if: always()
@@ -149,71 +149,97 @@ jobs:
           OUTPUT_FILE="${REPORT_DIR}/Allure_Offline_Single_Safe.html"
 
           echo "📦 Embedding Allure JSON data into single HTML file..."
-          echo "<!DOCTYPE html><html><head><meta charset='UTF-8'><title>Allure Offline Report</title></head><body><script>" > "$OUTPUT_FILE"
-          echo "window.allureData = " >> "$OUTPUT_FILE"
+          mkdir -p "$REPORT_DIR"
 
-          # ✅ Use safe concatenation — no process substitution
-          JSON_CONTENT=$(find "$REPORT_DIR" -name '*.json' -exec cat {} + | jq -s .)
-          echo "$JSON_CONTENT" >> "$OUTPUT_FILE"
+          # Collect & compress all Allure JSON files
+          TEMP_FILE="$REPORT_DIR/allure_data.json"
+          find "$REPORT_DIR" -name '*.json' -exec cat {} + > "$TEMP_FILE"
 
-          echo ";</script><iframe src='index.html' style='width:100%;height:100%;border:none;'></iframe></body></html>" >> "$OUTPUT_FILE"
+          # Encode into Base64 to avoid CI shell truncation
+          BASE64_JSON=$(base64 -i "$TEMP_FILE" | tr -d '\n')
 
-          echo "✅ Created Safari-safe offline report at $OUTPUT_FILE"
-          ls -lh "$OUTPUT_FILE"
+          # Create embedded HTML that decodes Base64 back into JS at runtime
+          cat <<EOF > "$OUTPUT_FILE"
+  <!DOCTYPE html>
+  <html>
+  <head>
+  <meta charset="UTF-8">
+  <title>Allure Offline Report</title>
+  <script>
+  const decoded = atob("$BASE64_JSON");
+  window.allureData = JSON.parse(decoded);
+  </script>
+  </head>
+  <body>
+  <iframe src="index.html" style="width:100%;height:100%;border:none;"></iframe>
+  </body>
+  </html>
+  EOF
+  
+  echo "✅ Created Safari-safe offline report at $OUTPUT_FILE"
+  ls -lh "$OUTPUT_FILE"
 
+# -----------------------------------------
+# 8️⃣ Verify Allure Results
+# -----------------------------------------
+- name: 🕵️ Verify Allure Results
+  if: always()
+  run: |
+    if [ -d "build/allure-results" ]; then
+      echo "✅ Found allure-results:"
+      find build/allure-results -name "*.json" | wc -l
+    else
+      echo "❌ No allure-results found!"
+    fi
 
-      # -----------------------------------------
-      # 8️⃣ Verify Allure Results
-      # -----------------------------------------
-      - name: 🕵️ Verify Allure Results
-        if: always()
-        run: |
-          if [ -d "build/allure-results" ]; then
-            echo "✅ Found allure-results:"
-            find build/allure-results -name "*.json" | wc -l
-          else
-            echo "❌ No allure-results found!"
-          fi
+# -----------------------------------------
+# 9️⃣ Upload Artifacts (HTML + Full Folder)
+# -----------------------------------------
+- name: 📦 Upload Safari-Safe Offline HTML Report
+  if: always()
+  uses: actions/upload-artifact@v4
+  with:
+    name: Allure-Offline-Report-${{ github.run_number }}
+    path: reports/current/Allure_Offline_Single_Safe.html
+    retention-days: 15
 
-      # -----------------------------------------
-      # 9️⃣ Upload Safari-Safe Offline Allure Report
-      # -----------------------------------------
-      - name: 📦 Upload Safari-Safe Offline Allure Report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: Allure-Offline-Report-${{ github.run_number }}
-          path: reports/current/Allure_Offline_Single_Safe.html
-          retention-days: 15
+- name: 📦 Upload Full Allure Report Folder
+  if: always()
+  uses: actions/upload-artifact@v4
+  with:
+    name: Allure-Full-Report-${{ github.run_number }}
+    path: reports/current/
+    retention-days: 15
 
-      # -----------------------------------------
-      # 🔟 Comment on PR with Report Link
-      # -----------------------------------------
-      - name: 💬 Comment on PR with Report Link
-        if: ${{ github.event_name == 'pull_request' }}
-        uses: actions/github-script@v7
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const prNumber = context.issue.number;
-            const runUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
-            const message = `
-            ✅ **API Tests Executed Successfully**
-            • **Branch:** \`${{ github.ref_name }}\`
-            • **Suite:** \`${{ github.event.inputs.test_group || 'All' }}\`
-            • 💾 **Download Report:**  
-              → Go to the [Artifacts tab](${runUrl}) and download **Allure-Offline-Report-${{ github.run_number }}**
-            • Once downloaded, open \`Allure_Offline_Single_Safe.html\` locally in any browser.`;
-            await github.rest.issues.createComment({
-              issue_number: prNumber,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: message
-            });
+# -----------------------------------------
+# 🔟 Comment on PR with Report Link
+# -----------------------------------------
+- name: 💬 Comment on PR with Report Link
+  if: ${{ github.event_name == 'pull_request' }}
+  uses: actions/github-script@v7
+  with:
+    github-token: ${{ secrets.GITHUB_TOKEN }}
+    script: |
+      const prNumber = context.issue.number;
+      const runUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+      const message = `
+      ✅ **API Tests Executed Successfully**
+      • **Branch:** \`${{ github.ref_name }}\`
+      • **Suite:** \`${{ github.event.inputs.test_group || 'All' }}\`
+      • 💾 **Download Report(s):**
+        → [Offline HTML (1-Click)](${runUrl}) — *Allure-Offline-Report-${{ github.run_number }}*  
+        → [Full Folder (Zip)](${runUrl}) — *Allure-Full-Report-${{ github.run_number }}*
+      • Open locally for a full visual dashboard.`;
+      await github.rest.issues.createComment({
+        issue_number: prNumber,
+        owner: context.repo.owner,
+        repo: context.repo.repo,
+        body: message
+      });
 
-      # -----------------------------------------
-      # 11️⃣ Fail Build on Test Failure
-      # -----------------------------------------
-      - name: 🛑 Fail Build on Test Failure
-        if: failure()
-        run: exit 1
+# -----------------------------------------
+# 11️⃣ Fail Build on Test Failure
+# -----------------------------------------
+- name: 🛑 Fail Build on Test Failure
+  if: failure()
+  run: exit 1
