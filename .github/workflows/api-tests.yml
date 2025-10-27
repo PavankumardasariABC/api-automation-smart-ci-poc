@@ -36,7 +36,7 @@ jobs:
       AUTH_PASSWORD: ${{ secrets.AUTH_PASSWORD }}
 
     steps:
-      # 1️⃣ Checkout Repository
+      # 1) Checkout (fetch all refs so "Smart Test Selection" can diff properly)
       - name: 📥 Checkout repository
         uses: actions/checkout@v4
         with:
@@ -44,31 +44,29 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
 
-      # 2️⃣ Cache Gradle
+      # 2) Gradle caches (wrapper + deps)
       - name: ⚡ Cache Gradle Wrapper
         uses: actions/cache@v4
         with:
           path: ~/.gradle/wrapper
           key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-wrapper-
+          restore-keys: ${{ runner.os }}-gradle-wrapper-
 
       - name: ⚡ Cache Gradle Dependencies
         uses: actions/cache@v4
         with:
           path: ~/.gradle/caches
           key: ${{ runner.os }}-gradle-caches-${{ hashFiles('**/*.gradle*') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-caches-
+          restore-keys: ${{ runner.os }}-gradle-caches-
 
-      # 3️⃣ Setup Java
+      # 3) JDK
       - name: ☕ Setup JDK
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: "21"
 
-      # 4️⃣ Allure CLI
+      # 4) Allure CLI (cached)
       - name: ⚡ Cache Allure CLI
         uses: actions/cache@v4
         with:
@@ -90,7 +88,7 @@ jobs:
           echo "$BASE_DIR/allure-2.27.0/bin" >> $GITHUB_PATH
           allure --version
 
-      # 5️⃣ Smart Test Selection
+      # 5) Smart test selection (diff against origin/<feature branch root>)
       - name: 🧠 Smart Test Selection
         id: smart
         shell: bash
@@ -107,7 +105,7 @@ jobs:
             echo "group=${{ github.event.inputs.test_group }}" >> $GITHUB_OUTPUT
           fi
 
-      # 6️⃣ Run Tests
+      # 6) Run tests (parallel)
       - name: 🧪 Run Tests
         shell: bash
         run: |
@@ -123,26 +121,17 @@ jobs:
             ./gradlew test --parallel --max-workers=4 --info
           fi
 
-      # 7️⃣ Generate Allure Report (Full Sync)
-      - name: 📊 Generate Allure Report (Full Sync)
+      # 7) Generate Allure report
+      - name: 📊 Generate Allure Report
         if: always()
         run: |
-          echo "🧩 Syncing Allure results..."
-          mkdir -p reports/current
-          cp -R build/allure-results/* reports/current/ || true
-
-          echo "⚙️ Generating Allure report..."
-          ./gradlew cleanTest generateAllureReport --info
-
-          # Preserve trend data
-          if [ -d "reports/history" ]; then
-            echo "📈 Preserving historical trend data..."
-            cp -R reports/history reports/current/ || true
+          if [ -d "build/allure-results" ] && [ "$(find build/allure-results -name '*.json' | wc -l)" -gt 0 ]; then
+            ./gradlew generateAllureReport --info
+          else
+            echo "⚠️ No allure-results found — skipping report generation."
           fi
 
-          echo "✅ Report successfully generated at reports/current/index.html"
-
-      # 8️⃣ Add Local-View Scripts
+      # 8) Add "open locally" helper scripts into the report folder
       - name: 🧰 Add local-view helper scripts
         if: always()
         shell: bash
@@ -182,7 +171,7 @@ jobs:
           python -m http.server %PORT%
           BAT
 
-      # 9️⃣ Upload Artifacts
+      # 9) Upload artifact (full site with helper scripts)
       - name: 📦 Upload Full Allure Report
         if: always()
         uses: actions/upload-artifact@v4
@@ -191,8 +180,8 @@ jobs:
           path: reports/current/
           retention-days: 15
 
-      # 🔟 Publish to GitHub Pages
-      - name: 🌐 Publish Allure report (latest)
+      # 10) Publish LIVE report to GitHub Pages
+      - name: 🌐 Publish Allure report to GitHub Pages (latest)
         if: always()
         uses: peaceiris/actions-gh-pages@v3
         with:
@@ -202,7 +191,7 @@ jobs:
           keep_files: true
           commit_message: "📊 Publish Allure Report (latest) #${{ github.run_number }}"
 
-      - name: 🌐 Publish Allure report (per-run)
+      - name: 🌐 Publish Allure report to GitHub Pages (run folder)
         if: always()
         uses: peaceiris/actions-gh-pages@v3
         with:
@@ -212,7 +201,7 @@ jobs:
           keep_files: true
           commit_message: "📊 Publish Allure Report (run ${{ github.run_number }})"
 
-      # 1️⃣1️⃣ Comment PR with Report Links
+      # 11) Comment on PR with links
       - name: 💬 Comment on PR
         if: ${{ github.event_name == 'pull_request' }}
         uses: actions/github-script@v7
@@ -231,12 +220,12 @@ jobs:
             • This run: ${pagesBase}/reports/runs/${{ github.run_number }}/
 
             💾 **Artifacts**
-            • Full folder: [Download here](${runUrl}) → **Allure-Full-Report-${{ github.run_number }}**
+            • Full folder: available in the [Artifacts tab](${runUrl}) as **Allure-Full-Report-${{ github.run_number }}**
             • To view locally: unzip → run \`run_local_server.sh\` (Mac/Linux) or \`run_local_server.bat\` (Windows) → open http://localhost:8000
             `;
             await github.rest.issues.createComment({ ...context.issue, body: msg });
 
-      # 1️⃣2️⃣ Fail Build on Test Failure
+      # 12) Fail the job if tests failed (keeps artifacts & pages published)
       - name: 🛑 Fail Build on Test Failure
         if: failure()
         run: exit 1
