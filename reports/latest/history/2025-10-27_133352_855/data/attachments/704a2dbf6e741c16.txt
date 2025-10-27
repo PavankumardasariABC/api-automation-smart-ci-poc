@@ -1,0 +1,12 @@
+https://secure.dev.30preprod.com/api/abcpg/terminal
+Headers:
+{ Authorization=****, Content-Type=application/json;charset=UTF-8, ABCFS-TENANT-ID=41424320-436f-6d70-616e-792020202020, User-Agent=Automation-Test,  }
+
+Body:
+{
+  "name": "Terminal Test_1761552218472_1761552218478",
+  "description": "Terminal description for automation",
+  "terminalNumber": "qa_terminal_1761552218478",
+  "merchantProcessorId": "11f0b30b-721f-e45d-97fd-3739d9eb3974",
+  "source": "glofox test"
+}

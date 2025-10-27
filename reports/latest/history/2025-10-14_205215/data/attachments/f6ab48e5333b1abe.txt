@@ -1,0 +1,16 @@
+https://dev.30preprod.com/api/abcblg/bank-account
+Headers:
+{ Authorization=****, ABCFS-TENANT-ID=98fda17c-7592-42d7-96f0-f2c3df66f7d7, Content-Type=application/json;charset=UTF-8, User-Agent=Automation-Test,  }
+
+Body:
+{
+  "clientProfileId": "11f0a911-813a-87a8-85f6-1bb7b17b67a7",
+  "tokenId": "11f0a911-8425-e74e-806b-11c127eded3b",
+  "routingNumber": "333555888",
+  "accountHolderName": "Client-9d66f2",
+  "type": "SAVINGS",
+  "lastFour": "7505",
+  "email": "super.saver@hotbank.com",
+  "phone": "9019328522",
+  "alias": "Alias-c6dafa-Client-9d66f2"
+}

@@ -1,0 +1,49 @@
+https://secure.dev.30preprod.com/api/abcpg/merchant/11f0b30b-6742-f9a9-97fd-3739d9eb3974
+Headers:
+{ Authorization=****, Content-Type=application/json;charset=UTF-8, ABCFS-TENANT-ID=41424320-436f-6d70-616e-792020202020, User-Agent=Automation-Test,  }
+
+Body:
+{
+  "name": "QA Merchant-1761552198178 - Updated_1761552216005",
+  "description": "Merchant updated via automation at 1761552216005",
+  "supportPhone": "394112083",
+  "merchantSupportPhone": {
+    "number": "394112083",
+    "countryCode": "US"
+  },
+  "address": {
+    "address": "822 Main Street",
+    "address1": "822 Main Street",
+    "city": "Sherwood",
+    "regionCode": "AR",
+    "provinceCode": "AR",
+    "postalCode": "72120",
+    "countryCode": "US"
+  },
+  "allowsPartialAuthorization": false,
+  "id": "11f0b30b-6742-f9a9-97fd-3739d9eb3974",
+  "categoryId": "41424320-4445-4620-4341-544547202020",
+  "category": {
+    "name": "DEFAULT",
+    "description": "Default merchant-processor category",
+    "id": "41424320-4445-4620-4341-544547202020"
+  },
+  "active": true,
+  "linkedToProcessors": {
+    "EFT": false,
+    "CREDIT_CARD": false,
+    "AMEX": false,
+    "WIRE": false
+  },
+  "isAccountUpdateAllowed": false,
+  "processors": [
+    {
+      "processorId": "11f0b30b-6f08-dfba-97fd-3739d9eb3974",
+      "providerSpecificMId": "364801462",
+      "isPrimary": true,
+      "name": "Regions Bank QA-224990",
+      "status": "READY",
+      "paymentType": "EFT"
+    }
+  ]
+}

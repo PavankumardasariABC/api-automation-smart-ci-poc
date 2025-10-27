@@ -1,0 +1,74 @@
+{
+  "tinLength": 15,
+  "maxBatchPerFile": 100,
+  "maxTransactionPerFile": 9999,
+  "storageDetails": {
+    "receive": {
+      "protocolType": "S3",
+      "bucketName": "abcfinancial-qa-payment-files-us-eft",
+      "region": "us-west-2",
+      "initFolder": true,
+      "folderPath": "transactions/responses_f4efa8"
+    },
+    "send": {
+      "protocolType": "S3",
+      "bucketName": "abcfinancial-qa-payment-files-us-eft",
+      "region": "us-west-2",
+      "initFolder": true,
+      "folderPath": "transactions/requests_f4efa8"
+    }
+  },
+  "communicationDetails": {
+    "receiveEndpoint": {
+      "password": "SevOyquecNaryecGobPis",
+      "protocolType": "SFTP",
+      "deleteAfterReceive": false,
+      "batchFileRenameOnCopy": true,
+      "url": "mocksftp.qa.30preprod.com",
+      "batchFileExtension": "*",
+      "username": "qabank",
+      "folderPath": "/srv/qa/regions/responses/demo_f4efa8"
+    },
+    "sendEndpoint": {
+      "password": "SevOyquecNaryecGobPis",
+      "deleteAfterSend": false,
+      "protocolType": "SFTP",
+      "batchFileRenameOnCopy": true,
+      "url": "mocksftp.qa.30preprod.com",
+      "batchFileExtension": "ach",
+      "username": "qabank",
+      "folderPath": "/srv/qa/regions/requests/demo_f4efa8"
+    }
+  },
+  "fileFormatType": "NACHA",
+  "generalDetails": {
+    "originator.companyIdentification": "G710602737",
+    "destination.fileIdModifier": "P",
+    "maxPendingPaymentFileResponseTimeInMinutes": 4.0,
+    "originator.originatorStatusCode": "1",
+    "destination.destinationBankName": "REGIONS BANK",
+    "destination.referenceCode": "XXXXXXXX",
+    "originator.immediateOriginName": "ABC FINANCIAL SVCSXXXXX",
+    "originator.originatorDFIIdentifier": "06200019",
+    "destination.priorityCode": "01",
+    "depositEntryDescription": "EARLY",
+    "destination.blockingFactor": "10",
+    "refundEntryDescription": "CLUBCHARGE",
+    "destination.immediateDestination": "062000019",
+    "chargeEntryDescription": "CLUB FEES",
+    "originator.immediateOrigin": "1710602737",
+    "batchFile.blocking": "TRUE",
+    "destination.formatCode": "1",
+    "customerCarePhone": "8888279262"
+  },
+  "fileNamingPattern": "{cv:counter}_{dv:dd-MM-yy}",
+  "platform": "REGIONS BANK",
+  "paymentType": "EFT",
+  "provider": "REGIONS_BANK",
+  "countryCode": "US",
+  "fileExtension": "ach",
+  "name": "Regions Bank QA-f4efa8",
+  "isManualApprovalRequired": false,
+  "maxBatchingTxTimeout": 20,
+  "maxTransactionPerBatch": 9999
+}

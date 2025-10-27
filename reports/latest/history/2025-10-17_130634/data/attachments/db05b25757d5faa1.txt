@@ -1,0 +1,17 @@
+{
+    "responses": [
+        {
+            "amount": 2300,
+            "referenceId": "b8075034-4af1-4c78-97ed-9ce8b0d5ffc7",
+            "tokenId": "11f092f8-1139-f15c-91b9-ef36cde23978",
+            "terminalId": "11f0ab2b-fc96-57c2-95ff-1bc04321ff3b",
+            "descriptor": "success webhook test - 1760686589335",
+            "metadata": {
+                "uniqueTransactionId": "DV2529000000001",
+                "secCode": "PPD"
+            },
+            "transactionId": "11f0ab2b-ff94-0770-95ff-1bc04321ff3b",
+            "status": "SUCCESS"
+        }
+    ]
+}

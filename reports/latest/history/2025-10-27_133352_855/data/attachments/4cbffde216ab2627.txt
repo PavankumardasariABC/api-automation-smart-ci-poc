@@ -1,0 +1,9 @@
+{
+  "ownerType": "PAYOR",
+  "consumerOrigin": "https://dev.30preprod.com",
+  "metadata": {
+    "limitedPrimaryPaymentMethod": "ANY"
+  },
+  "cvvRequired": false,
+  "consumerId": "11f0b30b-6abb-f422-b660-b9519948908e"
+}

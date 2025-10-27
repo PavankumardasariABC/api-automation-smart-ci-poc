@@ -1,0 +1,52 @@
+<div>POST to https://api-dev.pgw.abc.fitness/%2F%2Fapi/payment-gateway/payments/refund</div>
+
+    <h4>Body</h4>
+    <div>
+    <pre class="preformated-text">
+{
+    &quot;requests&quot;: [
+        {
+            &quot;amount&quot;: &quot;2300&quot;,
+            &quot;metadata&quot;: {
+                
+            },
+            &quot;tokenId&quot;: &quot;11f092f5-df62-00cb-91b9-ef36cde23978&quot;,
+            &quot;terminalId&quot;: &quot;11f0ab2d-203e-ccfb-b619-ef583f1d7c5d&quot;,
+            &quot;descriptor&quot;: &quot;Refund via automation test - 1760687080776&quot;,
+            &quot;referenceId&quot;: &quot;0e62404a-9ceb-43b2-b620-6f48a8b5df63&quot;,
+            &quot;effectiveDate&quot;: &quot;2025-09-16&quot;
+        }
+    ]
+}    </pre>
+    </div>
+
+    <h4>Headers</h4>
+    <div>
+            <div>Authorization: Bearer eyJraWQiOiJYOGw3MGhWWjI2R1AzUWwyIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiJHTE9GT1hfU0VDVVJFX0FVVEgiLCJhdWQiOiJhYmMtcGF5bWVudC1nYXRld2F5IiwibmJmIjoxNzYwNjg3MDQzLCJfdCI6IkNMSUVOVF9PTkxZIiwic2NvcGUiOlsic2VjdXJlOnByb3RlY3RlZCJdLCJpc3MiOiJodHRwczovL3NlY3VyZS5kZXYuMzBwcmVwcm9kLmNvbSIsImV4cCI6MTc2MDc3MzQ0MywiaWF0IjoxNzYwNjg3MDQzLCJqdGkiOiIyZGFkY2UwNi0yNjU2LTQ0ZTEtYTg5YS1iMWNiY2MzM2U3Y2IiLCJjbGllbnRfaWQiOiJHTE9GT1hfU0VDVVJFX0FVVEgiLCJhdXRob3JpdGllcyI6WyJ0cmFuc2FjdGlvbjpjbGllbnQtcmVhZCIsInBnLXBheW1lbnQ6Y2xpZW50LWNyZWF0ZSJdfQ.L9ai3PUrltzBa7NGWR535yDaLpP_waiN9IqSIvo4nfKinT8bi3_qsDnY0yJpHB38i_SDwphH5tacVc7V4lOtk0pwr6H-QhN0CuLUkl9Ev_hdS0SOtoRbV2vvoK0IN-bmXNl0FoFVW202cxfLaL7-eHCVJaHkNGbpKyfTWAKCf94swdXFcSZ1OhT9YD74YY8rxrC9DWjaA8OOx10MiAG18RCNMYiI5HX1OVuos_SvKMtiMiXGnUlMGrklWh-G6i4dPUFswlbmrO4Z8p7D2H46p5N1PJXTTX48XvAW9EUYPJPiFyAF4mrsidQJGxcg-yGXG48GwxxPXzgaXYwKmoLMUQ</div>
+            <div>User-Agent: Automation-Test</div>
+            <div>ABCFS-TENANT-ID: 41424320-436f-6d70-616e-792020202020</div>
+            <div>Accept: */*</div>
+            <div>Content-Type: application/json</div>
+    </div>
+
+
+
+    <h4>Curl</h4>
+    <div>
+        curl -v -X POST &#39;https://api-dev.pgw.abc.fitness/%2F%2Fapi/payment-gateway/payments/refund&#39; -H &#39;Authorization: Bearer eyJraWQiOiJYOGw3MGhWWjI2R1AzUWwyIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiJHTE9GT1hfU0VDVVJFX0FVVEgiLCJhdWQiOiJhYmMtcGF5bWVudC1nYXRld2F5IiwibmJmIjoxNzYwNjg3MDQzLCJfdCI6IkNMSUVOVF9PTkxZIiwic2NvcGUiOlsic2VjdXJlOnByb3RlY3RlZCJdLCJpc3MiOiJodHRwczovL3NlY3VyZS5kZXYuMzBwcmVwcm9kLmNvbSIsImV4cCI6MTc2MDc3MzQ0MywiaWF0IjoxNzYwNjg3MDQzLCJqdGkiOiIyZGFkY2UwNi0yNjU2LTQ0ZTEtYTg5YS1iMWNiY2MzM2U3Y2IiLCJjbGllbnRfaWQiOiJHTE9GT1hfU0VDVVJFX0FVVEgiLCJhdXRob3JpdGllcyI6WyJ0cmFuc2FjdGlvbjpjbGllbnQtcmVhZCIsInBnLXBheW1lbnQ6Y2xpZW50LWNyZWF0ZSJdfQ.L9ai3PUrltzBa7NGWR535yDaLpP_waiN9IqSIvo4nfKinT8bi3_qsDnY0yJpHB38i_SDwphH5tacVc7V4lOtk0pwr6H-QhN0CuLUkl9Ev_hdS0SOtoRbV2vvoK0IN-bmXNl0FoFVW202cxfLaL7-eHCVJaHkNGbpKyfTWAKCf94swdXFcSZ1OhT9YD74YY8rxrC9DWjaA8OOx10MiAG18RCNMYiI5HX1OVuos_SvKMtiMiXGnUlMGrklWh-G6i4dPUFswlbmrO4Z8p7D2H46p5N1PJXTTX48XvAW9EUYPJPiFyAF4mrsidQJGxcg-yGXG48GwxxPXzgaXYwKmoLMUQ&#39; -H &#39;User-Agent: Automation-Test&#39; -H &#39;ABCFS-TENANT-ID: 41424320-436f-6d70-616e-792020202020&#39; -H &#39;Accept: */*&#39; -H &#39;Content-Type: application/json&#39; -d &#39;{
+    &quot;requests&quot;: [
+        {
+            &quot;amount&quot;: &quot;2300&quot;,
+            &quot;metadata&quot;: {
+                
+            },
+            &quot;tokenId&quot;: &quot;11f092f5-df62-00cb-91b9-ef36cde23978&quot;,
+            &quot;terminalId&quot;: &quot;11f0ab2d-203e-ccfb-b619-ef583f1d7c5d&quot;,
+            &quot;descriptor&quot;: &quot;Refund via automation test - 1760687080776&quot;,
+            &quot;referenceId&quot;: &quot;0e62404a-9ceb-43b2-b620-6f48a8b5df63&quot;,
+            &quot;effectiveDate&quot;: &quot;2025-09-16&quot;
+        }
+    ]
+}&#39;
+    </div>
+

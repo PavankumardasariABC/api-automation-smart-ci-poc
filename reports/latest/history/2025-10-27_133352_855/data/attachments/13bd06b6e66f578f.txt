@@ -1,0 +1,23 @@
+https://dev.30preprod.com/api/location
+Headers:
+{ Authorization=****, ABCFS-TENANT-ID=d7480e56-955e-4b5c-a844-5a35a858d5bc, Content-Type=application/json;charset=UTF-8,  }
+
+Body:
+{
+  "name": "OP-Location-1761552193468-1761552193476",
+  "taxIncluded": true,
+  "address": {
+    "countryCode": "US",
+    "city": "Cobleskill",
+    "postalCode": "12043",
+    "provinceCode": "NY",
+    "address1": "139 Merchant Place"
+  },
+  "phone": {
+    "extension": "56648",
+    "countryCode": "US",
+    "number": "3030700"
+  },
+  "timezone": "US/Central",
+  "email": "OP-Location-1761552193468-1761552193476@qa4life.com"
+}
