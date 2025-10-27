@@ -166,8 +166,22 @@ ${jsonContent}
 /////////////////////////////////////////////////////////////
 // ✅ TEST CONFIGURATION
 /////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////
+// ✅ TEST CONFIGURATION — supports dynamic TestNG groups
+/////////////////////////////////////////////////////////////
 test {
-    useTestNG { suites 'testng.xml' }
+    useTestNG() {
+        // ✅ Support both suite XML and runtime group filtering
+        if (project.hasProperty('groups') && project.getProperty('groups')) {
+            def groupFilter = project.getProperty('groups')
+            println "🏷️ Running only TestNG group(s): ${groupFilter}"
+            includeGroups groupFilter.split(',')  // supports multiple comma-separated groups
+        } else {
+            println "🧩 No TestNG group specified — defaulting to full suite"
+            suites 'testng.xml'
+        }
+    }
+
     failFast = false
     ignoreFailures = true
     outputs.upToDateWhen { false }
@@ -187,6 +201,7 @@ test {
 
     finalizedBy 'generateAllureReport'
 }
+
 
 /////////////////////////////////////////////////////////////
 // ✅ ALLURE ADAPTER CONFIGURATION
