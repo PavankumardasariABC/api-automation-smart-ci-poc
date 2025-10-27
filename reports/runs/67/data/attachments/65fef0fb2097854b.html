@@ -1,0 +1,107 @@
+<div>Status code 201 </div>
+
+
+<h4>Body</h4>
+<div>
+    <pre class="preformated-text">
+{
+    &quot;locationId&quot;: &quot;11f0b306-77a4-7f49-9332-95ef7ab78dc3&quot;,
+    &quot;type&quot;: &quot;LOCATION&quot;,
+    &quot;merchantId&quot;: &quot;11f0b306-7b37-9112-97fd-3739d9eb3974&quot;,
+    &quot;name&quot;: &quot;Client-1761550087282&quot;,
+    &quot;email&quot;: &quot;qa_1761550087282@testmail.com&quot;,
+    &quot;phone&quot;: &quot;9017284033&quot;,
+    &quot;timeZone&quot;: &quot;US/Central&quot;,
+    &quot;billAllowed&quot;: false,
+    &quot;statementDeliveryByLetterAllowed&quot;: false,
+    &quot;processingMode&quot;: &quot;TEST&quot;,
+    &quot;locale&quot;: {
+        &quot;language&quot;: &quot;EN&quot;,
+        &quot;region&quot;: &quot;US&quot;
+    },
+    &quot;enableRFCStateManagement&quot;: false,
+    &quot;taxIncluded&quot;: false,
+    &quot;rfcDays&quot;: 90,
+    &quot;countryCode&quot;: &quot;US&quot;,
+    &quot;useClientStatementSchedule&quot;: false,
+    &quot;sendPrenote&quot;: false,
+    &quot;ccExpirationEventSuppression&quot;: false,
+    &quot;bundledPaymentsAllowed&quot;: false,
+    &quot;bundledUnmanagedPaymentsAllowed&quot;: false,
+    &quot;useNewPricingModel&quot;: true,
+    &quot;communicationFeeAllowed&quot;: false,
+    &quot;standardStatementProcessingApplied&quot;: false,
+    &quot;feePerInvoiceBillingEnabled&quot;: false,
+    &quot;costPlusPricingModelEnabled&quot;: false,
+    &quot;ecommerceEnabled&quot;: false,
+    &quot;personalTrainingEnabled&quot;: false,
+    &quot;limitedPrimaryPaymentMethod&quot;: &quot;ANY&quot;,
+    &quot;taxationSelfManaged&quot;: false,
+    &quot;showTaxJurisdictions&quot;: false,
+    &quot;useNewDepositModel&quot;: false,
+    &quot;reimburseAbcFee&quot;: false,
+    &quot;clientProfileId&quot;: &quot;11f0b306-7d41-69f3-97dd-01dc72de0062&quot;,
+    &quot;currency&quot;: &quot;USD&quot;,
+    &quot;proratedFreezeAllowed&quot;: false,
+    &quot;deferredCollectionAllowed&quot;: true,
+    &quot;deferralCollectionPeriodLength&quot;: 10,
+    &quot;organizationId&quot;: &quot;9242e783-99af-4a6b-9400-53e6f3da0b76&quot;,
+    &quot;paymentPolicyPlanId&quot;: &quot;11ed38ce-290c-88d8-b6e1-06a92038d2b5&quot;,
+    &quot;exceptionRules&quot;: [
+        {
+            &quot;id&quot;: &quot;11f0b306-7d76-aac4-97dd-01dc72de0062&quot;,
+            &quot;clientProfileId&quot;: &quot;11f0b306-7d41-69f3-97dd-01dc72de0062&quot;,
+            &quot;ruleId&quot;: &quot;11ea4cbf-b5bd-c0ed-9aad-0242ac120009&quot;,
+            &quot;description&quot;: &quot;More Than 1000.00&quot;,
+            &quot;active&quot;: false,
+            &quot;ruleName&quot;: &quot;HIGH_AMOUNT_DUE&quot;,
+            &quot;params&quot;: [
+                {
+                    &quot;id&quot;: &quot;11f0b306-7d76-d1d5-97dd-01dc72de0062&quot;,
+                    &quot;ruleInstanceId&quot;: &quot;11f0b306-7d76-aac4-97dd-01dc72de0062&quot;,
+                    &quot;value&quot;: &quot;1000.00&quot;,
+                    &quot;type&quot;: &quot;DECIMAL&quot;,
+                    &quot;name&quot;: &quot;AMOUNT&quot;
+                }
+            ]
+        },
+        {
+            &quot;id&quot;: &quot;11f0b306-7d76-d1d6-97dd-01dc72de0062&quot;,
+            &quot;clientProfileId&quot;: &quot;11f0b306-7d41-69f3-97dd-01dc72de0062&quot;,
+            &quot;ruleId&quot;: &quot;11ea4cbf-b5be-0112-9aad-0242ac120009&quot;,
+            &quot;description&quot;: &quot;Age Greater Than 60 Days&quot;,
+            &quot;active&quot;: true,
+            &quot;ruleName&quot;: &quot;HIGH_INVOICE_AGE_LIMIT&quot;,
+            &quot;params&quot;: [
+                {
+                    &quot;id&quot;: &quot;11f0b306-7d76-d1d7-97dd-01dc72de0062&quot;,
+                    &quot;ruleInstanceId&quot;: &quot;11f0b306-7d76-d1d6-97dd-01dc72de0062&quot;,
+                    &quot;value&quot;: &quot;60&quot;,
+                    &quot;type&quot;: &quot;INTEGER&quot;,
+                    &quot;name&quot;: &quot;DAYS&quot;
+                }
+            ]
+        }
+    ],
+    &quot;id&quot;: &quot;11f0b306-7d41-69f3-97dd-01dc72de0062&quot;
+}    </pre>
+</div>
+
+<h4>Headers</h4>
+<div>
+        <div>Transfer-Encoding: chunked</div>
+        <div>X-Content-Type-Options: nosniff</div>
+        <div>Connection: keep-alive</div>
+        <div>Pragma: no-cache</div>
+        <div>Date: Mon, 27 Oct 2025 07:28:11 GMT</div>
+        <div>X-Frame-Options: DENY</div>
+        <div>Strict-Transport-Security: max-age=31536000; includeSubDomains</div>
+        <div>Cache-Control: no-cache, no-store, max-age=0, must-revalidate</div>
+        <div>Vary: Access-Control-Request-Headers</div>
+        <div>Expires: 0</div>
+        <div>X-XSS-Protection: 0</div>
+        <div>Content-Type: application/json</div>
+        <div>Location: https://dev.30preprod.com/api/abcblg/client-profile/11f0b306-7d41-69f3-97dd-01dc72de0062</div>
+</div>
+
+

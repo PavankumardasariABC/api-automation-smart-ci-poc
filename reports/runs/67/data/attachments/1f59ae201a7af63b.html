@@ -1,0 +1,40 @@
+<div>POST to https://dev.30preprod.com/api/ors/payment-token/session/add-token</div>
+
+    <h4>Body</h4>
+    <div>
+    <pre class="preformated-text">
+{
+    &quot;ownerType&quot;: &quot;PAYOR&quot;,
+    &quot;consumerOrigin&quot;: &quot;https://dev.30preprod.com&quot;,
+    &quot;metadata&quot;: {
+        &quot;limitedPrimaryPaymentMethod&quot;: &quot;ANY&quot;
+    },
+    &quot;cvvRequired&quot;: false,
+    &quot;consumerId&quot;: &quot;11f0b306-7f7d-c62b-bfec-5b71c0b6f617&quot;
+}    </pre>
+    </div>
+
+    <h4>Headers</h4>
+    <div>
+            <div>Authorization: Bearer eyJraWQiOiIzcFI3ODNBOWFEdVpobHV1IiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiJHTE9GT1hfQVVUSCIsImF1ZCI6Im9yZGVyLXNlc3Npb24iLCJuYmYiOjE3NjE1NTAwNjksIl90IjoiQ0xJRU5UX09OTFkiLCJzY29wZSI6WyJwbGF0Zm9ybTpwcm90ZWN0ZWQiXSwiaXNzIjoiaHR0cHM6Ly9kZXYuMzBwcmVwcm9kLmNvbSIsImV4cCI6MTc2MTYzNjQ2OSwiaWF0IjoxNzYxNTUwMDY5LCJqdGkiOiI3OGFmMjk0Yy1jMDZmLTQ3NTEtODhlMS1iN2EwNWIxZjQyZDgiLCJjbGllbnRfaWQiOiJHTE9GT1hfQVVUSCIsImF1dGhvcml0aWVzIjpbInBheW1lbnQtdG9rZW4tc2Vzc2lvbjpjbGllbnQtY3JlYXRlIiwiY2xpZW50LXByb2ZpbGU6Y2xpZW50LWNyZWF0ZSJdfQ.eZBvsM5_aZBz4fXcwNPjWwaMohhyaIVk2Vw3bwk0SXOz8UqRNnn8bumn3bcZTZjkUFhZL5JldlUr4AwEOhBF2GQjfzzqX57BzzjaOGokPz2RrGVL13ftKEm4osQpjOPZk382pI1jmVMezw9ByyFmFrSe8zql08DKumj8rNrMppV2T_FJ2-MPN454j6nm_Y-bhXJ2lyBpWHeUOjUnSeQg8BqkB-cKXj9nPbGGpz277EgvnSthP7FBMfyCH0xCs-whT6s8VNhEkN3tbG0t_b8j7MDtAxMBIdCg_izHAC-Xdwv2TQMKYIf83Vf9M3zbabXkOFL0f1v87RWwJ6IpixEPWw</div>
+            <div>User-Agent: Automation-Test</div>
+            <div>ABCFS-TENANT-ID: 9242e783-99af-4a6b-9400-53e6f3da0b76</div>
+            <div>Accept: */*</div>
+            <div>Content-Type: application/json</div>
+    </div>
+
+
+
+    <h4>Curl</h4>
+    <div>
+        curl -v -X POST &#39;https://dev.30preprod.com/api/ors/payment-token/session/add-token&#39; -H &#39;Authorization: Bearer eyJraWQiOiIzcFI3ODNBOWFEdVpobHV1IiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiJHTE9GT1hfQVVUSCIsImF1ZCI6Im9yZGVyLXNlc3Npb24iLCJuYmYiOjE3NjE1NTAwNjksIl90IjoiQ0xJRU5UX09OTFkiLCJzY29wZSI6WyJwbGF0Zm9ybTpwcm90ZWN0ZWQiXSwiaXNzIjoiaHR0cHM6Ly9kZXYuMzBwcmVwcm9kLmNvbSIsImV4cCI6MTc2MTYzNjQ2OSwiaWF0IjoxNzYxNTUwMDY5LCJqdGkiOiI3OGFmMjk0Yy1jMDZmLTQ3NTEtODhlMS1iN2EwNWIxZjQyZDgiLCJjbGllbnRfaWQiOiJHTE9GT1hfQVVUSCIsImF1dGhvcml0aWVzIjpbInBheW1lbnQtdG9rZW4tc2Vzc2lvbjpjbGllbnQtY3JlYXRlIiwiY2xpZW50LXByb2ZpbGU6Y2xpZW50LWNyZWF0ZSJdfQ.eZBvsM5_aZBz4fXcwNPjWwaMohhyaIVk2Vw3bwk0SXOz8UqRNnn8bumn3bcZTZjkUFhZL5JldlUr4AwEOhBF2GQjfzzqX57BzzjaOGokPz2RrGVL13ftKEm4osQpjOPZk382pI1jmVMezw9ByyFmFrSe8zql08DKumj8rNrMppV2T_FJ2-MPN454j6nm_Y-bhXJ2lyBpWHeUOjUnSeQg8BqkB-cKXj9nPbGGpz277EgvnSthP7FBMfyCH0xCs-whT6s8VNhEkN3tbG0t_b8j7MDtAxMBIdCg_izHAC-Xdwv2TQMKYIf83Vf9M3zbabXkOFL0f1v87RWwJ6IpixEPWw&#39; -H &#39;User-Agent: Automation-Test&#39; -H &#39;ABCFS-TENANT-ID: 9242e783-99af-4a6b-9400-53e6f3da0b76&#39; -H &#39;Accept: */*&#39; -H &#39;Content-Type: application/json&#39; -d &#39;{
+    &quot;ownerType&quot;: &quot;PAYOR&quot;,
+    &quot;consumerOrigin&quot;: &quot;https://dev.30preprod.com&quot;,
+    &quot;metadata&quot;: {
+        &quot;limitedPrimaryPaymentMethod&quot;: &quot;ANY&quot;
+    },
+    &quot;cvvRequired&quot;: false,
+    &quot;consumerId&quot;: &quot;11f0b306-7f7d-c62b-bfec-5b71c0b6f617&quot;
+}&#39;
+    </div>
+

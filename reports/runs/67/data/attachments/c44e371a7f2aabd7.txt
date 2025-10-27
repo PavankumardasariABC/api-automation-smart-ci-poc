@@ -1,0 +1,36 @@
+{
+    "name": "OP-Location-1761550078054-1761550078064",
+    "email": "OP-Location-1761550078054-1761550078064@qa4life.com",
+    "number": "01KMCF",
+    "phone": {
+        "number": "9618338",
+        "extension": "56648",
+        "countryCode": "US"
+    },
+    "timezone": "US/Central",
+    "id": "11f0b306-77a4-7f49-9332-95ef7ab78dc3",
+    "created": "2025-10-27T07:28:00Z",
+    "modified": "2025-10-27T07:28:00Z",
+    "address": {
+        "id": "11f0b306-77b4-84da-9332-95ef7ab78dc3",
+        "address1": "139 Merchant Place",
+        "city": "Cobleskill",
+        "countryCode": "US",
+        "provinceCode": "NY",
+        "postalCode": "12043",
+        "province": {
+            "id": "NY",
+            "abbreviation": "NY",
+            "code": "US-NY"
+        },
+        "country": {
+            "id": "US",
+            "abbreviation": "USA",
+            "code": "840"
+        }
+    },
+    "verificationRequestDate": "2025-10-27T07:28:00Z",
+    "emailIdentityVerified": true,
+    "emailIdentityVerificationFailed": false,
+    "organizationId": "9242e783-99af-4a6b-9400-53e6f3da0b76"
+}

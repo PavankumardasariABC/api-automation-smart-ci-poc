@@ -1,0 +1,50 @@
+Before:
+{"name":"QA Merchant-1761550084530","description":"Test Merchant for API Automation","supportPhone":"400-653-9063","merchantSupportPhone":{"number":"400-653-9063","countryCode":"US"},"address":{"address":"628 Main Street","address1":"628 Main Street","city":"Sherwood","regionCode":"AR","provinceCode":"AR","postalCode":"72120","countryCode":"US"},"allowsPartialAuthorization":false,"id":"11f0b306-7b37-9112-97fd-3739d9eb3974","categoryId":"41424320-4445-4620-4341-544547202020","category":{"name":"DEFAULT","description":"Default merchant-processor category","id":"41424320-4445-4620-4341-544547202020"},"active":true,"linkedToProcessors":{"EFT":false,"CREDIT_CARD":false,"AMEX":false,"WIRE":false},"isAccountUpdateAllowed":false}
+
+After:
+{
+    "name": "QA Merchant-1761550084530 - Updated_1761550107194",
+    "description": "Merchant updated via automation at 1761550107194",
+    "supportPhone": "393034456",
+    "merchantSupportPhone": {
+        "number": "393034456",
+        "countryCode": "US"
+    },
+    "address": {
+        "address": "628 Main Street",
+        "address1": "628 Main Street",
+        "city": "Sherwood",
+        "regionCode": "AR",
+        "provinceCode": "AR",
+        "postalCode": "72120",
+        "countryCode": "US"
+    },
+    "allowsPartialAuthorization": false,
+    "id": "11f0b306-7b37-9112-97fd-3739d9eb3974",
+    "categoryId": "41424320-4445-4620-4341-544547202020",
+    "category": {
+        "name": "DEFAULT",
+        "description": "Default merchant-processor category",
+        "id": "41424320-4445-4620-4341-544547202020"
+    },
+    "active": true,
+    "linkedToProcessors": {
+        "EFT": true,
+        "CREDIT_CARD": false,
+        "AMEX": false,
+        "WIRE": false
+    },
+    "processors": [
+        {
+            "id": "11f0b306-88d2-fe40-8d2f-f3b125ace63e",
+            "processorId": "11f0b306-85ae-8c98-97fd-3739d9eb3974",
+            "providerSpecificMId": "364801462",
+            "isPrimary": true,
+            "isDefaultRealtime": false,
+            "name": "Regions Bank QA-986193",
+            "status": "READY",
+            "paymentType": "EFT"
+        }
+    ],
+    "isAccountUpdateAllowed": false
+}
