@@ -1,0 +1,25 @@
+{
+    "metadata": {
+        "limitedPrimaryPaymentMethod": "ANY"
+    },
+    "consumerOrigin": "https://dev.30preprod.com",
+    "workstationManualEntryAllowed": false,
+    "cvvRequired": false,
+    "expirationType": "DYNAMIC",
+    "p2pe": false,
+    "id": "11f0b320-4e8e-c52d-b660-b9519948908e",
+    "mode": "ADD_TOKEN",
+    "status": "CREATED",
+    "statusCheckState": "NONE",
+    "extensionCounter": 0,
+    "consumerId": "11f0b320-44c1-c47c-b660-b9519948908e",
+    "nextAction": "NONE",
+    "organizationId": "8d687035-ee21-4f85-beee-3e2d535ab78d",
+    "expirationTime": "2025-10-27T10:43:00Z",
+    "token": "eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIxMWYwYjMyMC00ZThlLWM1MmQtYjY2MC1iOTUxOTk0ODkwOGUiLCJhdWQiOiJFTVBMT1lFRSIsInRyYW5zZmVycmVkIjpmYWxzZSwiZXhwIjoxNzYxNjQ3NTc4LCJpYXQiOjE3NjE1NjExNzh9.RVEx3O6elptQbszCYUK_qm5yfsOsvRJywtANg2mKILKR_XQ60x7G47grMPnx0O4B9qDiRTJ4rx-0cOdYrw9rLHZOtrGcwdHNk5CUahd2htrBMpIkbfLjsW5_9igtBvy1zmuZjC34qpF2JjZwIWcMPpmMqHbKXSEJXMMbg44NNKnlsdrvdKi95oPbUvUzbs_9UuDQhMs0bMQkD8q5zId0m4vraNwkJ_EBK2tsgx0aZTlVdPf4J56K-lub10tLrDocPG1zultiueDkFM2qsz_n2KXt37lwzwAW0xbZP4Lps8NF-G3IFDww1BjoAxnqUhYEB2q2ToRAO4ozuC4Jg358gg",
+    "url": "https://pay.dev.aws.abcfinancial.net/add-token?token=eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIxMWYwYjMyMC00ZThlLWM1MmQtYjY2MC1iOTUxOTk0ODkwOGUiLCJhdWQiOiJFTVBMT1lFRSIsInRyYW5zZmVycmVkIjpmYWxzZSwiZXhwIjoxNzYxNjQ3NTc4LCJpYXQiOjE3NjE1NjExNzh9.RVEx3O6elptQbszCYUK_qm5yfsOsvRJywtANg2mKILKR_XQ60x7G47grMPnx0O4B9qDiRTJ4rx-0cOdYrw9rLHZOtrGcwdHNk5CUahd2htrBMpIkbfLjsW5_9igtBvy1zmuZjC34qpF2JjZwIWcMPpmMqHbKXSEJXMMbg44NNKnlsdrvdKi95oPbUvUzbs_9UuDQhMs0bMQkD8q5zId0m4vraNwkJ_EBK2tsgx0aZTlVdPf4J56K-lub10tLrDocPG1zultiueDkFM2qsz_n2KXt37lwzwAW0xbZP4Lps8NF-G3IFDww1BjoAxnqUhYEB2q2ToRAO4ozuC4Jg358gg",
+    "modified": "2025-10-27T10:32:58Z",
+    "created": "2025-10-27T10:32:58Z",
+    "ownerType": "PAYOR",
+    "manualEntryAllowed": false
+}
