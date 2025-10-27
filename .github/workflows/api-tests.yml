@@ -1,4 +1,4 @@
-name: 🚀 API Automation CI
+name: "🚀 API Automation CI"
 
 on:
   pull_request:
@@ -19,67 +19,44 @@ on:
         default: ""
 
 permissions:
-  contents: write
+  contents: write  # needed for gh-pages push
+
+concurrency:
+  group: api-tests-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   api-tests:
     runs-on: self-hosted
     env:
       TZ: "Asia/Kolkata"
-      ALLURE_RESULTS_DIR: build/allure-results
-      ALLURE_REPORT_DIR: reports/current
+      ALLURE_RESULTS_DIR: build/allure-results           # Gradle default
+      ALLURE_REPORT_DIR: build/reports/allure-report     # Gradle default report
+      PUBLISH_DIR: reports/site                          # Folder we publish/upload
       AUTH_USERNAME: ${{ secrets.AUTH_USERNAME }}
       AUTH_PASSWORD: ${{ secrets.AUTH_PASSWORD }}
 
     steps:
-      # -----------------------------------------
-      # 1️⃣ Checkout Repository
-      # -----------------------------------------
+      # 1) Checkout
       - name: 📥 Checkout repository
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.inputs.branch || github.ref_name }}
-          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
 
-      # -----------------------------------------
-      # 2️⃣ Cache Gradle Wrapper & Dependencies
-      # -----------------------------------------
-      - name: ⚡ Cache Gradle Wrapper
-        uses: actions/cache@v4
+      # 2) JDK + Gradle (with smart caching)
+      - name: ☕ Setup JDK + Gradle
+        uses: gradle/actions/setup-gradle@v3
         with:
-          path: ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-wrapper-
+          gradle-version: wrapper
+          cache-read-only: false
+          cache-cleanup: true
 
-      - name: ⚡ Cache Gradle Dependencies
-        uses: actions/cache@v4
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-caches-${{ hashFiles('**/*.gradle*') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-caches-
-
-      # -----------------------------------------
-      # 3️⃣ Setup JDK
-      # -----------------------------------------
-      - name: ☕ Setup JDK
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '21'
-
-      # -----------------------------------------
-      # 4️⃣ Cache & Install Allure CLI
-      # -----------------------------------------
-      - name: ⚡ Cache Allure CLI
-        uses: actions/cache@v4
-        with:
-          path: allure-cli
-          key: ${{ runner.os }}-allure-2.27.0
-
+      # 3) Allure CLI (used by your project / optional if Gradle task is enough)
       - name: 🧩 Install Allure CLI (cached)
+        shell: bash
         run: |
+          set -e
           BASE_DIR="${{ github.workspace }}/allure-cli"
           if [ ! -d "$BASE_DIR/allure-2.27.0" ]; then
             echo "⬇️ Installing Allure CLI..."
@@ -93,127 +70,171 @@ jobs:
           echo "$BASE_DIR/allure-2.27.0/bin" >> $GITHUB_PATH
           allure --version
 
-      # -----------------------------------------
-      # 5️⃣ Smart Test Selection
-      # -----------------------------------------
+      # 4) Smart test selection (diff vs main)
       - name: 🧠 Smart Test Selection
         id: smart
+        shell: bash
         run: |
+          set -e
+          git fetch origin
           echo "Detecting changed test files..."
-          CHANGED=$(git diff --name-only origin/feature/github-actions-poc-...HEAD | grep 'src/test/java' || true)
+          CHANGED=$(git diff --name-only origin/main...HEAD | grep 'src/test/java' || true)
           if [ -n "$CHANGED" ]; then
             echo "Changed test files:"
             echo "$CHANGED"
             echo "group=Custom" >> $GITHUB_OUTPUT
           else
-            echo "No specific changes; running default group."
+            echo "No specific changes; using input group."
             echo "group=${{ github.event.inputs.test_group }}" >> $GITHUB_OUTPUT
           fi
 
-      # -----------------------------------------
-      # 6️⃣ Run Tests (parallel & fast)
-      # -----------------------------------------
+      # 5) Run tests
       - name: 🧪 Run Tests
+        shell: bash
         run: |
+          set -e
           echo "🧪 Starting Test Execution..."
-          if [ "${{ github.event.inputs.test_class }}" != "" ]; then
-            echo "🎯 Running specific test class: ${{ github.event.inputs.test_class }}"
+          if [ -n "${{ github.event.inputs.test_class }}" ]; then
+            echo "🎯 Class: ${{ github.event.inputs.test_class }}"
             ./gradlew test --parallel --max-workers=4 --tests "${{ github.event.inputs.test_class }}" --info
-          elif [ "${{ github.event.inputs.test_group }}" != "" ] && [ "${{ github.event.inputs.test_group }}" != "All" ]; then
-            echo "🏷️ Running specific TestNG group: ${{ github.event.inputs.test_group }}"
+          elif [ -n "${{ github.event.inputs.test_group }}" ] && [ "${{ github.event.inputs.test_group }}" != "All" ]; then
+            echo "🏷️ Group: ${{ github.event.inputs.test_group }}"
             ./gradlew test --parallel --max-workers=4 -Dgroups=${{ github.event.inputs.test_group }} --info
           else
-            echo "🧩 Running full regression suite..."
+            echo "🧩 Full regression"
             ./gradlew test --parallel --max-workers=4 --info
           fi
+          echo "✅ Tests finished."
 
-      # -----------------------------------------
-      # 7️⃣ Generate Allure Report
-      # -----------------------------------------
+      # 6) Generate Allure report (Gradle default location)
       - name: 📊 Generate Allure Report
         if: always()
+        shell: bash
         run: |
-          if [ -d "build/allure-results" ] && [ "$(find build/allure-results -name '*.json' | wc -l)" -gt 0 ]; then
+          set -e
+          if [ -d "${ALLURE_RESULTS_DIR}" ] && [ "$(find "${ALLURE_RESULTS_DIR}" -name '*.json' | wc -l)" -gt 0 ]; then
+            echo "⚙️ Generating Allure report via Gradle…"
             ./gradlew generateAllureReport --info
           else
             echo "⚠️ No allure-results found — skipping report generation."
           fi
 
-      # -----------------------------------------
-      # 7.1️⃣ Embed Allure Report into Single HTML (Safe)
-      # -----------------------------------------
-      - name: 🧩 Embed Allure Report as Single HTML
+      # 7) Prepare publish folder (copy generated site, add .nojekyll & helpers)
+      - name: 🧰 Prepare site for upload & Pages
         if: always()
+        shell: bash
         run: |
-          REPORT_DIR="reports/current"
-          OUTPUT_FILE="${REPORT_DIR}/Allure_Offline_Single_Safe.html"
-
-          echo "📦 Embedding Allure JSON data into single HTML file..."
-          echo "<!DOCTYPE html><html><head><meta charset='UTF-8'><title>Allure Offline Report</title></head><body><script>" > "$OUTPUT_FILE"
-          echo "window.allureData = " >> "$OUTPUT_FILE"
-
-          # ✅ Use safe concatenation — no process substitution
-          JSON_CONTENT=$(find "$REPORT_DIR" -name '*.json' -exec cat {} + | jq -s .)
-          echo "$JSON_CONTENT" >> "$OUTPUT_FILE"
-
-          echo ";</script><iframe src='index.html' style='width:100%;height:100%;border:none;'></iframe></body></html>" >> "$OUTPUT_FILE"
-
-          echo "✅ Created Safari-safe offline report at $OUTPUT_FILE"
-          ls -lh "$OUTPUT_FILE"
-
-
-      # -----------------------------------------
-      # 8️⃣ Verify Allure Results
-      # -----------------------------------------
-      - name: 🕵️ Verify Allure Results
-        if: always()
-        run: |
-          if [ -d "build/allure-results" ]; then
-            echo "✅ Found allure-results:"
-            find build/allure-results -name "*.json" | wc -l
+          set -e
+          mkdir -p "${PUBLISH_DIR}"
+          if [ -d "${ALLURE_REPORT_DIR}" ]; then
+            rsync -a --delete "${ALLURE_REPORT_DIR}/" "${PUBLISH_DIR}/"
+            echo "✅ Copied site to ${PUBLISH_DIR}"
           else
-            echo "❌ No allure-results found!"
+            echo "❌ ${ALLURE_REPORT_DIR} not found; nothing to publish."
           fi
 
-      # -----------------------------------------
-      # 9️⃣ Upload Safari-Safe Offline Allure Report
-      # -----------------------------------------
-      - name: 📦 Upload Safari-Safe Offline Allure Report
+          # Prevent GitHub Pages/Jekyll from stripping assets
+          touch "${PUBLISH_DIR}/.nojekyll"
+
+          # Local-view helpers
+          cat > "${PUBLISH_DIR}/README_OPEN_ME.txt" <<'TXT'
+          How to open this Allure report locally
+          =====================================
+          Option A (Mac/Linux):
+            1) Open terminal in this folder
+            2) python3 -m http.server 8000
+            3) Open http://localhost:8000
+
+          Option B (Windows PowerShell):
+            1) cd to this folder
+            2) python -m http.server 8000
+            3) Start-Process http://localhost:8000
+
+          Note: Opening index.html with file:// may show "Loading..." due to browser security.
+          TXT
+
+          cat > "${PUBLISH_DIR}/run_local_server.sh" <<'SH'
+          #!/usr/bin/env bash
+          PORT=${1:-8000}
+          echo "Starting local server on http://localhost:${PORT}"
+          python3 -m http.server "${PORT}"
+          SH
+          chmod +x "${PUBLISH_DIR}/run_local_server.sh"
+
+          cat > "${PUBLISH_DIR}/run_local_server.bat" <<'BAT'
+          @echo off
+          set PORT=%1
+          if "%PORT%"=="" set PORT=8000
+          echo Starting local server on http://localhost:%PORT%
+          python -m http.server %PORT%
+          BAT
+
+          # Quick sanity checks
+          if [ -f "${PUBLISH_DIR}/index.html" ]; then
+            echo "🔎 Found index.html in ${PUBLISH_DIR}"
+          else
+            echo "⚠️ index.html missing in ${PUBLISH_DIR}"
+          fi
+          echo "📦 Files in site:"
+          ls -l "${PUBLISH_DIR}" | head -50
+
+      # 8) Upload artifact (full site)
+      - name: 📦 Upload Full Allure Report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: Allure-Offline-Report-${{ github.run_number }}
-          path: reports/current/Allure_Offline_Single_Safe.html
+          name: Allure-Full-Report-${{ github.run_number }}
+          path: ${{ env.PUBLISH_DIR }}/
           retention-days: 15
 
-      # -----------------------------------------
-      # 🔟 Comment on PR with Report Link
-      # -----------------------------------------
-      - name: 💬 Comment on PR with Report Link
+      # 9) Publish to GitHub Pages (latest + per-run)
+      - name: 🌐 Publish Allure report (latest)
+        if: always()
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ${{ env.PUBLISH_DIR }}
+          publish_branch: gh-pages
+          destination_dir: reports/latest
+          keep_files: true
+          commit_message: "📊 Publish Allure Report (latest) #${{ github.run_number }}"
+
+      - name: 🌐 Publish Allure report (per-run)
+        if: always()
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ${{ env.PUBLISH_DIR }}
+          publish_branch: gh-pages
+          destination_dir: reports/runs/${{ github.run_number }}
+          keep_files: true
+          commit_message: "📊 Publish Allure Report (run ${{ github.run_number }})"
+
+      # 10) Comment PR with live links
+      - name: 💬 Comment on PR
         if: ${{ github.event_name == 'pull_request' }}
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const prNumber = context.issue.number;
             const runUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
-            const message = `
-            ✅ **API Tests Executed Successfully**
+            const pagesBase = `https://${context.repo.owner}.github.io/${context.repo.repo}`;
+            const msg = `
+            ✅ **API tests completed**
             • **Branch:** \`${{ github.ref_name }}\`
             • **Suite:** \`${{ github.event.inputs.test_group || 'All' }}\`
-            • 💾 **Download Report:**  
-              → Go to the [Artifacts tab](${runUrl}) and download **Allure-Offline-Report-${{ github.run_number }}**
-            • Once downloaded, open \`Allure_Offline_Single_Safe.html\` locally in any browser.`;
-            await github.rest.issues.createComment({
-              issue_number: prNumber,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: message
-            });
 
-      # -----------------------------------------
-      # 11️⃣ Fail Build on Test Failure
-      # -----------------------------------------
+            📊 **Live Allure report**
+            • Latest: ${pagesBase}/reports/latest/
+            • This run: ${pagesBase}/reports/runs/${{ github.run_number }}/
+
+            💾 **Artifacts**
+            • Full folder: [Download here](${runUrl}) → **Allure-Full-Report-${{ github.run_number }}**
+            • To view locally: unzip → run \`run_local_server.sh\` (Mac/Linux) or \`run_local_server.bat\` (Windows) → open http://localhost:8000
+            `;
+            await github.rest.issues.createComment({ ...context.issue, body: msg });
+
+      # 11) Fail job if tests failed (reports remain published)
       - name: 🛑 Fail Build on Test Failure
         if: failure()
         run: exit 1
