@@ -1,0 +1,22 @@
+{
+    "routingNumber": "333555888",
+    "bankAccountType": "SAVINGS",
+    "metadata": {
+        "Bank": "WF"
+    },
+    "address": {
+        "countryCode": "US"
+    },
+    "tokenStatus": "ACTIVE",
+    "useAsPaymentMethod": true,
+    "accountHolderName": "Client-47a134",
+    "id": "11f0b31e-77be-82e8-91b5-6fa0303ba198",
+    "accountNumberLastFour": "0946",
+    "createdBy": "SECURE_AUTOMATED_TESTING",
+    "prenoteStatus": "SUCCESS",
+    "source": "SECURE_AUTOMATED_TESTING",
+    "blacklisted": false,
+    "groupId": "11f0b31e-77be-82e8-91b5-6fa0303ba198",
+    "created": "2025-10-27T10:19:48Z",
+    "modified": "2025-10-27T10:19:48Z"
+}

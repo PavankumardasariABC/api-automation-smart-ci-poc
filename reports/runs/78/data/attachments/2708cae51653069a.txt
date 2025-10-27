@@ -1,0 +1,18 @@
+https://api-dev.pgw.abc.fitness/api/payment-gateway/payments/refund
+Headers:
+{ Authorization=****, Content-Type=application/json;charset=UTF-8, ABCFS-TENANT-ID=41424320-436f-6d70-616e-792020202020, User-Agent=Automation-Test,  }
+
+Body:
+{
+  "requests": [
+    {
+      "amount": "1500",
+      "metadata": {},
+      "tokenId": "11f092f8-1139-f15c-91b9-ef36cde23978",
+      "terminalId": "11f0b31e-7f81-34aa-8d2f-f3b125ace63e",
+      "descriptor": "Partial refund validation test - 1761560406869",
+      "referenceId": "eb6c6608-90ba-4857-adb7-748cd832a1f0",
+      "effectiveDate": "2025-09-20"
+    }
+  ]
+}

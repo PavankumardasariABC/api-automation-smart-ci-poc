@@ -1,0 +1,13 @@
+{
+  "requests": [
+    {
+      "amount": "2300",
+      "metadata": {},
+      "tokenId": "11f092f5-df62-00cb-91b9-ef36cde23978",
+      "terminalId": "11f0b31e-7f81-34aa-8d2f-f3b125ace63e",
+      "descriptor": "Refund via automation test - 1761560406869",
+      "referenceId": "c04491ec-0c5b-42ba-88b2-b04b16a70168",
+      "effectiveDate": "2025-09-16"
+    }
+  ]
+}

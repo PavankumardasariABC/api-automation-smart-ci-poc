@@ -1,0 +1,25 @@
+https://secure.dev.30preprod.com/api/client
+Headers:
+{ Content-Type=application/json;charset=UTF-8, Authorization=****,  }
+
+Body:
+{
+  "clientId": "glofox-test-02-1761560368680",
+  "resourceIds": [
+    "abc-payment-gateway"
+  ],
+  "scopes": [
+    "secure:protected"
+  ],
+  "authorities": [
+    "pg-payment:client-write"
+  ],
+  "grantTypes": [
+    "client_credentials"
+  ],
+  "accessTokenExpiration": 43200.0,
+  "refreshTokenExpiration": 604800.0,
+  "autoApprove": "*",
+  "clientSecret": "glofox999",
+  "subject": "Alternate test case"
+}

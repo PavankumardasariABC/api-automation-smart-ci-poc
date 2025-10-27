@@ -1,0 +1,1 @@
+{"responses":[{"amount":2300,"referenceId":"674775ac-12f0-44a2-a362-d1919c585d8c","tokenId":"11f092f8-1139-f15c-91b9-ef36cde23978","descriptor":"success webhook test - 1761560404598","status":"ERROR","errors":[{"code":"REQUEST_INVALID","message":"Internal server error occurred","messageKey":"response.error.internal.server"}]}]}
