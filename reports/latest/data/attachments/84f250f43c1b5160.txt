@@ -1,0 +1,1 @@
+{"name":"consumer_glofox_1761560384383","authClientId":"GLOFOX_AUTH","allowedOrigins":["https://dev.30preprod.com"],"disableVoidJob":false,"allowedModes":["PAY_NOW","ADD_TOKEN"],"enableReceiptNumberGeneration":false,"id":"11f0b31e-76af-aad8-b660-b9519948908e","created":"2025-10-27T10:19:47Z","modified":"2025-10-27T10:19:47Z"}

@@ -1,0 +1,19 @@
+{
+    "clientProfileId": "11f0b31e-7401-a1d9-a69e-0d0de37e06d9",
+    "tokenId": "11f0b31e-77be-82e8-91b5-6fa0303ba198",
+    "routingNumber": "333555888",
+    "accountHolderName": "Client-a34fe2",
+    "type": "SAVINGS",
+    "lastFour": "0946",
+    "email": "super.saver@hotbank.com",
+    "phone": "9017970470",
+    "alias": "Alias-21d2e5-Client-a34fe2",
+    "wireTransferType": false,
+    "transferMethod": "ACH",
+    "bankAccountId": "11f0b31e-7957-e77e-a69e-0d0de37e06d9",
+    "status": "ACTIVE",
+    "isOrganizationPaymentMethod": false,
+    "paymentMethodWalletStatus": "ACTIVE",
+    "paymentMethodWalletSubStatus": "ACTIVE",
+    "id": "11f0b31e-7957-e77e-a69e-0d0de37e06d9"
+}
