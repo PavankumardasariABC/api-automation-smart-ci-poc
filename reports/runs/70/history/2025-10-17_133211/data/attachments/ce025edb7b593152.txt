@@ -1,0 +1,11 @@
+{
+  "clientProfileId": "11f0ab2f-87c5-1ce4-9760-65ad15a38889",
+  "tokenId": "11f0ab2f-89f6-a2e6-af01-471e2c465456",
+  "routingNumber": "333555888",
+  "accountHolderName": "Client-388dbc",
+  "type": "SAVINGS",
+  "lastFour": "2259",
+  "email": "super.saver@hotbank.com",
+  "phone": "9019262274",
+  "alias": "Alias-415b47-Client-388dbc"
+}

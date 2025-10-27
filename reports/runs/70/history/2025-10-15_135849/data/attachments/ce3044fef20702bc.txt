@@ -1,0 +1,34 @@
+{
+    "name": "QA Merchant-1760516905235",
+    "description": "Test Merchant for API Automation",
+    "supportPhone": "582-490-9150",
+    "merchantSupportPhone": {
+        "number": "582-490-9150",
+        "countryCode": "US"
+    },
+    "address": {
+        "address": "929 Main Street",
+        "address1": "929 Main Street",
+        "city": "Sherwood",
+        "regionCode": "AR",
+        "provinceCode": "AR",
+        "postalCode": "72120",
+        "countryCode": "US"
+    },
+    "allowsPartialAuthorization": false,
+    "id": "11f0a9a0-ec51-7cbe-84d6-45fa262230b5",
+    "categoryId": "41424320-4445-4620-4341-544547202020",
+    "category": {
+        "name": "DEFAULT",
+        "description": "Default merchant-processor category",
+        "id": "41424320-4445-4620-4341-544547202020"
+    },
+    "active": true,
+    "linkedToProcessors": {
+        "EFT": false,
+        "CREDIT_CARD": false,
+        "AMEX": false,
+        "WIRE": false
+    },
+    "isAccountUpdateAllowed": false
+}

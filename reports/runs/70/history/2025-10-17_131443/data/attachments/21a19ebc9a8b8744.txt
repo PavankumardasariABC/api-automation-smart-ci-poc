@@ -1,0 +1,16 @@
+{
+    "name": "consumer_glofox_1760687061939",
+    "authClientId": "GLOFOX_AUTH",
+    "allowedOrigins": [
+        "https://dev.30preprod.com"
+    ],
+    "disableVoidJob": false,
+    "allowedModes": [
+        "PAY_NOW",
+        "ADD_TOKEN"
+    ],
+    "enableReceiptNumberGeneration": false,
+    "id": "11f0ab2d-196c-965b-b839-5d1f0421e66f",
+    "created": "2025-10-17T07:44:23Z",
+    "modified": "2025-10-17T07:44:23Z"
+}
