@@ -1,0 +1,170 @@
+<div>POST to https://secure.dev.30preprod.com/api/abcpg/processor</div>
+
+    <h4>Body</h4>
+    <div>
+    <pre class="preformated-text">
+{
+    &quot;tinLength&quot;: 15,
+    &quot;maxBatchPerFile&quot;: 100,
+    &quot;maxTransactionPerFile&quot;: 9999,
+    &quot;storageDetails&quot;: {
+        &quot;receive&quot;: {
+            &quot;protocolType&quot;: &quot;S3&quot;,
+            &quot;bucketName&quot;: &quot;abcfinancial-qa-payment-files-us-eft&quot;,
+            &quot;region&quot;: &quot;us-west-2&quot;,
+            &quot;initFolder&quot;: true,
+            &quot;folderPath&quot;: &quot;transactions/responses_0e00e9&quot;
+        },
+        &quot;send&quot;: {
+            &quot;protocolType&quot;: &quot;S3&quot;,
+            &quot;bucketName&quot;: &quot;abcfinancial-qa-payment-files-us-eft&quot;,
+            &quot;region&quot;: &quot;us-west-2&quot;,
+            &quot;initFolder&quot;: true,
+            &quot;folderPath&quot;: &quot;transactions/requests_0e00e9&quot;
+        }
+    },
+    &quot;communicationDetails&quot;: {
+        &quot;receiveEndpoint&quot;: {
+            &quot;password&quot;: &quot;SevOyquecNaryecGobPis&quot;,
+            &quot;protocolType&quot;: &quot;SFTP&quot;,
+            &quot;deleteAfterReceive&quot;: false,
+            &quot;batchFileRenameOnCopy&quot;: true,
+            &quot;url&quot;: &quot;mocksftp.qa.30preprod.com&quot;,
+            &quot;batchFileExtension&quot;: &quot;*&quot;,
+            &quot;username&quot;: &quot;qabank&quot;,
+            &quot;folderPath&quot;: &quot;/srv/qa/regions/responses/demo_0e00e9&quot;
+        },
+        &quot;sendEndpoint&quot;: {
+            &quot;password&quot;: &quot;SevOyquecNaryecGobPis&quot;,
+            &quot;deleteAfterSend&quot;: false,
+            &quot;protocolType&quot;: &quot;SFTP&quot;,
+            &quot;batchFileRenameOnCopy&quot;: true,
+            &quot;url&quot;: &quot;mocksftp.qa.30preprod.com&quot;,
+            &quot;batchFileExtension&quot;: &quot;ach&quot;,
+            &quot;username&quot;: &quot;qabank&quot;,
+            &quot;folderPath&quot;: &quot;/srv/qa/regions/requests/demo_0e00e9&quot;
+        }
+    },
+    &quot;fileFormatType&quot;: &quot;NACHA&quot;,
+    &quot;generalDetails&quot;: {
+        &quot;originator.companyIdentification&quot;: &quot;G710602737&quot;,
+        &quot;destination.fileIdModifier&quot;: &quot;P&quot;,
+        &quot;maxPendingPaymentFileResponseTimeInMinutes&quot;: 4.0,
+        &quot;originator.originatorStatusCode&quot;: &quot;1&quot;,
+        &quot;destination.destinationBankName&quot;: &quot;REGIONS BANK&quot;,
+        &quot;destination.referenceCode&quot;: &quot;XXXXXXXX&quot;,
+        &quot;originator.immediateOriginName&quot;: &quot;ABC FINANCIAL SVCSXXXXX&quot;,
+        &quot;originator.originatorDFIIdentifier&quot;: &quot;06200019&quot;,
+        &quot;destination.priorityCode&quot;: &quot;01&quot;,
+        &quot;depositEntryDescription&quot;: &quot;EARLY&quot;,
+        &quot;destination.blockingFactor&quot;: &quot;10&quot;,
+        &quot;refundEntryDescription&quot;: &quot;CLUBCHARGE&quot;,
+        &quot;destination.immediateDestination&quot;: &quot;062000019&quot;,
+        &quot;chargeEntryDescription&quot;: &quot;CLUB FEES&quot;,
+        &quot;originator.immediateOrigin&quot;: &quot;1710602737&quot;,
+        &quot;batchFile.blocking&quot;: &quot;TRUE&quot;,
+        &quot;destination.formatCode&quot;: &quot;1&quot;,
+        &quot;customerCarePhone&quot;: &quot;8888279262&quot;
+    },
+    &quot;fileNamingPattern&quot;: &quot;{cv:counter}_{dv:dd-MM-yy}&quot;,
+    &quot;platform&quot;: &quot;REGIONS BANK&quot;,
+    &quot;paymentType&quot;: &quot;EFT&quot;,
+    &quot;provider&quot;: &quot;REGIONS_BANK&quot;,
+    &quot;countryCode&quot;: &quot;US&quot;,
+    &quot;fileExtension&quot;: &quot;ach&quot;,
+    &quot;name&quot;: &quot;Regions Bank QA-0e00e9&quot;,
+    &quot;isManualApprovalRequired&quot;: false,
+    &quot;maxBatchingTxTimeout&quot;: 20,
+    &quot;maxTransactionPerBatch&quot;: 9999
+}    </pre>
+    </div>
+
+    <h4>Headers</h4>
+    <div>
+            <div>Authorization: Bearer eyJraWQiOiJYOGw3MGhWWjI2R1AzUWwyIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiJTRUNVUkVfQVVUT01BVEVEX1RFU1RJTkciLCJhdWQiOlsiYWJjLXBheW1lbnQtZ2F0ZXdheSIsImJpbGxpbmctaW5mby1pbXBvcnRlciIsImFiYy1wZy1zaW11bGF0b3IiLCJzZWN1cmUtYXV0aG9yaXphdGlvbiIsInBheW1lbnQtZGlzcHV0ZS1yZXNvbHV0aW9uIiwiZHQtcGF5bWVudC1wcm94eSIsInBnLXBheW1lbnQiLCJpbmZvcm1hdGlvbi1saWZlY3ljbGUtbWFuYWdlbWVudCIsInNlY3VyZS1vbmJvYXJkaW5nLWRhdGEiLCJwZy1yZXBvcnRpbmciLCJwZi1hc3luYy1wcm94eSIsImZpbGUtcm91dGVyIiwic2VjdXJlLWRvY3VtZW50LXVwZ3JhZGUiLCJzZWN1cmUtZG9jdW1lbnQiLCJwYXltZW50LXNlcnZpY2VzIiwiZW9uLXVwZ3JhZGUiLCJjb252ZXJzaW9uLXBjaSIsInRlbGVwaG9ueSIsIm9yZGVyLXNlcnZpY2UiLCJ2YXVsdCIsIm1pZ3JhdGlvbi1zdXBlcnZpc29yIl0sIm5iZiI6MTc2MTU2MTYwNSwiX3QiOiJDTElFTlRfT05MWSIsInNjb3BlIjpbInNlY3VyZTpwcm90ZWN0ZWQiXSwiaXNzIjoiaHR0cHM6Ly9zZWN1cmUuZGV2LjMwcHJlcHJvZC5jb20iLCJleHAiOjE3NjE2NDgwMDUsImlhdCI6MTc2MTU2MTYwNSwianRpIjoiZWY4NThmZDUtOTgyMi00OTEwLTlkMTctNzI4NDYxYzZmZjg2IiwiY2xpZW50X2lkIjoiU0VDVVJFX0FVVE9NQVRFRF9URVNUSU5HIiwiYXV0aG9yaXRpZXMiOlsicGF5bWVudC10b2tlbi1uby1tZXJjaGFudDpjbGllbnQtZGVsZXRlIiwidG9rZW4tZXhwb3J0OmNsaWVudC1hZG1pbiIsImZhaWx1cmUtcmVwb3J0OmNsaWVudC1yZWFkIiwicGF5bWVudC10b2tlbi1zZXNzaW9uOmNsaWVudC1jcmVhdGUiLCJjb21wYW55OmNsaWVudC1hZG1pbiIsIm1lcmNoYW50LWJvYXJkaW5nLWludGVncmF0aW9uOmNsaWVudC1jcmVhdGUiLCJtZXJjaGFudDpjbGllbnQtYWRtaW4iLCJwZi1wcm94eS1hZ3JlZW1lbnQ6Y2xpZW50LWNyZWF0ZSIsImRldmljZTpjbGllbnQtZGVsZXRlIiwibWVyY2hhbnQtYm9hcmRpbmc6Y2xpZW50LWFkbWluIiwicGF5bWVudC10b2tlbi1ibGFja2xpc3Q6Y2xpZW50LWNyZWF0ZSIsIm1pZ2F0aW9uLXN1cGVydmlzb3I6Y2xpZW50LXdyaXRlIiwicGRyLWNoYXJnZWJhY2stcmVwcmVzZW50bWVudDpjbGllbnQtcmVhZCIsInRyYW5zYWN0aW9uOmNsaWVudC1hZG1pbiIsImVuY3J5cHRpb24ta2V5LWFwcHJvdmU6Y2xpZW50LWFkbWluIiwicGF5bWVudC10b2tlbi11bnVzZWQ6Y2xpZW50LWFkbWluIiwicGF5bWVudDpjbGllbnQtYWRtaW4iLCJwZy1wYXltZW50OmNsaWVudC1yZWFkIiwiZW5jcnlwdGlvbi1rZXk6Y2xpZW50LWFkbWluIiwicGF5bWVudC10b2tlbi1zZXNzaW9uLW5vLW1lcmNoYW50OmNsaWVudC1kZWxldGUiLCJwYXltZW50LWZpbGU6Y2xpZW50LXdyaXRlIiwiZW5jc3ZjLXRzeXMtc2V0dGxlbWVudDpjbGllbnQtY3JlYXRlIiwicGctcGF5bWVudDpjbGllbnQtd3JpdGUiLCJ0ZXJtaW5hbDpjbGllbnQtYWRtaW4iLCJhY2NvdW50LXVwZGF0ZTpjbGllbnQtYWRtaW4iLCJwZy1wYXltZW50OmNsaWVudC1wcm90ZWN0ZWQiLCJtaWdhdGlvbi1zdXBlcnZpc29yOmNsaWVudC1yZWFkIiwic2NoZWR1bGVyOmNsaWVudC1hZG1pbiIsInBmLXByb3h5LXRyYWNraW5nOmNsaWVudC1yZWFkIiwicHVibGljLWZpbGUtcmVjb3JkOmNsaWVudC1wcm90ZWN0ZWQiLCJwYXltZW50LXRva2VuOmNsaWVudC1hZG1pbiIsInNlY3VyZS1kb2N1bWVudC11cGdyYWRlOmNsaWVudC1hZG1pbiIsImVuY3N2Yy1jYXJkLWF1dGhvcml6YXRpb246Y2xpZW50LWNyZWF0ZSIsIm5vdGlmaWNhdGlvbi1jb25maWd1cmF0aW9uOmNsaWVudC1hZG1pbiIsIndlYmhvb2s6Y2xpZW50LWFkbWluIiwiZW9uLXVwZ3JhZGU6Y2xpZW50LWFkbWluIiwicGctcGF5bWVudDpjbGllbnQtZGVsZXRlIiwic2VjdXJlLWRvY3VtZW50OmNsaWVudC1hZG1pbiIsImVuY3N2Yy1hdWRpdDpjbGllbnQtcmVhZCIsInRlcm1pbmFsOmNsaWVudC1kZWxldGUiLCJzZWN1cmUtb25ib2FyZGluZy1kYXRhOmNsaWVudC1yZWFkIiwicGF5bWVudC10b2tlbi1pbml0aWFsOmNsaWVudC1jcmVhdGUiLCJydWxlOmNsaWVudC1hZG1pbiIsInRyYW5zYWN0aW9uLXJlcG9ydDpjbGllbnQtYWRtaW4iLCJjbGllbnQ6Y2xpZW50LWFkbWluIiwicGctcmVwb3J0aW5nOmNsaWVudC13cml0ZSIsImJpbGxpbmctaW5mby1pbXBvcnQ6Y2xpZW50LWFkbWluIiwicGctZWxhc3RpYy1taWdyYXRpb246Y2xpZW50LWFkbWluIiwiY29uZmlndXJhdGlvbjpjbGllbnQtYWRtaW4iLCJwZXJtaXNzaW9uOmNsaWVudC1wcm90ZWN0ZWQiLCJibGFja2xpc3QtY2F0YWxvZzpjbGllbnQtYWRtaW4iLCJwYXltZW50LXRva2VuLWludGVncmF0aW9uOmNsaWVudC1hZG1pbiIsInNyLXJ1bGU6Y2xpZW50LWFkbWluIiwiY29tbW9uLXJlc3BvbnNlLWNvZGU6Y2xpZW50LWFkbWluIiwiZmFrZS10b2tlbi1jb25maWd1cmF0aW9uOmNsaWVudC1hZG1pbiIsInBnLXBheW1lbnQ6Y2xpZW50LWFkbWluIiwiYmFuay1jYXRhbG9nOmNsaWVudC1hZG1pbiIsInBnLXBheW1lbnQ6Y2xpZW50LWNyZWF0ZSIsInBheW1lbnQtc2VydmljZXM6Y2xpZW50LWFkbWluIiwicHJvY2Vzc29yOmNsaWVudC1hZG1pbiIsInBheW1lbnQtdG9rZW4tc2Vzc2lvbjpjbGllbnQtYWRtaW4iLCJibGFja2xpc3QtY2F0YWxvZy1pbnRlZ3JhdGlvbjpjbGllbnQtYWRtaW4iLCJjb252ZXJzaW9uLXBjaTpjbGllbnQtYWRtaW4iLCJjb21wYW55LXJvbGU6Y2xpZW50LWFkbWluIl19.EqIZrsMXiG4XnB_JE_qm1RGmnKUTQzaWqawspd5MtSJ5fjJk6KpToBoRLFElSbON0Ae031qjN9j6CxpwIkVJZPkjPYe58EO8Ex1vPkK9xJDfyfEvXMXao6KiqzNJvZQ2UmRzo5AKLO4EU355Yd80Rk5uxeTtfT97GOMohzu0aEg06NpCKx44hVoaUYDTX2GV8nB1DCt8V4Fg7hMB72_nhz3Dvu3L9QaZjirVo1MR-VuPuIxVaAlnQO1MERvbn9-AiAaaeKRHhSr1a7_ZaRriX9sysZ4bxRXfdaKRbEdUJKRL9gKIhD04zRtGigsT6qcdxQW9TCiOuQ1lc4uCqdVRUA</div>
+            <div>User-Agent: Automation-Test</div>
+            <div>ABCFS-TENANT-ID: 41424320-436f-6d70-616e-792020202020</div>
+            <div>Accept: */*</div>
+            <div>Content-Type: application/json</div>
+    </div>
+
+
+
+    <h4>Curl</h4>
+    <div>
+        curl -v -X POST &#39;https://secure.dev.30preprod.com/api/abcpg/processor&#39; -H &#39;Authorization: Bearer eyJraWQiOiJYOGw3MGhWWjI2R1AzUWwyIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiJTRUNVUkVfQVVUT01BVEVEX1RFU1RJTkciLCJhdWQiOlsiYWJjLXBheW1lbnQtZ2F0ZXdheSIsImJpbGxpbmctaW5mby1pbXBvcnRlciIsImFiYy1wZy1zaW11bGF0b3IiLCJzZWN1cmUtYXV0aG9yaXphdGlvbiIsInBheW1lbnQtZGlzcHV0ZS1yZXNvbHV0aW9uIiwiZHQtcGF5bWVudC1wcm94eSIsInBnLXBheW1lbnQiLCJpbmZvcm1hdGlvbi1saWZlY3ljbGUtbWFuYWdlbWVudCIsInNlY3VyZS1vbmJvYXJkaW5nLWRhdGEiLCJwZy1yZXBvcnRpbmciLCJwZi1hc3luYy1wcm94eSIsImZpbGUtcm91dGVyIiwic2VjdXJlLWRvY3VtZW50LXVwZ3JhZGUiLCJzZWN1cmUtZG9jdW1lbnQiLCJwYXltZW50LXNlcnZpY2VzIiwiZW9uLXVwZ3JhZGUiLCJjb252ZXJzaW9uLXBjaSIsInRlbGVwaG9ueSIsIm9yZGVyLXNlcnZpY2UiLCJ2YXVsdCIsIm1pZ3JhdGlvbi1zdXBlcnZpc29yIl0sIm5iZiI6MTc2MTU2MTYwNSwiX3QiOiJDTElFTlRfT05MWSIsInNjb3BlIjpbInNlY3VyZTpwcm90ZWN0ZWQiXSwiaXNzIjoiaHR0cHM6Ly9zZWN1cmUuZGV2LjMwcHJlcHJvZC5jb20iLCJleHAiOjE3NjE2NDgwMDUsImlhdCI6MTc2MTU2MTYwNSwianRpIjoiZWY4NThmZDUtOTgyMi00OTEwLTlkMTctNzI4NDYxYzZmZjg2IiwiY2xpZW50X2lkIjoiU0VDVVJFX0FVVE9NQVRFRF9URVNUSU5HIiwiYXV0aG9yaXRpZXMiOlsicGF5bWVudC10b2tlbi1uby1tZXJjaGFudDpjbGllbnQtZGVsZXRlIiwidG9rZW4tZXhwb3J0OmNsaWVudC1hZG1pbiIsImZhaWx1cmUtcmVwb3J0OmNsaWVudC1yZWFkIiwicGF5bWVudC10b2tlbi1zZXNzaW9uOmNsaWVudC1jcmVhdGUiLCJjb21wYW55OmNsaWVudC1hZG1pbiIsIm1lcmNoYW50LWJvYXJkaW5nLWludGVncmF0aW9uOmNsaWVudC1jcmVhdGUiLCJtZXJjaGFudDpjbGllbnQtYWRtaW4iLCJwZi1wcm94eS1hZ3JlZW1lbnQ6Y2xpZW50LWNyZWF0ZSIsImRldmljZTpjbGllbnQtZGVsZXRlIiwibWVyY2hhbnQtYm9hcmRpbmc6Y2xpZW50LWFkbWluIiwicGF5bWVudC10b2tlbi1ibGFja2xpc3Q6Y2xpZW50LWNyZWF0ZSIsIm1pZ2F0aW9uLXN1cGVydmlzb3I6Y2xpZW50LXdyaXRlIiwicGRyLWNoYXJnZWJhY2stcmVwcmVzZW50bWVudDpjbGllbnQtcmVhZCIsInRyYW5zYWN0aW9uOmNsaWVudC1hZG1pbiIsImVuY3J5cHRpb24ta2V5LWFwcHJvdmU6Y2xpZW50LWFkbWluIiwicGF5bWVudC10b2tlbi11bnVzZWQ6Y2xpZW50LWFkbWluIiwicGF5bWVudDpjbGllbnQtYWRtaW4iLCJwZy1wYXltZW50OmNsaWVudC1yZWFkIiwiZW5jcnlwdGlvbi1rZXk6Y2xpZW50LWFkbWluIiwicGF5bWVudC10b2tlbi1zZXNzaW9uLW5vLW1lcmNoYW50OmNsaWVudC1kZWxldGUiLCJwYXltZW50LWZpbGU6Y2xpZW50LXdyaXRlIiwiZW5jc3ZjLXRzeXMtc2V0dGxlbWVudDpjbGllbnQtY3JlYXRlIiwicGctcGF5bWVudDpjbGllbnQtd3JpdGUiLCJ0ZXJtaW5hbDpjbGllbnQtYWRtaW4iLCJhY2NvdW50LXVwZGF0ZTpjbGllbnQtYWRtaW4iLCJwZy1wYXltZW50OmNsaWVudC1wcm90ZWN0ZWQiLCJtaWdhdGlvbi1zdXBlcnZpc29yOmNsaWVudC1yZWFkIiwic2NoZWR1bGVyOmNsaWVudC1hZG1pbiIsInBmLXByb3h5LXRyYWNraW5nOmNsaWVudC1yZWFkIiwicHVibGljLWZpbGUtcmVjb3JkOmNsaWVudC1wcm90ZWN0ZWQiLCJwYXltZW50LXRva2VuOmNsaWVudC1hZG1pbiIsInNlY3VyZS1kb2N1bWVudC11cGdyYWRlOmNsaWVudC1hZG1pbiIsImVuY3N2Yy1jYXJkLWF1dGhvcml6YXRpb246Y2xpZW50LWNyZWF0ZSIsIm5vdGlmaWNhdGlvbi1jb25maWd1cmF0aW9uOmNsaWVudC1hZG1pbiIsIndlYmhvb2s6Y2xpZW50LWFkbWluIiwiZW9uLXVwZ3JhZGU6Y2xpZW50LWFkbWluIiwicGctcGF5bWVudDpjbGllbnQtZGVsZXRlIiwic2VjdXJlLWRvY3VtZW50OmNsaWVudC1hZG1pbiIsImVuY3N2Yy1hdWRpdDpjbGllbnQtcmVhZCIsInRlcm1pbmFsOmNsaWVudC1kZWxldGUiLCJzZWN1cmUtb25ib2FyZGluZy1kYXRhOmNsaWVudC1yZWFkIiwicGF5bWVudC10b2tlbi1pbml0aWFsOmNsaWVudC1jcmVhdGUiLCJydWxlOmNsaWVudC1hZG1pbiIsInRyYW5zYWN0aW9uLXJlcG9ydDpjbGllbnQtYWRtaW4iLCJjbGllbnQ6Y2xpZW50LWFkbWluIiwicGctcmVwb3J0aW5nOmNsaWVudC13cml0ZSIsImJpbGxpbmctaW5mby1pbXBvcnQ6Y2xpZW50LWFkbWluIiwicGctZWxhc3RpYy1taWdyYXRpb246Y2xpZW50LWFkbWluIiwiY29uZmlndXJhdGlvbjpjbGllbnQtYWRtaW4iLCJwZXJtaXNzaW9uOmNsaWVudC1wcm90ZWN0ZWQiLCJibGFja2xpc3QtY2F0YWxvZzpjbGllbnQtYWRtaW4iLCJwYXltZW50LXRva2VuLWludGVncmF0aW9uOmNsaWVudC1hZG1pbiIsInNyLXJ1bGU6Y2xpZW50LWFkbWluIiwiY29tbW9uLXJlc3BvbnNlLWNvZGU6Y2xpZW50LWFkbWluIiwiZmFrZS10b2tlbi1jb25maWd1cmF0aW9uOmNsaWVudC1hZG1pbiIsInBnLXBheW1lbnQ6Y2xpZW50LWFkbWluIiwiYmFuay1jYXRhbG9nOmNsaWVudC1hZG1pbiIsInBnLXBheW1lbnQ6Y2xpZW50LWNyZWF0ZSIsInBheW1lbnQtc2VydmljZXM6Y2xpZW50LWFkbWluIiwicHJvY2Vzc29yOmNsaWVudC1hZG1pbiIsInBheW1lbnQtdG9rZW4tc2Vzc2lvbjpjbGllbnQtYWRtaW4iLCJibGFja2xpc3QtY2F0YWxvZy1pbnRlZ3JhdGlvbjpjbGllbnQtYWRtaW4iLCJjb252ZXJzaW9uLXBjaTpjbGllbnQtYWRtaW4iLCJjb21wYW55LXJvbGU6Y2xpZW50LWFkbWluIl19.EqIZrsMXiG4XnB_JE_qm1RGmnKUTQzaWqawspd5MtSJ5fjJk6KpToBoRLFElSbON0Ae031qjN9j6CxpwIkVJZPkjPYe58EO8Ex1vPkK9xJDfyfEvXMXao6KiqzNJvZQ2UmRzo5AKLO4EU355Yd80Rk5uxeTtfT97GOMohzu0aEg06NpCKx44hVoaUYDTX2GV8nB1DCt8V4Fg7hMB72_nhz3Dvu3L9QaZjirVo1MR-VuPuIxVaAlnQO1MERvbn9-AiAaaeKRHhSr1a7_ZaRriX9sysZ4bxRXfdaKRbEdUJKRL9gKIhD04zRtGigsT6qcdxQW9TCiOuQ1lc4uCqdVRUA&#39; -H &#39;User-Agent: Automation-Test&#39; -H &#39;ABCFS-TENANT-ID: 41424320-436f-6d70-616e-792020202020&#39; -H &#39;Accept: */*&#39; -H &#39;Content-Type: application/json&#39; -d &#39;{
+    &quot;tinLength&quot;: 15,
+    &quot;maxBatchPerFile&quot;: 100,
+    &quot;maxTransactionPerFile&quot;: 9999,
+    &quot;storageDetails&quot;: {
+        &quot;receive&quot;: {
+            &quot;protocolType&quot;: &quot;S3&quot;,
+            &quot;bucketName&quot;: &quot;abcfinancial-qa-payment-files-us-eft&quot;,
+            &quot;region&quot;: &quot;us-west-2&quot;,
+            &quot;initFolder&quot;: true,
+            &quot;folderPath&quot;: &quot;transactions/responses_0e00e9&quot;
+        },
+        &quot;send&quot;: {
+            &quot;protocolType&quot;: &quot;S3&quot;,
+            &quot;bucketName&quot;: &quot;abcfinancial-qa-payment-files-us-eft&quot;,
+            &quot;region&quot;: &quot;us-west-2&quot;,
+            &quot;initFolder&quot;: true,
+            &quot;folderPath&quot;: &quot;transactions/requests_0e00e9&quot;
+        }
+    },
+    &quot;communicationDetails&quot;: {
+        &quot;receiveEndpoint&quot;: {
+            &quot;password&quot;: &quot;SevOyquecNaryecGobPis&quot;,
+            &quot;protocolType&quot;: &quot;SFTP&quot;,
+            &quot;deleteAfterReceive&quot;: false,
+            &quot;batchFileRenameOnCopy&quot;: true,
+            &quot;url&quot;: &quot;mocksftp.qa.30preprod.com&quot;,
+            &quot;batchFileExtension&quot;: &quot;*&quot;,
+            &quot;username&quot;: &quot;qabank&quot;,
+            &quot;folderPath&quot;: &quot;/srv/qa/regions/responses/demo_0e00e9&quot;
+        },
+        &quot;sendEndpoint&quot;: {
+            &quot;password&quot;: &quot;SevOyquecNaryecGobPis&quot;,
+            &quot;deleteAfterSend&quot;: false,
+            &quot;protocolType&quot;: &quot;SFTP&quot;,
+            &quot;batchFileRenameOnCopy&quot;: true,
+            &quot;url&quot;: &quot;mocksftp.qa.30preprod.com&quot;,
+            &quot;batchFileExtension&quot;: &quot;ach&quot;,
+            &quot;username&quot;: &quot;qabank&quot;,
+            &quot;folderPath&quot;: &quot;/srv/qa/regions/requests/demo_0e00e9&quot;
+        }
+    },
+    &quot;fileFormatType&quot;: &quot;NACHA&quot;,
+    &quot;generalDetails&quot;: {
+        &quot;originator.companyIdentification&quot;: &quot;G710602737&quot;,
+        &quot;destination.fileIdModifier&quot;: &quot;P&quot;,
+        &quot;maxPendingPaymentFileResponseTimeInMinutes&quot;: 4.0,
+        &quot;originator.originatorStatusCode&quot;: &quot;1&quot;,
+        &quot;destination.destinationBankName&quot;: &quot;REGIONS BANK&quot;,
+        &quot;destination.referenceCode&quot;: &quot;XXXXXXXX&quot;,
+        &quot;originator.immediateOriginName&quot;: &quot;ABC FINANCIAL SVCSXXXXX&quot;,
+        &quot;originator.originatorDFIIdentifier&quot;: &quot;06200019&quot;,
+        &quot;destination.priorityCode&quot;: &quot;01&quot;,
+        &quot;depositEntryDescription&quot;: &quot;EARLY&quot;,
+        &quot;destination.blockingFactor&quot;: &quot;10&quot;,
+        &quot;refundEntryDescription&quot;: &quot;CLUBCHARGE&quot;,
+        &quot;destination.immediateDestination&quot;: &quot;062000019&quot;,
+        &quot;chargeEntryDescription&quot;: &quot;CLUB FEES&quot;,
+        &quot;originator.immediateOrigin&quot;: &quot;1710602737&quot;,
+        &quot;batchFile.blocking&quot;: &quot;TRUE&quot;,
+        &quot;destination.formatCode&quot;: &quot;1&quot;,
+        &quot;customerCarePhone&quot;: &quot;8888279262&quot;
+    },
+    &quot;fileNamingPattern&quot;: &quot;{cv:counter}_{dv:dd-MM-yy}&quot;,
+    &quot;platform&quot;: &quot;REGIONS BANK&quot;,
+    &quot;paymentType&quot;: &quot;EFT&quot;,
+    &quot;provider&quot;: &quot;REGIONS_BANK&quot;,
+    &quot;countryCode&quot;: &quot;US&quot;,
+    &quot;fileExtension&quot;: &quot;ach&quot;,
+    &quot;name&quot;: &quot;Regions Bank QA-0e00e9&quot;,
+    &quot;isManualApprovalRequired&quot;: false,
+    &quot;maxBatchingTxTimeout&quot;: 20,
+    &quot;maxTransactionPerBatch&quot;: 9999
+}&#39;
+    </div>
+
