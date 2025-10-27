@@ -1,0 +1,9 @@
+{
+  "routingNumber": "333555888",
+  "metadata": {
+    "Bank": "WF"
+  },
+  "bankAccountNumber": "597379515032",
+  "bankAccountType": "SAVINGS",
+  "accountHolderName": "Client-242537"
+}

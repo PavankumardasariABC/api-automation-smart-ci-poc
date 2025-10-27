@@ -1,0 +1,46 @@
+{
+    "name": "QA Merchant-1761561625186 - Updated_1761561643089",
+    "description": "Merchant updated via automation at 1761561643089",
+    "supportPhone": "396587066",
+    "merchantSupportPhone": {
+        "number": "396587066",
+        "countryCode": "US"
+    },
+    "address": {
+        "address": "140 Main Street",
+        "address1": "140 Main Street",
+        "city": "Sherwood",
+        "regionCode": "AR",
+        "provinceCode": "AR",
+        "postalCode": "72120",
+        "countryCode": "US"
+    },
+    "allowsPartialAuthorization": false,
+    "id": "11f0b321-59e4-6b89-97fd-3739d9eb3974",
+    "categoryId": "41424320-4445-4620-4341-544547202020",
+    "category": {
+        "name": "DEFAULT",
+        "description": "Default merchant-processor category",
+        "id": "41424320-4445-4620-4341-544547202020"
+    },
+    "active": true,
+    "linkedToProcessors": {
+        "EFT": true,
+        "CREDIT_CARD": false,
+        "AMEX": false,
+        "WIRE": false
+    },
+    "processors": [
+        {
+            "id": "11f0b321-6475-0a91-8d2f-f3b125ace63e",
+            "processorId": "11f0b321-6163-5e1a-8d2f-f3b125ace63e",
+            "providerSpecificMId": "364801462",
+            "isPrimary": true,
+            "isDefaultRealtime": false,
+            "name": "Regions Bank QA-0e00e9",
+            "status": "READY",
+            "paymentType": "EFT"
+        }
+    ],
+    "isAccountUpdateAllowed": false
+}
