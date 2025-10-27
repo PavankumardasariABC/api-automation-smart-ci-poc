@@ -1,0 +1,20 @@
+{
+    "description": "Terminal description for automation",
+    "terminalNumber": "qa_terminal_1760688120097",
+    "isDefaultEnabled": false,
+    "source": "glofox test",
+    "id": "11f0ab2f-8fed-e305-95ff-1bc04321ff3b",
+    "name": "Terminal Test_1760688120095_1760688120097",
+    "processor": {
+        "id": "11f0ab2f-8c6f-923e-b619-ef583f1d7c5d",
+        "name": "Regions Bank QA-37cf46"
+    },
+    "numberOfLinkedDevices": 0,
+    "merchant": {
+        "name": "QA Merchant-1760688104436 - Updated_1760688118285",
+        "id": "11f0ab2f-86a1-0ecd-95ff-1bc04321ff3b"
+    },
+    "defaultLaneId": 1,
+    "status": "ACTIVE",
+    "merchantProcessorId": "11f0ab2f-8ee7-2161-95ff-1bc04321ff3b"
+}

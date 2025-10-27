@@ -1,0 +1,15 @@
+https://dev.30preprod.com/api/abcblg/client-profile
+Headers:
+{ ABCFS-TENANT-ID=98fda17c-7592-42d7-96f0-f2c3df66f7d7, Authorization=****, User-Agent=Automation-Test, Content-Type=application/json;charset=UTF-8,  }
+
+Body:
+{
+  "useNewPricingModel": true,
+  "phone": "9015555010",
+  "merchantId": "11f0a911-7fbd-ab7b-800b-53e03c54b684",
+  "locationId": "11f0a911-7c61-6081-98fb-b9c5f3a44a1f",
+  "name": "Client-1760455307846",
+  "timeZone": "US/Central",
+  "costPlusPricingModelEnabled": true,
+  "email": "qa_1760455307846@testmail.com"
+}
