@@ -1,0 +1,13 @@
+{
+  "requests": [
+    {
+      "amount": "1500",
+      "metadata": {},
+      "tokenId": "11f092f8-1139-f15c-91b9-ef36cde23978",
+      "terminalId": "11f0b320-4d5e-5b92-8d2f-f3b125ace63e",
+      "descriptor": "Partial refund validation test - 1761561181178",
+      "referenceId": "e4fa9b8c-d28e-4588-aedf-d2781330ae6c",
+      "effectiveDate": "2025-09-20"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+https://secure.dev.30preprod.com/api/abcpg/merchant
+Headers:
+{ User-Agent=Automation-Test, Authorization=****, ABCFS-TENANT-ID=41424320-436f-6d70-616e-792020202020, Content-Type=application/json;charset=UTF-8,  }
+
+Body:
+{
+  "name": "QA Merchant-1761561154803",
+  "description": "Test Merchant for API Automation",
+  "address": {
+    "address": "183 Main Street",
+    "city": "Sherwood",
+    "regionCode": "AR",
+    "postalCode": "72120",
+    "countryCode": "US"
+  },
+  "supportPhone": "847-360-2817"
+}
