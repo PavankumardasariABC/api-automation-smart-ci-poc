@@ -1,0 +1,48 @@
+<div>POST to https://secure.dev.30preprod.com/api/abcpg/payments/charge</div>
+
+    <h4>Body</h4>
+    <div>
+    <pre class="preformated-text">
+{
+    &quot;requests&quot;: [
+        {
+            &quot;amount&quot;: &quot;2300&quot;,
+            &quot;tokenId&quot;: &quot;11f092f8-1139-f15c-91b9-ef36cde23978&quot;,
+            &quot;relatedReferenceId&quot;: &quot;f58c6195-16bb-42e4-b592-9bcfdc6fff7e&quot;,
+            &quot;terminalId&quot;: &quot;11f0b306-8a40-22d4-8d2f-f3b125ace63e&quot;,
+            &quot;descriptor&quot;: &quot;success webhook test - 1761550114408&quot;,
+            &quot;effectiveDate&quot;: &quot;2026-09-16&quot;,
+            &quot;referenceId&quot;: &quot;86a06eae-62a7-49dc-80a6-510555561fb2&quot;
+        }
+    ]
+}    </pre>
+    </div>
+
+    <h4>Headers</h4>
+    <div>
+            <div>Authorization: Bearer eyJraWQiOiJYOGw3MGhWWjI2R1AzUWwyIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiJHTE9GT1hfU0VDVVJFX0FVVEgiLCJhdWQiOiJhYmMtcGF5bWVudC1nYXRld2F5IiwibmJmIjoxNzYxNTUwMDcxLCJfdCI6IkNMSUVOVF9PTkxZIiwic2NvcGUiOlsic2VjdXJlOnByb3RlY3RlZCJdLCJpc3MiOiJodHRwczovL3NlY3VyZS5kZXYuMzBwcmVwcm9kLmNvbSIsImV4cCI6MTc2MTYzNjQ3MSwiaWF0IjoxNzYxNTUwMDcxLCJqdGkiOiJkYTRkNDA2NS04M2IyLTQyODItOThkMi00ZmJlZjMyMTkzZDAiLCJjbGllbnRfaWQiOiJHTE9GT1hfU0VDVVJFX0FVVEgiLCJhdXRob3JpdGllcyI6WyJ0cmFuc2FjdGlvbjpjbGllbnQtcmVhZCIsInBnLXBheW1lbnQ6Y2xpZW50LWNyZWF0ZSJdfQ.ErsZFYkEef678Uv5ptDncTX0lFZxW_LobE3Z3nuA1Oh9Tx5VIRMNW-1Ns-m0bkZlblSwfKjG2pvSHZX4-Ha9W52Uq6u5i2WDoRnKp5hSFZDUEQpiAo0d3cyCJUWeYbWOVlYQnBEybWL0Ixg773-2HXhgSVcEb8QmGRUHTmqmbbWWTm5U3HPN2LKOkB_bqHEmyih-uz-OvyRlNHuaULMBqyYnk1PznoUMlB8mHxGU26FeF8Djh101Q5vS3A9C0ayL8R8JpYBuZZPcEGXFA_L76LcEbiLS1Ml35ntFlKgjg4WbHAAsU873ybmaYO6ntKKgYgZJlIAKcf3DnBJ_ThB_mQ</div>
+            <div>User-Agent: Automation-Test</div>
+            <div>ABCFS-TENANT-ID: 41424320-436f-6d70-616e-792020202020</div>
+            <div>Accept: */*</div>
+            <div>Content-Type: application/json</div>
+    </div>
+
+
+
+    <h4>Curl</h4>
+    <div>
+        curl -v -X POST &#39;https://secure.dev.30preprod.com/api/abcpg/payments/charge&#39; -H &#39;Authorization: Bearer eyJraWQiOiJYOGw3MGhWWjI2R1AzUWwyIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiJHTE9GT1hfU0VDVVJFX0FVVEgiLCJhdWQiOiJhYmMtcGF5bWVudC1nYXRld2F5IiwibmJmIjoxNzYxNTUwMDcxLCJfdCI6IkNMSUVOVF9PTkxZIiwic2NvcGUiOlsic2VjdXJlOnByb3RlY3RlZCJdLCJpc3MiOiJodHRwczovL3NlY3VyZS5kZXYuMzBwcmVwcm9kLmNvbSIsImV4cCI6MTc2MTYzNjQ3MSwiaWF0IjoxNzYxNTUwMDcxLCJqdGkiOiJkYTRkNDA2NS04M2IyLTQyODItOThkMi00ZmJlZjMyMTkzZDAiLCJjbGllbnRfaWQiOiJHTE9GT1hfU0VDVVJFX0FVVEgiLCJhdXRob3JpdGllcyI6WyJ0cmFuc2FjdGlvbjpjbGllbnQtcmVhZCIsInBnLXBheW1lbnQ6Y2xpZW50LWNyZWF0ZSJdfQ.ErsZFYkEef678Uv5ptDncTX0lFZxW_LobE3Z3nuA1Oh9Tx5VIRMNW-1Ns-m0bkZlblSwfKjG2pvSHZX4-Ha9W52Uq6u5i2WDoRnKp5hSFZDUEQpiAo0d3cyCJUWeYbWOVlYQnBEybWL0Ixg773-2HXhgSVcEb8QmGRUHTmqmbbWWTm5U3HPN2LKOkB_bqHEmyih-uz-OvyRlNHuaULMBqyYnk1PznoUMlB8mHxGU26FeF8Djh101Q5vS3A9C0ayL8R8JpYBuZZPcEGXFA_L76LcEbiLS1Ml35ntFlKgjg4WbHAAsU873ybmaYO6ntKKgYgZJlIAKcf3DnBJ_ThB_mQ&#39; -H &#39;User-Agent: Automation-Test&#39; -H &#39;ABCFS-TENANT-ID: 41424320-436f-6d70-616e-792020202020&#39; -H &#39;Accept: */*&#39; -H &#39;Content-Type: application/json&#39; -d &#39;{
+    &quot;requests&quot;: [
+        {
+            &quot;amount&quot;: &quot;2300&quot;,
+            &quot;tokenId&quot;: &quot;11f092f8-1139-f15c-91b9-ef36cde23978&quot;,
+            &quot;relatedReferenceId&quot;: &quot;f58c6195-16bb-42e4-b592-9bcfdc6fff7e&quot;,
+            &quot;terminalId&quot;: &quot;11f0b306-8a40-22d4-8d2f-f3b125ace63e&quot;,
+            &quot;descriptor&quot;: &quot;success webhook test - 1761550114408&quot;,
+            &quot;effectiveDate&quot;: &quot;2026-09-16&quot;,
+            &quot;referenceId&quot;: &quot;86a06eae-62a7-49dc-80a6-510555561fb2&quot;
+        }
+    ]
+}&#39;
+    </div>
+
