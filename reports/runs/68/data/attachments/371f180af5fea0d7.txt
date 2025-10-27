@@ -1,0 +1,14 @@
+https://dev.30preprod.com/api/ors/payment-token/session/add-token
+Headers:
+{ Authorization=****, Content-Type=application/json;charset=UTF-8, ABCFS-TENANT-ID=39519175-c5ba-4613-854f-32b8d22f8870, User-Agent=Automation-Test,  }
+
+Body:
+{
+  "ownerType": "PAYOR",
+  "consumerOrigin": "https://dev.30preprod.com",
+  "metadata": {
+    "limitedPrimaryPaymentMethod": "ANY"
+  },
+  "cvvRequired": false,
+  "consumerId": "11f0b308-ee80-bd6e-b660-b9519948908e"
+}

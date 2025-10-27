@@ -1,0 +1,18 @@
+{
+  "name": "OP-Location-1761551126483-1761551126492",
+  "taxIncluded": true,
+  "address": {
+    "countryCode": "US",
+    "city": "Cobleskill",
+    "postalCode": "12043",
+    "provinceCode": "NY",
+    "address1": "139 Merchant Place"
+  },
+  "phone": {
+    "extension": "56648",
+    "countryCode": "US",
+    "number": "6588429"
+  },
+  "timezone": "US/Central",
+  "email": "OP-Location-1761551126483-1761551126492@qa4life.com"
+}
