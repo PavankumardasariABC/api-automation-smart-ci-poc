@@ -1,4 +1,4 @@
-name: "🚀 API Automation CI"
+name: 🚀 API Automation CI
 
 on:
   pull_request:
@@ -21,10 +21,6 @@ on:
 permissions:
   contents: write
 
-concurrency:
-  group: api-tests-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
   api-tests:
     runs-on: self-hosted
@@ -36,22 +32,52 @@ jobs:
       AUTH_PASSWORD: ${{ secrets.AUTH_PASSWORD }}
 
     steps:
-      # 1️⃣ Checkout Code
+      # -----------------------------------------
+      # 1️⃣ Checkout Repository
+      # -----------------------------------------
       - name: 📥 Checkout repository
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.inputs.branch || github.ref_name }}
-          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-      # 2️⃣ Setup JDK + Optimized Gradle Cache (faster builds)
-      - name: ☕ Setup JDK + Gradle
-        uses: gradle/actions/setup-gradle@v3
+      # -----------------------------------------
+      # 2️⃣ Cache Gradle Wrapper & Dependencies
+      # -----------------------------------------
+      - name: ⚡ Cache Gradle Wrapper
+        uses: actions/cache@v4
         with:
-          gradle-version: wrapper
-          cache-read-only: false
-          cache-cleanup: true
+          path: ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-wrapper-
 
-      # 3️⃣ Setup Allure CLI (cached)
+      - name: ⚡ Cache Gradle Dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-caches-${{ hashFiles('**/*.gradle*') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-caches-
+
+      # -----------------------------------------
+      # 3️⃣ Setup JDK
+      # -----------------------------------------
+      - name: ☕ Setup JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      # -----------------------------------------
+      # 4️⃣ Cache & Install Allure CLI
+      # -----------------------------------------
+      - name: ⚡ Cache Allure CLI
+        uses: actions/cache@v4
+        with:
+          path: allure-cli
+          key: ${{ runner.os }}-allure-2.27.0
+
       - name: 🧩 Install Allure CLI (cached)
         run: |
           BASE_DIR="${{ github.workspace }}/allure-cli"
@@ -67,148 +93,127 @@ jobs:
           echo "$BASE_DIR/allure-2.27.0/bin" >> $GITHUB_PATH
           allure --version
 
-      # 4️⃣ Smart Test Selection (diff vs main)
+      # -----------------------------------------
+      # 5️⃣ Smart Test Selection
+      # -----------------------------------------
       - name: 🧠 Smart Test Selection
         id: smart
-        shell: bash
         run: |
-          git fetch origin
           echo "Detecting changed test files..."
-          CHANGED=$(git diff --name-only origin/main...HEAD | grep 'src/test/java' || true)
+          CHANGED=$(git diff --name-only origin/feature/github-actions-poc-...HEAD | grep 'src/test/java' || true)
           if [ -n "$CHANGED" ]; then
             echo "Changed test files:"
             echo "$CHANGED"
             echo "group=Custom" >> $GITHUB_OUTPUT
           else
-            echo "No specific changes; using input group."
+            echo "No specific changes; running default group."
             echo "group=${{ github.event.inputs.test_group }}" >> $GITHUB_OUTPUT
           fi
 
-      # 5️⃣ Run Tests
+      # -----------------------------------------
+      # 6️⃣ Run Tests (parallel & fast)
+      # -----------------------------------------
       - name: 🧪 Run Tests
-        shell: bash
         run: |
           echo "🧪 Starting Test Execution..."
-          if [ -n "${{ github.event.inputs.test_class }}" ]; then
-            echo "🎯 Running Class: ${{ github.event.inputs.test_class }}"
+          if [ "${{ github.event.inputs.test_class }}" != "" ]; then
+            echo "🎯 Running specific test class: ${{ github.event.inputs.test_class }}"
             ./gradlew test --parallel --max-workers=4 --tests "${{ github.event.inputs.test_class }}" --info
-          elif [ -n "${{ github.event.inputs.test_group }}" ] && [ "${{ github.event.inputs.test_group }}" != "All" ]; then
-            echo "🏷️ Running Group: ${{ github.event.inputs.test_group }}"
+          elif [ "${{ github.event.inputs.test_group }}" != "" ] && [ "${{ github.event.inputs.test_group }}" != "All" ]; then
+            echo "🏷️ Running specific TestNG group: ${{ github.event.inputs.test_group }}"
             ./gradlew test --parallel --max-workers=4 -Dgroups=${{ github.event.inputs.test_group }} --info
           else
-            echo "🧩 Running Full Regression Suite"
+            echo "🧩 Running full regression suite..."
             ./gradlew test --parallel --max-workers=4 --info
           fi
 
-      # 6️⃣ Generate Allure Report (Full Sync + Trends)
-      - name: 📊 Generate Allure Report (Full Sync)
+      # -----------------------------------------
+      # 7️⃣ Generate Allure Report
+      # -----------------------------------------
+      - name: 📊 Generate Allure Report
         if: always()
         run: |
-          echo "🧩 Syncing Allure results..."
-          mkdir -p reports/current
-          cp -R build/allure-results/* reports/current/ || true
-
-          echo "⚙️ Generating Allure report..."
-          ./gradlew cleanTest generateAllureReport --info
-
-          if [ -d "reports/history" ]; then
-            echo "📈 Preserving historical trend data..."
-            cp -R reports/history reports/current/ || true
+          if [ -d "build/allure-results" ] && [ "$(find build/allure-results -name '*.json' | wc -l)" -gt 0 ]; then
+            ./gradlew generateAllureReport --info
+          else
+            echo "⚠️ No allure-results found — skipping report generation."
           fi
 
-          echo "✅ Report generated successfully at reports/current/index.html"
-
-      # 7️⃣ Add Local-View Scripts for Offline Access
-      - name: 🧰 Add local-view helper scripts
+      # -----------------------------------------
+      # 7.1️⃣ Embed Allure Report into Single HTML (Safe)
+      # -----------------------------------------
+      - name: 🧩 Embed Allure Report as Single HTML
         if: always()
-        shell: bash
         run: |
           REPORT_DIR="reports/current"
-          [ -d "$REPORT_DIR" ] || exit 0
+          OUTPUT_FILE="${REPORT_DIR}/Allure_Offline_Single_Safe.html"
 
-          cat > "$REPORT_DIR/README_OPEN_ME.txt" <<'TXT'
-          How to open this Allure report locally
-          =====================================
-          Option A (Mac/Linux):
-            python3 -m http.server 8000
-            Open http://localhost:8000
+          echo "📦 Embedding Allure JSON data into single HTML file..."
+          echo "<!DOCTYPE html><html><head><meta charset='UTF-8'><title>Allure Offline Report</title></head><body><script>" > "$OUTPUT_FILE"
+          echo "window.allureData = " >> "$OUTPUT_FILE"
 
-          Option B (Windows PowerShell):
-            python -m http.server 8000
-            Start-Process http://localhost:8000
-          TXT
+          # ✅ Use safe concatenation — no process substitution
+          JSON_CONTENT=$(find "$REPORT_DIR" -name '*.json' -exec cat {} + | jq -s .)
+          echo "$JSON_CONTENT" >> "$OUTPUT_FILE"
 
-          cat > "$REPORT_DIR/run_local_server.sh" <<'SH'
-          #!/usr/bin/env bash
-          PORT=${1:-8000}
-          echo "Starting local server on http://localhost:${PORT}"
-          python3 -m http.server "${PORT}"
-          SH
-          chmod +x "$REPORT_DIR/run_local_server.sh"
+          echo ";</script><iframe src='index.html' style='width:100%;height:100%;border:none;'></iframe></body></html>" >> "$OUTPUT_FILE"
 
-          cat > "$REPORT_DIR/run_local_server.bat" <<'BAT'
-          @echo off
-          set PORT=%1
-          if "%PORT%"=="" set PORT=8000
-          echo Starting local server on http://localhost:%PORT%
-          python -m http.server %PORT%
-          BAT
+          echo "✅ Created Safari-safe offline report at $OUTPUT_FILE"
+          ls -lh "$OUTPUT_FILE"
 
-      # 8️⃣ Upload Artifacts
-      - name: 📦 Upload Full Allure Report
+
+      # -----------------------------------------
+      # 8️⃣ Verify Allure Results
+      # -----------------------------------------
+      - name: 🕵️ Verify Allure Results
+        if: always()
+        run: |
+          if [ -d "build/allure-results" ]; then
+            echo "✅ Found allure-results:"
+            find build/allure-results -name "*.json" | wc -l
+          else
+            echo "❌ No allure-results found!"
+          fi
+
+      # -----------------------------------------
+      # 9️⃣ Upload Safari-Safe Offline Allure Report
+      # -----------------------------------------
+      - name: 📦 Upload Safari-Safe Offline Allure Report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: Allure-Full-Report-${{ github.run_number }}
-          path: reports/current/
+          name: Allure-Offline-Report-${{ github.run_number }}
+          path: reports/current/Allure_Offline_Single_Safe.html
           retention-days: 15
 
-      # 9️⃣ Publish to GitHub Pages (Live Reports)
-      - name: 🌐 Publish Allure report (latest)
-        if: always()
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: reports/current
-          destination_dir: reports/latest
-          keep_files: true
-          commit_message: "📊 Publish Allure Report (latest) #${{ github.run_number }}"
-
-      - name: 🌐 Publish Allure report (per-run)
-        if: always()
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: reports/current
-          destination_dir: reports/runs/${{ github.run_number }}
-          keep_files: true
-          commit_message: "📊 Publish Allure Report (run ${{ github.run_number }})"
-
-      # 🔟 Comment PR with Live Report Links
-      - name: 💬 Comment on PR
+      # -----------------------------------------
+      # 🔟 Comment on PR with Report Link
+      # -----------------------------------------
+      - name: 💬 Comment on PR with Report Link
         if: ${{ github.event_name == 'pull_request' }}
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
+            const prNumber = context.issue.number;
             const runUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
-            const pagesBase = `https://${context.repo.owner}.github.io/${context.repo.repo}`;
-            const msg = `
-            ✅ **API Tests Completed**
+            const message = `
+            ✅ **API Tests Executed Successfully**
             • **Branch:** \`${{ github.ref_name }}\`
             • **Suite:** \`${{ github.event.inputs.test_group || 'All' }}\`
+            • 💾 **Download Report:**  
+              → Go to the [Artifacts tab](${runUrl}) and download **Allure-Offline-Report-${{ github.run_number }}**
+            • Once downloaded, open \`Allure_Offline_Single_Safe.html\` locally in any browser.`;
+            await github.rest.issues.createComment({
+              issue_number: prNumber,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: message
+            });
 
-            📊 **Allure Reports**
-            • Latest: ${pagesBase}/reports/latest/
-            • This run: ${pagesBase}/reports/runs/${{ github.run_number }}/
-
-            💾 **Artifacts**
-            • [Download Folder](${runUrl}) → Allure-Full-Report-${{ github.run_number }}
-            • To open locally: run \`run_local_server.sh\` or \`run_local_server.bat\`
-            `;
-            await github.rest.issues.createComment({ ...context.issue, body: msg });
-
-      # 1️⃣1️⃣ Fail Job on Test Failure (but keep reports)
+      # -----------------------------------------
+      # 11️⃣ Fail Build on Test Failure
+      # -----------------------------------------
       - name: 🛑 Fail Build on Test Failure
         if: failure()
         run: exit 1
