@@ -151,14 +151,11 @@ jobs:
           echo "📦 Embedding Allure JSON data into single HTML file..."
           mkdir -p "$REPORT_DIR"
 
-          # Collect & compress all Allure JSON files
           TEMP_FILE="$REPORT_DIR/allure_data.json"
           find "$REPORT_DIR" -name '*.json' -exec cat {} + > "$TEMP_FILE"
 
-          # Encode into Base64 to avoid CI shell truncation
           BASE64_JSON=$(base64 -i "$TEMP_FILE" | tr -d '\n')
 
-          # Create embedded HTML that decodes Base64 back into JS at runtime
           cat <<EOF > "$OUTPUT_FILE"
   <!DOCTYPE html>
   <html>
