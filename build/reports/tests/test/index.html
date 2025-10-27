@@ -20,13 +20,13 @@
 <tr>
 <td>
 <div class="infoBox" id="tests">
-<div class="counter">1</div>
+<div class="counter">21</div>
 <p>tests</p>
 </div>
 </td>
 <td>
 <div class="infoBox" id="failures">
-<div class="counter">0</div>
+<div class="counter">2</div>
 <p>failures</p>
 </div>
 </td>
@@ -38,7 +38,7 @@
 </td>
 <td>
 <div class="infoBox" id="duration">
-<div class="counter">4.126s</div>
+<div class="counter">49.824s</div>
 <p>duration</p>
 </div>
 </td>
@@ -47,8 +47,8 @@
 </div>
 </td>
 <td>
-<div class="infoBox success" id="successRate">
-<div class="percent">100%</div>
+<div class="infoBox failures" id="successRate">
+<div class="percent">90%</div>
 <p>successful</p>
 </div>
 </td>
@@ -58,12 +58,28 @@
 <div class="tab-container">
 <ul class="tabLinks">
 <li>
+<a href="#">Failed tests</a>
+</li>
+<li>
 <a href="#">Packages</a>
 </li>
 <li>
 <a href="#">Classes</a>
 </li>
 </ul>
+<div class="tab">
+<h2>Failed tests</h2>
+<ul class="linkList">
+<li>
+<a href="classes/com.externalAPIs.tests.Charge.CreateRefundPaymentTests.html">CreateRefundPaymentTests</a>.
+<a href="classes/com.externalAPIs.tests.Charge.CreateRefundPaymentTests.html#createRefundPayment[0]({amount=2300, metadata={}, tokenId=11f092f5-df62-00cb-91b9-ef36cde23978, terminalId=11f0af55-8f39-dbe8-ae14-415e2af402ed, descriptor=Refund via automation test - 1761144249412, referenceId=f758a57c-2605-4194-a2b6-6d12233a46ee, effectiveDate=2025-09-16})">createRefundPayment[0]({amount=2300, metadata={}, tokenId=11f092f5-df62-00cb-91b9-ef36cde23978, terminalId=11f0af55-8f39-dbe8-ae14-415e2af402ed, descriptor=Refund via automation test - 1761144249412, referenceId=f758a57c-2605-4194-a2b6-6d12233a46ee, effectiveDate=2025-09-16})</a>
+</li>
+<li>
+<a href="classes/com.externalAPIs.tests.Charge.CreateRefundPaymentTests.html">CreateRefundPaymentTests</a>.
+<a href="classes/com.externalAPIs.tests.Charge.CreateRefundPaymentTests.html#createRefundPayment[1]({amount=1500, metadata={}, tokenId=11f092f8-1139-f15c-91b9-ef36cde23978, terminalId=11f0af55-8f39-dbe8-ae14-415e2af402ed, descriptor=Partial refund validation test - 1761144249412, referenceId=f758a57c-2605-4194-a2b6-6d12233a46ee, effectiveDate=2025-09-20})">createRefundPayment[1]({amount=1500, metadata={}, tokenId=11f092f8-1139-f15c-91b9-ef36cde23978, terminalId=11f0af55-8f39-dbe8-ae14-415e2af402ed, descriptor=Partial refund validation test - 1761144249412, referenceId=f758a57c-2605-4194-a2b6-6d12233a46ee, effectiveDate=2025-09-20})</a>
+</li>
+</ul>
+</div>
 <div class="tab">
 <h2>Packages</h2>
 <table>
@@ -79,13 +95,33 @@
 </thead>
 <tbody>
 <tr>
+<td class="failures">
+<a href="packages/com.externalAPIs.tests.Charge.html">com.externalAPIs.tests.Charge</a>
+</td>
+<td>4</td>
+<td>2</td>
+<td>0</td>
+<td>8.629s</td>
+<td class="failures">50%</td>
+</tr>
+<tr>
 <td class="success">
 <a href="packages/com.externalAPIs.tests.auth.html">com.externalAPIs.tests.auth</a>
 </td>
-<td>1</td>
+<td>4</td>
 <td>0</td>
 <td>0</td>
-<td>4.126s</td>
+<td>11.101s</td>
+<td class="success">100%</td>
+</tr>
+<tr>
+<td class="success">
+<a href="packages/com.externalAPIs.tests.common.html">com.externalAPIs.tests.common</a>
+</td>
+<td>13</td>
+<td>0</td>
+<td>0</td>
+<td>30.094s</td>
 <td class="success">100%</td>
 </tr>
 </tbody>
@@ -107,12 +143,192 @@
 <tbody>
 <tr>
 <td class="success">
+<a href="classes/com.externalAPIs.tests.Charge.CreateAchPaymentChargeTests.html">com.externalAPIs.tests.Charge.CreateAchPaymentChargeTests</a>
+</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>2.163s</td>
+<td class="success">100%</td>
+</tr>
+<tr>
+<td class="success">
+<a href="classes/com.externalAPIs.tests.Charge.CreatePaymentTokenSessionTests.html">com.externalAPIs.tests.Charge.CreatePaymentTokenSessionTests</a>
+</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1.820s</td>
+<td class="success">100%</td>
+</tr>
+<tr>
+<td class="failures">
+<a href="classes/com.externalAPIs.tests.Charge.CreateRefundPaymentTests.html">com.externalAPIs.tests.Charge.CreateRefundPaymentTests</a>
+</td>
+<td>2</td>
+<td>2</td>
+<td>0</td>
+<td>4.646s</td>
+<td class="failures">0%</td>
+</tr>
+<tr>
+<td class="success">
 <a href="classes/com.externalAPIs.tests.auth.Authorization_TokenTests.html">com.externalAPIs.tests.auth.Authorization_TokenTests</a>
 </td>
 <td>1</td>
 <td>0</td>
 <td>0</td>
-<td>4.126s</td>
+<td>4.542s</td>
+<td class="success">100%</td>
+</tr>
+<tr>
+<td class="success">
+<a href="classes/com.externalAPIs.tests.auth.Glofox_ClientTokenTests.html">com.externalAPIs.tests.auth.Glofox_ClientTokenTests</a>
+</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>2.559s</td>
+<td class="success">100%</td>
+</tr>
+<tr>
+<td class="success">
+<a href="classes/com.externalAPIs.tests.auth.Glofox_SecureClientTokenTests.html">com.externalAPIs.tests.auth.Glofox_SecureClientTokenTests</a>
+</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1.793s</td>
+<td class="success">100%</td>
+</tr>
+<tr>
+<td class="success">
+<a href="classes/com.externalAPIs.tests.auth.Secure_TokenTests.html">com.externalAPIs.tests.auth.Secure_TokenTests</a>
+</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>2.207s</td>
+<td class="success">100%</td>
+</tr>
+<tr>
+<td class="success">
+<a href="classes/com.externalAPIs.tests.common.CreateBankPaymentTokenTests.html">com.externalAPIs.tests.common.CreateBankPaymentTokenTests</a>
+</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>2.397s</td>
+<td class="success">100%</td>
+</tr>
+<tr>
+<td class="success">
+<a href="classes/com.externalAPIs.tests.common.CreateClientBankAccountTests.html">com.externalAPIs.tests.common.CreateClientBankAccountTests</a>
+</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>2.482s</td>
+<td class="success">100%</td>
+</tr>
+<tr>
+<td class="success">
+<a href="classes/com.externalAPIs.tests.common.CreateClientProfileTests.html">com.externalAPIs.tests.common.CreateClientProfileTests</a>
+</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>2.172s</td>
+<td class="success">100%</td>
+</tr>
+<tr>
+<td class="success">
+<a href="classes/com.externalAPIs.tests.common.CreateClientTests.html">com.externalAPIs.tests.common.CreateClientTests</a>
+</td>
+<td>2</td>
+<td>0</td>
+<td>0</td>
+<td>3.650s</td>
+<td class="success">100%</td>
+</tr>
+<tr>
+<td class="success">
+<a href="classes/com.externalAPIs.tests.common.CreateCompanyTests.html">com.externalAPIs.tests.common.CreateCompanyTests</a>
+</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1.794s</td>
+<td class="success">100%</td>
+</tr>
+<tr>
+<td class="success">
+<a href="classes/com.externalAPIs.tests.common.CreateLocationTests.html">com.externalAPIs.tests.common.CreateLocationTests</a>
+</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>2.526s</td>
+<td class="success">100%</td>
+</tr>
+<tr>
+<td class="success">
+<a href="classes/com.externalAPIs.tests.common.CreateMerchantTests.html">com.externalAPIs.tests.common.CreateMerchantTests</a>
+</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1.993s</td>
+<td class="success">100%</td>
+</tr>
+<tr>
+<td class="success">
+<a href="classes/com.externalAPIs.tests.common.CreateOrganizationTests.html">com.externalAPIs.tests.common.CreateOrganizationTests</a>
+</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>2.526s</td>
+<td class="success">100%</td>
+</tr>
+<tr>
+<td class="success">
+<a href="classes/com.externalAPIs.tests.common.CreatePaymentSessionConsumerTests.html">com.externalAPIs.tests.common.CreatePaymentSessionConsumerTests</a>
+</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>2.059s</td>
+<td class="success">100%</td>
+</tr>
+<tr>
+<td class="success">
+<a href="classes/com.externalAPIs.tests.common.CreateProcessorTests.html">com.externalAPIs.tests.common.CreateProcessorTests</a>
+</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>4.734s</td>
+<td class="success">100%</td>
+</tr>
+<tr>
+<td class="success">
+<a href="classes/com.externalAPIs.tests.common.CreateTerminalTests.html">com.externalAPIs.tests.common.CreateTerminalTests</a>
+</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1.785s</td>
+<td class="success">100%</td>
+</tr>
+<tr>
+<td class="success">
+<a href="classes/com.externalAPIs.tests.common.UpdateMerchantTests.html">com.externalAPIs.tests.common.UpdateMerchantTests</a>
+</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1.976s</td>
 <td class="success">100%</td>
 </tr>
 </tbody>
@@ -126,7 +342,7 @@
 <input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
 </label>
 </div>Generated by 
-<a href="https://www.gradle.org">Gradle 8.14</a> at 22-Oct-2025, 5:39:35 pm</p>
+<a href="https://www.gradle.org">Gradle 9.0.0</a> at 22-Oct-2025, 8:14:14 pm</p>
 </div>
 </div>
 </body>

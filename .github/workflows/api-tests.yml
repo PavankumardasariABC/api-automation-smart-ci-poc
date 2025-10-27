@@ -42,7 +42,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       # -----------------------------------------
-      # 2️⃣ Optimized Gradle Cache (Split + Lightweight)
+      # 2️⃣ Cache Gradle Wrapper & Dependencies
       # -----------------------------------------
       - name: ⚡ Cache Gradle Wrapper
         uses: actions/cache@v4
@@ -52,16 +52,13 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-wrapper-
 
-      - name: ⚡ Cache Gradle Dependencies (Optimized)
+      - name: ⚡ Cache Gradle Dependencies
         uses: actions/cache@v4
         with:
-          path: |
-            ~/.gradle/caches/modules-2
-            ~/.gradle/caches/jars-*
-            ~/.gradle/caches/transforms-*
-          key: ${{ runner.os }}-gradle-modcache-${{ hashFiles('**/*.gradle*') }}
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-caches-${{ hashFiles('**/*.gradle*') }}
           restore-keys: |
-            ${{ runner.os }}-gradle-modcache-
+            ${{ runner.os }}-gradle-caches-
 
       # -----------------------------------------
       # 3️⃣ Setup JDK
@@ -73,9 +70,15 @@ jobs:
           java-version: '21'
 
       # -----------------------------------------
-      # 4️⃣ Install Allure CLI (Cached)
+      # 4️⃣ Cache & Install Allure CLI
       # -----------------------------------------
-      - name: 🧩 Install Allure CLI
+      - name: ⚡ Cache Allure CLI
+        uses: actions/cache@v4
+        with:
+          path: allure-cli
+          key: ${{ runner.os }}-allure-2.27.0
+
+      - name: 🧩 Install Allure CLI (cached)
         run: |
           BASE_DIR="${{ github.workspace }}/allure-cli"
           if [ ! -d "$BASE_DIR/allure-2.27.0" ]; then
@@ -108,20 +111,20 @@ jobs:
           fi
 
       # -----------------------------------------
-      # 6️⃣ Run Tests (No 'clean' for speed)
+      # 6️⃣ Run Tests (parallel & fast)
       # -----------------------------------------
       - name: 🧪 Run Tests
         run: |
           echo "🧪 Starting Test Execution..."
           if [ "${{ github.event.inputs.test_class }}" != "" ]; then
             echo "🎯 Running specific test class: ${{ github.event.inputs.test_class }}"
-            ./gradlew test --tests "${{ github.event.inputs.test_class }}" --info
+            ./gradlew test --parallel --max-workers=4 --tests "${{ github.event.inputs.test_class }}" --info
           elif [ "${{ github.event.inputs.test_group }}" != "" ] && [ "${{ github.event.inputs.test_group }}" != "All" ]; then
             echo "🏷️ Running specific TestNG group: ${{ github.event.inputs.test_group }}"
-            ./gradlew test -Dgroups=${{ github.event.inputs.test_group }} --info
+            ./gradlew test --parallel --max-workers=4 -Dgroups=${{ github.event.inputs.test_group }} --info
           else
             echo "🧩 Running full regression suite..."
-            ./gradlew test --info
+            ./gradlew test --parallel --max-workers=4 --info
           fi
 
       # -----------------------------------------
@@ -137,46 +140,47 @@ jobs:
           fi
 
       # -----------------------------------------
-      # 8️⃣ Upload Report Artifact
+      # 8️⃣ Verify Allure Results
       # -----------------------------------------
-      - name: 📦 Upload Allure Report Folder
+      - name: 🕵️ Verify Allure Results
+        if: always()
+        run: |
+          if [ -d "build/allure-results" ]; then
+            echo "✅ Found allure-results:"
+            find build/allure-results -name "*.json" | wc -l
+          else
+            echo "❌ No allure-results found!"
+          fi
+
+      # -----------------------------------------
+      # 9️⃣ Upload Safari-Safe Offline Allure Report
+      # -----------------------------------------
+      - name: 📦 Upload Safari-Safe Offline Allure Report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: Allure-Full-Report-${{ github.run_number }}
-          path: reports/current/
-          retention-days: 10
+          name: Allure-Offline-Report-${{ github.run_number }}
+          path: reports/current/Allure_Offline_Single_Safe.html
+          retention-days: 15
 
       # -----------------------------------------
-      # 9️⃣ Publish to GitHub Pages (Live Allure Report)
+      # 🔟 Comment on PR with Report Link
       # -----------------------------------------
-      - name: 🌐 Publish Allure Report to GitHub Pages
-        if: always()
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: reports/current
-          destination_dir: reports/latest
-          keep_files: true
-          commit_message: "📊 Publish Allure Report #${{ github.run_number }}"
-
-      # -----------------------------------------
-      # 🔟 Comment on PR
-      # -----------------------------------------
-      - name: 💬 Comment on PR
+      - name: 💬 Comment on PR with Report Link
         if: ${{ github.event_name == 'pull_request' }}
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const prNumber = context.issue.number;
+            const runUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
             const message = `
-            ✅ **API Tests Executed**
-            - **Branch:** ${{ github.ref_name }}
-            - **Group:** ${{ github.event.inputs.test_group || 'All' }}
-            - 📊 [**View Allure Report (Live)**](https://pavankumardasariabc.github.io/api-automation-smart-ci-poc/reports/latest/)
-            - 💾 **Artifact:** Allure-Full-Report-${{ github.run_number }}
-            `;
+            ✅ **API Tests Executed Successfully**
+            • **Branch:** \`${{ github.ref_name }}\`
+            • **Suite:** \`${{ github.event.inputs.test_group || 'All' }}\`
+            • 💾 **Download Report:**  
+              → Go to the [Artifacts tab](${runUrl}) and download **Allure-Offline-Report-${{ github.run_number }}**
+            • Once downloaded, open \`Allure_Offline_Single_Safe.html\` locally in any browser.`;
             await github.rest.issues.createComment({
               issue_number: prNumber,
               owner: context.repo.owner,
