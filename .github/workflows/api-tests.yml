@@ -140,6 +140,22 @@ jobs:
           fi
 
       # -----------------------------------------
+      # 7.1️⃣ Embed Allure Report into Single HTML
+      # -----------------------------------------
+      - name: 🧩 Embed Allure Report as Single HTML
+        if: always()
+        run: |
+          REPORT_DIR="reports/current"
+          OUTPUT_FILE="${REPORT_DIR}/Allure_Offline_Single_Safe.html"
+          echo "📦 Embedding Allure JSON data into single HTML file..."
+          echo "<!DOCTYPE html><html><head><meta charset='UTF-8'><title>Allure Offline Report</title></head><body><script>" > $OUTPUT_FILE
+          echo "window.allureData = " >> $OUTPUT_FILE
+          jq -n --slurpfile data <(find $REPORT_DIR -name '*.json' -exec cat {} \;) '$data' >> $OUTPUT_FILE
+          echo ";</script><iframe src='index.html' style='width:100%;height:100%;border:none;'></iframe></body></html>" >> $OUTPUT_FILE
+          echo "✅ Created Safari-safe offline report at $OUTPUT_FILE"
+          ls -lh $OUTPUT_FILE
+
+      # -----------------------------------------
       # 8️⃣ Verify Allure Results
       # -----------------------------------------
       - name: 🕵️ Verify Allure Results
