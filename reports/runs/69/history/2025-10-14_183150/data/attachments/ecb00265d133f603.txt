@@ -1,0 +1,7 @@
+{
+  "name": "Terminal Test_1760446902437_1760446902438",
+  "description": "Terminal description for automation",
+  "terminalNumber": "qa_terminal_1760446902438",
+  "merchantProcessorId": "11f0a8fd-eded-4eeb-8b84-b39110c67a6c",
+  "source": "glofox test"
+}

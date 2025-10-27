@@ -1,0 +1,18 @@
+https://secure.dev.30preprod.com/api/abcpg/payments/charge
+Headers:
+{ Authorization=****, Content-Type=application/json;charset=UTF-8, ABCFS-TENANT-ID=41424320-436f-6d70-616e-792020202020, User-Agent=Automation-Test,  }
+
+Body:
+{
+  "requests": [
+    {
+      "amount": "2300",
+      "tokenId": "11f092f8-1139-f15c-91b9-ef36cde23978",
+      "relatedReferenceId": "f58c6195-16bb-42e4-b592-9bcfdc6fff7e",
+      "terminalId": "11f0a921-ca83-1b11-84d6-45fa262230b5",
+      "descriptor": "success webhook test - 1760462308165",
+      "effectiveDate": "2026-09-16",
+      "referenceId": "af7b7b71-b5f2-4261-9fe7-dcaf13edc02a"
+    }
+  ]
+}

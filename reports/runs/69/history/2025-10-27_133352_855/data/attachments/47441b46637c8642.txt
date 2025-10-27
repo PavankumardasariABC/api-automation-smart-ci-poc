@@ -1,0 +1,58 @@
+{
+    "id": "d7480e56-955e-4b5c-a844-5a35a858d5bc",
+    "name": "GLofox Organization 1761552190624",
+    "email": "abcqatesting2017+org_1761552190624@gmail.com",
+    "phone": {
+        "number": "1155751",
+        "extension": "38",
+        "countryCode": "US"
+    },
+    "number": "911808",
+    "signInLink": "https://test.url.qa4life.com",
+    "websiteUrl": "www.op-Org-1761552190624.com",
+    "reportingUrl": "www.reporting-host.com",
+    "timezone": "US/Eastern",
+    "locale": {
+        "language": "en",
+        "region": "US",
+        "variant": "MAC"
+    },
+    "branding": {
+        "id": "d7480e56-955e-4b5c-a844-5a35a858d5bc",
+        "colorScheme": {
+            "primary": "#666666",
+            "primaryHover": "#666666"
+        },
+        "logoPath": "7f9d8ac3-f937-4765-914b-f81ddc80e637",
+        "primaryMessage": "PrimaryText",
+        "secondaryMessage": "SecondaryText"
+    },
+    "allowSecondaryMembers": true,
+    "taxIncluded": true,
+    "address": {
+        "id": "11f0b30b-632d-9839-9332-95ef7ab78dc3",
+        "address1": "15725 SW 72nd St",
+        "address2": "15725 SW",
+        "city": "Miami",
+        "countryCode": "US",
+        "provinceCode": "FL",
+        "postalCode": "33193",
+        "provinceName": "Florida",
+        "region": "Miami metropolitan area‎",
+        "province": {
+            "id": "FL",
+            "abbreviation": "FL",
+            "code": "US-FL"
+        },
+        "country": {
+            "id": "US",
+            "abbreviation": "USA",
+            "code": "840"
+        }
+    },
+    "verificationRequestDate": "2025-10-27T08:03:13Z",
+    "emailIdentityVerified": true,
+    "emailIdentityVerificationFailed": false,
+    "subDomainAlias": "glofox-organization-1761552190624",
+    "status": "PENDING"
+}
