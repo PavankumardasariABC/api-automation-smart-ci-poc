@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Allure Report</title>
+    <link rel="icon" href="favicon.ico">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <link rel="stylesheet" type="text/css" href="plugin/screen-diff/styles.css">
+</head>
+<body>
+    <div id="alert"></div>
+    <div id="content">
+        <span class="spinner">
+            <span class="spinner__circle"></span>
+        </span>
+    </div>
+    <div id="popup"></div>
+    <script src="app.js"></script>
+    <script src="plugin/behaviors/index.js"></script>
+    <script src="plugin/packages/index.js"></script>
+    <script src="plugin/screen-diff/index.js"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-FVWC4GKEYS"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-FVWC4GKEYS', {
+          'allureVersion': 'dev',
+          'reportUuid': '379264e7-06d0-4cfd-bd7e-5d0013061529',
+          'single_file': false
+        });
+    </script>
+
+<script id='embedded-json' type='application/json'>
+{
+    "categories.json": "eyJ0b3RhbCI6MCwiaXRlbXMiOltdfQ==",
+    "suites.json": "eyJ0b3RhbCI6MCwiaXRlbXMiOltdfQ==",
+    "timeline.json": "eyJ1aWQiOiJhYjE3ZmM1YTRlYjNiY2E0YjIxNmI1NDhjN2Y5ZmNiYyIsImNoaWxkcmVuIjpbXSwibmFtZSI6InRpbWVsaW5lIn0=",
+    "packages.json": "eyJ1aWQiOiI4M2VkYzA2YzA3ZjlhZTllNDdlYjZkZDFiNjgzZTRlMiIsImNoaWxkcmVuIjpbXSwibmFtZSI6InBhY2thZ2VzIn0=",
+    "behaviors.json": "eyJ0b3RhbCI6MCwiaXRlbXMiOltdfQ==",
+    "summary.json": "eyJyZXBvcnROYW1lIjoiQWxsdXJlIFJlcG9ydCIsInRlc3RSdW5zIjpbXSwic3RhdGlzdGljIjp7ImZhaWxlZCI6MCwiYnJva2VuIjowLCJza2lwcGVkIjowLCJwYXNzZWQiOjAsInVua25vd24iOjAsInRvdGFsIjowfSwidGltZSI6e319",
+    "executors.json": "W3sibmFtZSI6IkdyYWRsZSIsInR5cGUiOiJncmFkbGUiLCJidWlsZE5hbWUiOiJhcGktYXV0b21hdGlvbi1mcmFtZXdvcmstZ3JhZGxlIn1d",
+    "duration-trend.json": "W3siZGF0YSI6e319XQ==",
+    "status-chart.json": "W10=",
+    "retry-trend.json": "W3siZGF0YSI6eyJydW4iOjAsInJldHJ5IjowfX1d",
+    "categories-trend.json": "W3siZGF0YSI6e319XQ==",
+    "severity.json": "W10=",
+    "history-trend.json": "W3siZGF0YSI6eyJmYWlsZWQiOjAsImJyb2tlbiI6MCwic2tpcHBlZCI6MCwicGFzc2VkIjowLCJ1bmtub3duIjowLCJ0b3RhbCI6MH19XQ==",
+    "launch.json": "W10=",
+    "duration.json": "W10=",
+    "environment.json": "W10="
+}
+</script>
+<script>
+(function(){
+  const el = document.getElementById('embedded-json');
+  if(!el){console.error('❌ Embedded JSON not found');return;}
+  const data = JSON.parse(el.textContent);
+  const origFetch = window.fetch;
+  window.fetch = (url)=>{
+    if(url && (url.includes('/data/') || url.includes('/widgets/'))){
+      const file=url.split('/').pop();
+      const b64=data[file];
+      if(b64){
+        const decoded = new TextDecoder('utf-8').decode(
+            Uint8Array.from(atob(b64), c => c.charCodeAt(0))
+        );
+        return Promise.resolve({
+          ok:true,status:200,
+          json:async()=>JSON.parse(decoded),
+          text:async()=>decoded
+        });
+      }
+    }
+    return origFetch(url);
+  };
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.getRegistrations().then(r=>r.forEach(s=>s.unregister()));
+  }
+  console.log('✅ Allure Offline Mode Activated');
+})();
+</script>
+
+</body>
+</html>
