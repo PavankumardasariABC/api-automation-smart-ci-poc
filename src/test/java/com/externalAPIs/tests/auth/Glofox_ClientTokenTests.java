@@ -22,7 +22,7 @@ import java.util.*;
 public class Glofox_ClientTokenTests {
 
     @Story("As a Glofox client, I can authenticate and retrieve a valid OAuth token for downstream API access.")
-    @Test(priority = 1, groups = {"auth", "smoke"})
+    @Test(priority = 1, groups = {"Sanity"})
     @Description("Ensures Glofox OAuth token retrieval using Base64-encoded client credentials and validates token caching.")
 
     public void getGlofoxClientToken() {
