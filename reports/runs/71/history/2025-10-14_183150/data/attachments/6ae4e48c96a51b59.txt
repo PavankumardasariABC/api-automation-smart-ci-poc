@@ -1,0 +1,26 @@
+{
+    "clientId": "glofox-test-01-1760446861327",
+    "resourceIds": [
+        "abc-payment-gateway"
+    ],
+    "scopes": [
+        "secure:protected"
+    ],
+    "grantTypes": [
+        "password",
+        "refresh_token",
+        "client_credentials",
+        "authorization_code"
+    ],
+    "accessTokenExpiration": 86400,
+    "refreshTokenExpiration": 1209600,
+    "autoApprove": "*",
+    "subject": "Test client creation for glofox",
+    "id": "11f0a8fd-d6ae-d664-9bd3-b588409ae3f2",
+    "authorities": [
+        {
+            "key": "pg-payment:client-write",
+            "description": "Write client permissions for external payment apis"
+        }
+    ]
+}

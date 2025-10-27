@@ -1,0 +1,40 @@
+{
+  "taxIncluded": true,
+  "address": {
+    "address1": "15725 SW 72nd St",
+    "address2": "15725 SW",
+    "city": "Miami",
+    "countryCode": "US",
+    "provinceCode": "FL",
+    "postalCode": "33193",
+    "provinceName": "Florida",
+    "region": "Miami metropolitan area‎"
+  },
+  "signInLink": "https://test.url.qa4life.com",
+  "reportingUrl": "www.reporting-host.com",
+  "timezone": "US/Eastern",
+  "branding": {
+    "colorScheme": {
+      "primary": "#666666",
+      "primaryHover": "#666666"
+    },
+    "logoPath": "7f9d8ac3-f937-4765-914b-f81ddc80e637",
+    "primaryMessage": "PrimaryText",
+    "secondaryMessage": "SecondaryText"
+  },
+  "locale": {
+    "language": "en",
+    "region": "US",
+    "variant": "MAC"
+  },
+  "number": "316182",
+  "websiteUrl": "www.op-Org-1760686367150.com",
+  "phone": {
+    "number": "7862184",
+    "extension": "38",
+    "countryCode": "US"
+  },
+  "name": "GLofox Organization 1760686367150",
+  "allowSecondaryMembers": true,
+  "email": "abcqatesting2017+org_1760686367150@gmail.com"
+}
