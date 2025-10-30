@@ -1,1 +1,1 @@
-[{"uid":"fe145a4ecb6c51c6","name":"getAuthToken","time":{"start":1761815824281,"stop":1761815828645,"duration":4364},"status":"passed","severity":"blocker"}]
+[{"uid":"d848d377639ae1c6","name":"getAuthToken","time":{"start":1761817355087,"stop":1761817359509,"duration":4422},"status":"passed","severity":"blocker"}]
