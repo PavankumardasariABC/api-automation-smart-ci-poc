@@ -9,6 +9,17 @@ on:
         description: "Select branch to run tests"
         required: true
         default: "feature/github-actions-poc-"
+
+        environment:
+          description: "Select Environment"
+          required: true
+          type: choice
+          options:
+            - dev
+            - qa
+            - stage
+            - prod
+          default: dev
       test_group:
         description: "Test group (Sanity, Integration, Regression, All)"
         required: true
@@ -17,17 +28,6 @@ on:
         description: "Optional: Run only specific API test class"
         required: false
         default: ""
-
-    environment:
-      description: "Select Environment"
-      required: true
-      type: choice
-      options:
-        - dev
-        - qa
-        - stage
-        - prod
-      default: dev
 
 permissions:
   contents: write
