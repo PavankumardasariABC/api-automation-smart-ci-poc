@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
-
 <suite name="External APIs Test Suite" parallel="none">
 
     <listeners>
@@ -9,7 +7,7 @@
 
     <test name="Authentication and Merchant Flow">
         <classes>
-            <!-- 🔐 Authentication Tests -->
+            <!-- 🔐 AUTH -->
             <class name="com.externalAPIs.tests.auth.Authorization_TokenTests"/>
             <class name="com.externalAPIs.tests.auth.Secure_TokenTests"/>
             <class name="com.externalAPIs.tests.auth.Glofox_ClientTokenTests"/>
@@ -33,7 +31,6 @@
             <class name="com.externalAPIs.tests.Charge.CreatePaymentTokenSessionTests"/>
             <class name="com.externalAPIs.tests.Charge.CreateAchPaymentChargeTests"/>
             <class name="com.externalAPIs.tests.Charge.CreateRefundPaymentTests"/>
-
         </classes>
     </test>
 </suite>

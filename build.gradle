@@ -11,9 +11,7 @@ java {
     targetCompatibility = JavaVersion.VERSION_17
 }
 
-repositories {
-    mavenCentral()
-}
+repositories { mavenCentral() }
 
 ext {
     allureVersion = '2.27.0'
@@ -39,28 +37,27 @@ dependencies {
 }
 
 /////////////////////////////////////////////////////////////
-// ✅ SAFARI-SAFE OFFLINE ALLURE REPORT (UTF-8 Compatible)
+// ✅ OFFLINE ALLURE REPORT (UTF-8 & Safari Safe)
 /////////////////////////////////////////////////////////////
 tasks.register('generateAllureReport') {
     group = "reporting"
-    description = "Generate offline Allure report with embedded JSON (Safari-safe + UTF-8)"
+    description = "Generate offline Allure report (UTF-8 & Safari safe)"
 
     doLast {
-        def resultsDir = new File("${project.projectDir}/build/allure-results")
-        def outputDir  = new File("${project.projectDir}/reports/current")
+        def resultsDir = file("$projectDir/build/allure-results")
+        def outputDir  = file("$projectDir/reports/current")
         def timestamp  = new Date().format("yyyy-MM-dd_HHmmss_SSS")
         def isCI       = System.getenv("GITHUB_ACTIONS") != null
 
         println "\n🧹 Cleaning old Allure reports..."
         if (outputDir.exists()) outputDir.deleteDir()
 
-        // 🧩 Auto-install Allure CLI if missing
         def allureCmd = "allure"
         def checkAllure = ["bash", "-c", "command -v allure"].execute()
         checkAllure.waitFor()
         if (checkAllure.exitValue() != 0) {
-            println "⚙️ Installing Allure CLI locally (missing)..."
-            def allureZip = new File("${project.projectDir}/allure.zip")
+            println "⚙️ Installing Allure CLI locally..."
+            def allureZip = file("$projectDir/allure.zip")
             ["bash", "-c", """
                 wget -q https://github.com/allure-framework/allure2/releases/download/2.27.0/allure-2.27.0.zip -O ${allureZip}
                 unzip -q -o ${allureZip} -d ${project.projectDir}
@@ -75,155 +72,204 @@ tasks.register('generateAllureReport') {
         process.waitForProcessOutput(System.out, System.err)
 
         if (process.exitValue() != 0) {
-            println "❌ Allure CLI exited with code ${process.exitValue()}"
+            println "❌ Allure generation failed (exit code ${process.exitValue()})"
             return
         }
+
         println "✅ Allure report generated → ${outputDir}/index.html"
 
-        // 🧩 Base64-embed JSONs (UTF-8 Safe)
+        // 🧩 Embed JSONs for Safari/Offline Mode
         try {
-            def dataDirs = [
-                    new File("${outputDir}/data"),
-                    new File("${outputDir}/widgets")
-            ]
-            def indexFile = new File("${outputDir}/index.html")
-            if (!indexFile.exists()) {
-                println "⚠️ Missing index.html — skipping embedding."
-                return
-            }
-
+            def dataDirs = [file("${outputDir}/data"), file("${outputDir}/widgets")]
             def jsonFiles = []
             dataDirs.each { dir -> if (dir.exists()) jsonFiles += fileTree(dir: dir, include: '**/*.json').files }
+            if (jsonFiles.isEmpty()) return
 
-            if (jsonFiles.isEmpty()) {
-                println "⚠️ No JSON files found — report may appear blank!"
-                return
-            }
-
-            println "🧩 Embedding ${jsonFiles.size()} JSON files..."
             def jsonMap = [:]
             jsonFiles.each { f -> jsonMap[f.name] = f.getText('UTF-8').bytes.encodeBase64().toString() }
-
             def jsonContent = new groovy.json.JsonBuilder(jsonMap).toPrettyString()
-            def finalHtml = new File("${outputDir}/Allure_Offline_Single_Safe.html")
+
+            def indexFile = file("${outputDir}/index.html")
+            def finalHtml = file("${outputDir}/Allure_Offline_Single_Safe.html")
             def indexHtml = indexFile.getText('UTF-8')
 
-            // ✅ UTF-8 safe decoding using TextDecoder
             def embeddedData = """
-<script id='embedded-json' type='application/json'>
-${jsonContent}
-</script>
+<script id='embedded-json' type='application/json'>${jsonContent}</script>
 <script>
 (function(){
-  const el = document.getElementById('embedded-json');
-  if(!el){console.error('❌ Embedded JSON not found');return;}
-  const data = JSON.parse(el.textContent);
-  const origFetch = window.fetch;
-  window.fetch = (url)=>{
-    if(url && (url.includes('/data/') || url.includes('/widgets/'))){
-      const file=url.split('/').pop();
-      const b64=data[file];
-      if(b64){
-        const decoded = new TextDecoder('utf-8').decode(
-            Uint8Array.from(atob(b64), c => c.charCodeAt(0))
-        );
-        return Promise.resolve({
-          ok:true,status:200,
-          json:async()=>JSON.parse(decoded),
-          text:async()=>decoded
-        });
-      }
-    }
-    return origFetch(url);
-  };
-  if('serviceWorker' in navigator){
-    navigator.serviceWorker.getRegistrations().then(r=>r.forEach(s=>s.unregister()));
-  }
-  console.log('✅ Allure Offline Mode Activated');
+ const el=document.getElementById('embedded-json');if(!el)return;
+ const data=JSON.parse(el.textContent),origFetch=window.fetch;
+ window.fetch=(u)=>{if(u&&(u.includes('/data/')||u.includes('/widgets/'))){
+ const f=u.split('/').pop(),b=data[f];if(b){const dec=new TextDecoder('utf-8')
+ .decode(Uint8Array.from(atob(b),c=>c.charCodeAt(0)));
+ return Promise.resolve({ok:true,status:200,
+ json:async()=>JSON.parse(dec),text:async()=>dec});}}
+ return origFetch(u);};
+ if('serviceWorker'in navigator)navigator.serviceWorker.getRegistrations()
+ .then(r=>r.forEach(s=>s.unregister()));
+ console.log('✅ Allure Offline Mode Activated');
 })();
 </script>
 """
-            def mergedHtml = indexHtml.replaceFirst('(?i)</body>', "${embeddedData}\n</body>")
-            finalHtml.setText(mergedHtml, 'UTF-8')
-            println "✅ Safari-safe report created → ${finalHtml.absolutePath}"
+            def merged = indexHtml.replaceFirst('(?i)</body>', "${embeddedData}\n</body>")
+            finalHtml.setText(merged, 'UTF-8')
+            println "✅ Offline HTML created → ${finalHtml.absolutePath}"
         } catch (Exception e) {
             println "⚠️ Embedding failed: ${e.message}"
         }
 
-        // 🗂 Archive history
         copy {
             from outputDir
-            into "${project.projectDir}/reports/history/${timestamp}"
+            into "$projectDir/reports/history/${timestamp}"
         }
-        println "🗂 Archived → reports/history/${timestamp}"
+        println "🗂 Archived report → reports/history/${timestamp}"
 
-        if (!isCI && System.getProperty("os.name").toLowerCase().contains("mac")) {
+        if (!isCI && System.getProperty("os.name").toLowerCase().contains("mac"))
             ["bash", "-c", "open '${outputDir}/Allure_Offline_Single_Safe.html'"].execute()
-        }
     }
 }
 
 /////////////////////////////////////////////////////////////
-// ✅ TEST CONFIGURATION
-/////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////
-// ✅ TEST CONFIGURATION — supports dynamic TestNG groups
+// ✅ TEST CONFIGURATION — Dynamic Groups / Class + Workflow
 /////////////////////////////////////////////////////////////
 test {
-    useTestNG() {
-        // ✅ Support both suite XML and runtime group filtering
-        if (project.hasProperty('groups') && project.getProperty('groups')) {
-            def groupFilter = project.getProperty('groups')
-            println "🏷️ Running only TestNG group(s): ${groupFilter}"
-            includeGroups groupFilter.split(',')  // supports multiple comma-separated groups
-        } else {
-            println "🧩 No TestNG group specified — defaulting to full suite"
-            suites 'testng.xml'
+    outputs.upToDateWhen { false }
+
+    def testSummary = [passed: 0, failed: 0, skipped: 0]
+
+    beforeTest { descriptor ->
+        println "▶️ Running Test: ${descriptor.className} :: ${descriptor.name}"
+    }
+
+    afterTest { descriptor, result ->
+        switch (result.resultType) {
+            case org.gradle.api.tasks.testing.TestResult.ResultType.SUCCESS: testSummary.passed++; break
+            case org.gradle.api.tasks.testing.TestResult.ResultType.FAILURE: testSummary.failed++; break
+            case org.gradle.api.tasks.testing.TestResult.ResultType.SKIPPED: testSummary.skipped++; break
         }
     }
 
-    failFast = false
-    ignoreFailures = true
-    outputs.upToDateWhen { false }
+    doLast {
+        println "\n📊 ===== TEST SUMMARY ====="
+        println "✅ Passed: ${testSummary.passed}"
+        println "❌ Failed: ${testSummary.failed}"
+        println "⚠️ Skipped: ${testSummary.skipped}"
+        println "==========================\n"
+    }
+
+    doFirst {
+        def resultsDir = file("$projectDir/build/allure-results")
+        if (resultsDir.exists()) resultsDir.deleteDir()
+        resultsDir.mkdirs()
+        println "🧹 Cleared old allure-results"
+
+        // ✅ Generate dynamic suite early (fix race condition)
+        def groupsProp = System.getProperty('groups')
+        def classProp = System.getProperty('testClass')
+        def hasGroup = groupsProp && !groupsProp.trim().isEmpty()
+        def hasClass = classProp && !classProp.trim().isEmpty()
+
+        def suiteFile = file("$buildDir/dynamic-suite.xml")
+        def xmlFile = file("$projectDir/testng.xml")
+
+        if (hasGroup || hasClass) {
+            def groupFilter = hasGroup ? groupsProp.trim() : null
+            def classFilter = hasClass ? classProp.trim() : null
+
+            println "🎯 Dynamic Execution Mode:"
+            if (groupFilter) println "   → Groups: ${groupFilter}"
+            if (classFilter) println "   → Class: ${classFilter}"
+
+            def xmlContent = new XmlParser(false, false).parse(xmlFile)
+            def allClasses = xmlContent.'test'.'classes'.'class'*.@name
+
+            def filteredClasses = allClasses.findAll { !classFilter || it == classFilter }
+            if (filteredClasses.isEmpty()) {
+                println "⚠️ No matching classes found for filter. Running default suite."
+                System.setProperty("useDefaultSuite", "true")
+                return
+            }
+
+            def includeGroupsXml = groupFilter ? groupFilter.split(',')
+                    .collect { "<include name='${it.trim()}'/>" }
+                    .join('\n            ') : ""
+
+            suiteFile.text = """<?xml version="1.0" encoding="UTF-8"?>
+<suite name="DynamicSuite" verbose="1" configfailurepolicy="continue">
+  <test name="FilteredExecution" preserve-order="true">
+    ${groupFilter ? """
+    <groups><run>${includeGroupsXml}</run></groups>""" : ""}
+    <classes>
+      ${filteredClasses.collect { "<class name='${it}'/>" }.join('\n      ')}
+    </classes>
+  </test>
+</suite>
+"""
+            println "🧩 Created suite → ${suiteFile.canonicalPath}"
+        } else {
+            System.setProperty("useDefaultSuite", "true")
+            println "🧩 No filter provided — running full suite (testng.xml)"
+        }
+    }
+
+    useTestNG {
+        // ✅ Reference suite file safely after it's created
+        def suiteFile = file("$buildDir/dynamic-suite.xml")
+        def useDefault = System.getProperty("useDefaultSuite", "false").toBoolean()
+
+        if (useDefault || !suiteFile.exists()) {
+            options.suites(file('testng.xml'))
+        } else {
+            options.suites(suiteFile)
+        }
+    }
+
+    // ✅ Workflow-based fail-fast logic
+    def workflow = System.getProperty('workflow', 'all').toLowerCase()
+    failFast = (workflow == 'all')
+    println "⚙️ Workflow Mode: ${workflow} → failFast=${failFast}"
+
+    finalizedBy 'generateAllureReport'
 
     testLogging {
         events "passed", "failed", "skipped"
         exceptionFormat = 'full'
         showStandardStreams = true
     }
-
-    doFirst {
-        def resultsDir = new File("${project.projectDir}/build/allure-results")
-        if (resultsDir.exists()) resultsDir.deleteDir()
-        resultsDir.mkdirs()
-        println "🧹 Cleared old allure-results"
-    }
-
-    finalizedBy 'generateAllureReport'
 }
 
 
 /////////////////////////////////////////////////////////////
-// ✅ ALLURE ADAPTER CONFIGURATION
+// ✅ ALLURE CONFIGURATION
 /////////////////////////////////////////////////////////////
 allure {
     version = allureVersion
     adapter {
-        frameworks {
-            testng { adapterVersion = allureVersion }
-        }
+        frameworks { testng { adapterVersion = allureVersion } }
         autoconfigure = true
         aspectjWeaver = true
     }
 }
 
+/////////////////////////////////////////////////////////////
+// ✅ ENV PRINT TASK
+/////////////////////////////////////////////////////////////
 tasks.register('printEnv') {
     doLast {
         println "\n===== ENVIRONMENT INFO ====="
         println "Environment: " + System.getProperty("env", "dev")
+        println "Workflow: " + System.getProperty("workflow", "all")
         println "Java Version: " + JavaVersion.current()
         println "Allure Version: ${allureVersion}"
         println "RestAssured Version: ${restAssuredVersion}"
         println "============================\n"
     }
+}
+
+/////////////////////////////////////////////////////////////
+// ✅ FAIL BUILD IF TESTS FAIL
+/////////////////////////////////////////////////////////////
+gradle.buildFinished { result ->
+    if (result.failure)
+        println "❌ Tests failed — build marked as failed (Allure report generated)."
 }

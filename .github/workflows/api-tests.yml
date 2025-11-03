@@ -18,6 +18,17 @@ on:
         required: false
         default: ""
 
+    environment:
+      description: "Select Environment"
+      required: true
+      type: choice
+      options:
+        - dev
+        - qa
+        - stage
+        - prod
+      default: dev
+
 permissions:
   contents: write
 
@@ -28,7 +39,9 @@ concurrency:
 jobs:
   api-tests:
     runs-on: self-hosted
+    environment: ${{ github.event.inputs.environment }}
     env:
+      ARGET_ENV: ${{ github.event.inputs.environment }}
       TZ: "Asia/Kolkata"
       ALLURE_RESULTS_DIR: build/allure-results
       ALLURE_REPORT_DIR: build/reports/allure-report
