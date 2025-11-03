@@ -10,7 +10,7 @@ on:
         required: true
         default: "feature/github-actions-poc-"
 
-        environment:
+      environment:
           description: "Select Environment"
           required: true
           type: choice
@@ -41,7 +41,7 @@ jobs:
     runs-on: self-hosted
     environment: ${{ github.event.inputs.environment }}
     env:
-      ARGET_ENV: ${{ github.event.inputs.environment }}
+      TARGET_ENV: ${{ github.event.inputs.environment }}
       TZ: "Asia/Kolkata"
       ALLURE_RESULTS_DIR: build/allure-results
       ALLURE_REPORT_DIR: build/reports/allure-report
