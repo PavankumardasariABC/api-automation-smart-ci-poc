@@ -1,0 +1,2 @@
+"Status","Start Time","Stop Time","Duration in ms","Parent Suite","Suite","Sub Suite","Test Class","Test Method","Name","Description"
+"passed","Wed Nov 05 20:11:10 IST 2025","Wed Nov 05 20:11:14 IST 2025","4230","External APIs Test Suite","Authentication and Merchant Flow","com.externalAPIs.tests.auth.Authorization_TokenTests","com.externalAPIs.tests.auth.Authorization_TokenTests","getAuthToken","getAuthToken","Ensures valid OAuth access token retrieval from the authorization server using Base64-encoded client credentials."
