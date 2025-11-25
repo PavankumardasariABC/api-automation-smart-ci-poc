@@ -9,7 +9,8 @@ public class ConfigManager {
     private static final String ENV;
 
     static {
-        ENV = System.getProperty("env", "dev"); // default to dev
+       // ENV = System.getProperty("env", "dev"); // default to dev
+        ENV = System.getProperty("env", "dev");
         loadProperties();
     }
 

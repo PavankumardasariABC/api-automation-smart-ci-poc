@@ -16,7 +16,8 @@ public class BaseTestTemplate {
     public void beforeSuite() {
         System.out.println("🔧 Starting External API Test Suite");
         Allure.step("🔧 Test Suite Started");
-        System.out.println("Environment: " + System.getProperty("env", "dev"));
+       // System.out.println("Environment: " + System.getProperty("env", "dev"));
+        System.out.println("Environment: " + System.getProperty("env", "qa"));
     }
 
     @AfterSuite(alwaysRun = true)
