@@ -1,0 +1,9 @@
+https://secure.dev.30preprod.com/api/abcpg/company
+Headers:
+{ Content-Type=application/json;charset=UTF-8, Authorization=****,  }
+
+Body:
+{
+  "name": "QA Automation Company 1773302223944",
+  "shortCode": "QACOMP177330"
+}

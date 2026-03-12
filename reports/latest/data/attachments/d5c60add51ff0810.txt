@@ -1,0 +1,11 @@
+{
+  "clientProfileId": "11f11de9-12be-1acb-86b7-6b3b1b7d14a4",
+  "tokenId": "11f11de9-153f-bd0e-94bf-83679977dd41",
+  "routingNumber": "122235821",
+  "accountHolderName": "Client-b88d9e",
+  "type": "SAVINGS",
+  "lastFour": "6584",
+  "email": "super.saver@hotbank.com",
+  "phone": "9013826765",
+  "alias": "Alias-af4926-Client-b88d9e"
+}
