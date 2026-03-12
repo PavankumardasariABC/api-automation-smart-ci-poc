@@ -1,0 +1,10 @@
+{
+    "statusCode": "UNAUTHORIZED",
+    "errors": [
+      {
+        "code": "REQUEST_UNAUTHORIZED",
+        "message": "Invalid or expired authentication token",
+        "messageKey": "response.error.access.unauthorized"
+      }
+    ]
+}

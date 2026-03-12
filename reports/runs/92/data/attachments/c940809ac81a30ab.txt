@@ -1,0 +1,45 @@
+https://dev.30preprod.com/api/organization
+Headers:
+{ Content-Type=application/json;charset=UTF-8, Authorization=****,  }
+
+Body:
+{
+  "taxIncluded": true,
+  "address": {
+    "address1": "15725 SW 72nd St",
+    "address2": "15725 SW",
+    "city": "Miami",
+    "countryCode": "US",
+    "provinceCode": "FL",
+    "postalCode": "33193",
+    "provinceName": "Florida",
+    "region": "Miami metropolitan area‎"
+  },
+  "signInLink": "https://test.url.qa4life.com",
+  "reportingUrl": "www.reporting-host.com",
+  "timezone": "US/Eastern",
+  "branding": {
+    "colorScheme": {
+      "primary": "#666666",
+      "primaryHover": "#666666"
+    },
+    "logoPath": "7f9d8ac3-f937-4765-914b-f81ddc80e637",
+    "primaryMessage": "PrimaryText",
+    "secondaryMessage": "SecondaryText"
+  },
+  "locale": {
+    "language": "en",
+    "region": "US",
+    "variant": "MAC"
+  },
+  "number": "842580",
+  "websiteUrl": "www.op-Org-1773302217763.com",
+  "phone": {
+    "number": "9163873",
+    "extension": "38",
+    "countryCode": "US"
+  },
+  "name": "GLofox Organization 1773302217763",
+  "allowSecondaryMembers": true,
+  "email": "abcqatesting2017+org_1773302217763@gmail.com"
+}

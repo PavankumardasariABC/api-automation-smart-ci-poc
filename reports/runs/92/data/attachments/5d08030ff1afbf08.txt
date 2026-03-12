@@ -1,0 +1,10 @@
+{
+  "useNewPricingModel": true,
+  "phone": "901253120",
+  "merchantId": "11f11de9-112c-a51d-b1c2-a1eee20bc44f",
+  "locationId": "11f11de9-0ea3-8999-8d01-e7afe1e8deff",
+  "name": "Client-1773302228014",
+  "timeZone": "US/Central",
+  "costPlusPricingModelEnabled": true,
+  "email": "qa_1773302228014@testmail.com"
+}

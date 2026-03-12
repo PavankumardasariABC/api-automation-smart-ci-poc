@@ -1,0 +1,83 @@
+{
+    "locationId": "11f11de9-0ea3-8999-8d01-e7afe1e8deff",
+    "type": "LOCATION",
+    "merchantId": "11f11de9-112c-a51d-b1c2-a1eee20bc44f",
+    "name": "Client-1773302228014",
+    "email": "qa_1773302228014@testmail.com",
+    "phone": "901253120",
+    "timeZone": "US/Central",
+    "billAllowed": false,
+    "statementDeliveryByLetterAllowed": false,
+    "processingMode": "TEST",
+    "locale": {
+        "language": "EN",
+        "region": "US"
+    },
+    "enableRFCStateManagement": false,
+    "taxIncluded": false,
+    "rfcDays": 90,
+    "countryCode": "US",
+    "useClientStatementSchedule": false,
+    "sendPrenote": false,
+    "ccExpirationEventSuppression": false,
+    "bundledPaymentsAllowed": false,
+    "bundledUnmanagedPaymentsAllowed": false,
+    "useNewPricingModel": true,
+    "communicationFeeAllowed": false,
+    "standardStatementProcessingApplied": false,
+    "feePerInvoiceBillingEnabled": false,
+    "costPlusPricingModelEnabled": false,
+    "ecommerceEnabled": false,
+    "personalTrainingEnabled": false,
+    "limitedPrimaryPaymentMethod": "ANY",
+    "taxationSelfManaged": false,
+    "showTaxJurisdictions": false,
+    "useNewDepositModel": false,
+    "reimburseAbcFee": false,
+    "clientProfileId": "11f11de9-12be-1acb-86b7-6b3b1b7d14a4",
+    "currency": "USD",
+    "proratedFreezeAllowed": false,
+    "deferredCollectionAllowed": true,
+    "deferralCollectionPeriodLength": 10,
+    "organizationId": "4d347b28-9106-42ad-810b-cf82c9083843",
+    "paymentPolicyPlanId": "11ed38ce-290c-88d8-b6e1-06a92038d2b5",
+    "exceptionRules": [
+        {
+            "id": "11f11de9-12cb-fd7c-86b7-6b3b1b7d14a4",
+            "clientProfileId": "11f11de9-12be-1acb-86b7-6b3b1b7d14a4",
+            "ruleId": "11ea4cbf-b5bd-c0ed-9aad-0242ac120009",
+            "description": "More Than 1000.00",
+            "active": false,
+            "ruleName": "HIGH_AMOUNT_DUE",
+            "params": [
+                {
+                    "id": "11f11de9-12cb-fd7d-86b7-6b3b1b7d14a4",
+                    "ruleInstanceId": "11f11de9-12cb-fd7c-86b7-6b3b1b7d14a4",
+                    "value": "1000.00",
+                    "type": "DECIMAL",
+                    "name": "AMOUNT"
+                }
+            ]
+        },
+        {
+            "id": "11f11de9-12cb-fd7e-86b7-6b3b1b7d14a4",
+            "clientProfileId": "11f11de9-12be-1acb-86b7-6b3b1b7d14a4",
+            "ruleId": "11ea4cbf-b5be-0112-9aad-0242ac120009",
+            "description": "Age Greater Than 60 Days",
+            "active": true,
+            "ruleName": "HIGH_INVOICE_AGE_LIMIT",
+            "params": [
+                {
+                    "id": "11f11de9-12cb-fd7f-86b7-6b3b1b7d14a4",
+                    "ruleInstanceId": "11f11de9-12cb-fd7e-86b7-6b3b1b7d14a4",
+                    "value": "60",
+                    "type": "INTEGER",
+                    "name": "DAYS"
+                }
+            ]
+        }
+    ],
+    "status": "ACTIVE",
+    "surchargeEnabled": false,
+    "id": "11f11de9-12be-1acb-86b7-6b3b1b7d14a4"
+}
