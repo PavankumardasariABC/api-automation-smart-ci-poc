@@ -101,7 +101,8 @@ jobs:
             echo "group=${{ github.event.inputs.test_group }}" >> $GITHUB_OUTPUT
           fi
 
-      # 5️⃣ Run Tests (fail build on any failure, but continue for report generation)
+      # 5️⃣ Run Tests (fail build on any failure, but continue for report generation).
+      # On PR: no inputs → full suite. Re-run without manual intervention: use "Re-run all jobs" in Actions.
       - name: 🧪 Run Tests
         id: run_tests
         shell: bash
@@ -110,11 +111,16 @@ jobs:
           echo "🧪 Starting Test Execution..."
           TEST_GROUP="${{ github.event.inputs.test_group }}"
           TEST_CLASS="${{ github.event.inputs.test_class }}"
+          # Default group on PR when no input (workflow_dispatch has inputs)
+          if [ -z "$TEST_GROUP" ] && [ "${{ github.event_name }}" = "pull_request" ]; then
+            TEST_GROUP="Regression"
+          fi
 
           if [ -n "$TEST_CLASS" ]; then
             echo "🎯 Running specific class: $TEST_CLASS"
             ./gradlew test --parallel --max-workers=4 --tests "$TEST_CLASS" --info
           elif [ -n "$TEST_GROUP" ] && [ "$TEST_GROUP" != "All" ]; then
+            # e.g. Sanity, Regression, Billing
             echo "🏷️ Running test group: $TEST_GROUP"
             ./gradlew test --parallel --max-workers=4 -Dgroups="$TEST_GROUP" --info
           else
@@ -198,7 +204,7 @@ jobs:
             const msg = `
             ✅ **API Tests Completed**
             • **Branch:** \`${{ github.ref_name }}\`
-            • **Suite:** \`${{ github.event.inputs.test_group || 'All' }}\`
+            • **Suite:** \`${{ github.event.inputs.test_group || 'Regression (PR default) / All' }}\`
 
             📊 **Allure Reports**
             • [Latest Report](${pagesBase}/reports/latest/)

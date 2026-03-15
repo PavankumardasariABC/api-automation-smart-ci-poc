@@ -1,0 +1,32 @@
+[
+  {
+    "scenario": "VALID_TRANSFER_EXECUTE",
+    "description": "Valid payload with dryRun=false - executes transfer",
+    "dryRun": false,
+    "locationId": "11ec0af2-3a19-b7d3-a84f-59243ef7e239",
+    "metadata": {
+      "transferReason": "Relocation",
+      "requestedBy": "Automation"
+    },
+    "expectedStatusMin": 200,
+    "expectedStatusMax": 201
+  },
+  {
+    "scenario": "VALID_DRY_RUN",
+    "description": "Valid payload with dryRun=true - eligibility check only",
+    "dryRun": true,
+    "locationId": "11ec0af2-3a19-b7d3-a84f-59243ef7e239",
+    "metadata": {},
+    "expectedStatusMin": 200,
+    "expectedStatusMax": 201
+  },
+  {
+    "scenario": "VALID_WITH_MINIMAL_PAYLOAD",
+    "description": "Only required locationId, no metadata",
+    "dryRun": false,
+    "locationId": "11ec0af2-3a19-b7d3-a84f-59243ef7e239",
+    "metadata": null,
+    "expectedStatusMin": 200,
+    "expectedStatusMax": 201
+  }
+]
