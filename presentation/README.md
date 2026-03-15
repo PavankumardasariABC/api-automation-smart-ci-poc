@@ -23,7 +23,9 @@ This folder contains a **single-page website** for presenting the API Automation
 
 3. **Live demo (optional)**
    - Run: `./gradlew test -Dgroups=Billing`
-   - Open Allure report: `reports/current/Allure_Offline_Single_Safe.html`
+   - **Open Allure report via server** (avoids "Loading..." in Safari):
+     - From project root: `./serve-allure-report.sh`
+     - Then open: **http://localhost:8765/Allure_Offline_Single_Safe.html**
    - Show PR workflow and report link in GitHub Actions (if repo is connected).
 
 ## Content summary

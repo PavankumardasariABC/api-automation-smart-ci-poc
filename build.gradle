@@ -185,16 +185,14 @@ test {
 
             def filteredClasses = allClasses.findAll { !classFilter || it == classFilter }
             if (filteredClasses.isEmpty()) {
-                println "⚠️ No matching classes found for filter. Running default suite."
-                System.setProperty("useDefaultSuite", "true")
-                return
-            }
+                println "⚠️ No matching classes found for filter. Using full suite."
+                suiteFile.text = xmlFile.text
+            } else {
+                def includeGroupsXml = groupFilter ? groupFilter.split(',')
+                        .collect { "<include name='${it.trim()}'/>" }
+                        .join('\n            ') : ""
 
-            def includeGroupsXml = groupFilter ? groupFilter.split(',')
-                    .collect { "<include name='${it.trim()}'/>" }
-                    .join('\n            ') : ""
-
-            suiteFile.text = """<?xml version="1.0" encoding="UTF-8"?>
+                suiteFile.text = """<?xml version="1.0" encoding="UTF-8"?>
 <suite name="DynamicSuite" verbose="1" configfailurepolicy="continue">
   <test name="FilteredExecution" preserve-order="true">
     ${groupFilter ? """
@@ -205,29 +203,25 @@ test {
   </test>
 </suite>
 """
+            }
             println "🧩 Created suite → ${suiteFile.canonicalPath}"
         } else {
-            System.setProperty("useDefaultSuite", "true")
-            println "🧩 No filter provided — running full suite (testng.xml)"
+            // No filter: run ALL tests — use testng.xml content so full suite runs
+            suiteFile.text = xmlFile.text
+            println "🧩 Full suite — all test classes from testng.xml"
         }
     }
 
     useTestNG {
-        // ✅ Reference suite file safely after it's created
+        // Always use dynamic-suite.xml (written in doFirst: full suite or filtered)
         def suiteFile = file("$buildDir/dynamic-suite.xml")
-        def useDefault = System.getProperty("useDefaultSuite", "false").toBoolean()
-
-        if (useDefault || !suiteFile.exists()) {
-            options.suites(file('testng.xml'))
-        } else {
-            options.suites(suiteFile)
-        }
+        options.suites(suiteFile)
     }
 
-    // ✅ Workflow-based fail-fast logic
+    // ✅ Run all tests so report includes every class (e.g. Billing). Set -Dworkflow=all for strict fail-fast.
     def workflow = System.getProperty('workflow', 'all').toLowerCase()
-    failFast = (workflow == 'all')
-    println "⚙️ Workflow Mode: ${workflow} → failFast=${failFast}"
+    failFast = false  // false = run all tests (including Billing) even if one fails; report shows full results
+    println "⚙️ Workflow Mode: ${workflow} → failFast=${failFast} (all tests run for full report)"
 
     finalizedBy 'generateAllureReport'
 

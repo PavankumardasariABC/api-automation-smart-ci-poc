@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<suite name="External APIs Test Suite" parallel="none">
+<suite name="External APIs Test Suite" parallel="none" configfailurepolicy="continue">
 
     <listeners>
         <listener class-name="com.externalAPIs.reporting.AllureTestListener"/>
