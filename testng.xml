@@ -31,6 +31,9 @@
             <class name="com.externalAPIs.tests.Charge.CreatePaymentTokenSessionTests"/>
             <class name="com.externalAPIs.tests.Charge.CreateAchPaymentChargeTests"/>
             <class name="com.externalAPIs.tests.Charge.CreateRefundPaymentTests"/>
+
+            <!-- 📋 BILLING (Template for reuse) -->
+            <class name="com.externalAPIs.tests.billing.CreateBillingAccountTransferTests"/>
         </classes>
     </test>
 </suite>
