@@ -24,7 +24,7 @@ import java.util.Map;
 public class CreateOrganizationTests {
 
     @Story("As an admin, I can create a new organization via API")
-    @Test(dataProvider = "createOrganizationData", dataProviderClass = DataProviderUtils.class, groups = {"Regression"})
+    @Test(dataProvider = "createOrganizationData", dataProviderClass = DataProviderUtils.class, groups = {"Regression", "Sanity"})
     @Description("Validates that an organization can be created successfully with valid input data and handles duplicates gracefully.")
 
     public void createOrganization(Map<String, Object> orgData) {

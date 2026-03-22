@@ -28,6 +28,8 @@
             <class name="com.externalAPIs.tests.common.CreateClientBankAccountTests"/>
 
             <!-- 💳 CHARGE APIs -->
+            <class name="com.externalAPIs.tests.Charge.GetMerchantDetailsTests"/>
+            <class name="com.externalAPIs.tests.Charge.GetTransactionDetailsTests"/>
             <class name="com.externalAPIs.tests.Charge.CreatePaymentTokenSessionTests"/>
             <class name="com.externalAPIs.tests.Charge.CreateAchPaymentChargeTests"/>
             <class name="com.externalAPIs.tests.Charge.CreateRefundPaymentTests"/>

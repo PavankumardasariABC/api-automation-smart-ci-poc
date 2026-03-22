@@ -24,7 +24,7 @@ import java.util.Map;
 public class CreateMerchantTests {
 
     @Story("As an admin, I can create a new merchant via API")
-    @Test(dataProvider = "createMerchantData", dataProviderClass = DataProviderUtils.class, groups = {"Regression"})
+    @Test(dataProvider = "createMerchantData", dataProviderClass = DataProviderUtils.class, groups = {"Regression", "Sanity"})
     @Description("Verifies merchant creation flow, validates response schema and ensures data persistence for update APIs.")
 
     public void createMerchant(Map<String, Object> merchantData) {
