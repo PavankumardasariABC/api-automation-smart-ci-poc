@@ -23,7 +23,7 @@ import java.util.Map;
 public class CreateClientTests {
 
     @Story("As an admin, I can create a new client record via API.")
-    @Test(dataProvider = "createClientData", dataProviderClass = DataProviderUtils.class, groups = {"Regression"})
+    @Test(dataProvider = "createClientData", dataProviderClass = DataProviderUtils.class, groups = {"Regression", "Sanity"})
     @Description("Verifies that a new client can be created successfully and all possible HTTP status codes are handled gracefully.")
 
     public void createClient(Map<String, Object> data) {

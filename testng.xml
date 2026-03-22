@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<suite name="External APIs Test Suite" parallel="none">
+<suite name="External APIs Test Suite" parallel="none" configfailurepolicy="continue">
 
     <listeners>
         <listener class-name="com.externalAPIs.reporting.AllureTestListener"/>
@@ -28,6 +28,8 @@
             <class name="com.externalAPIs.tests.common.CreateClientBankAccountTests"/>
 
             <!-- 💳 CHARGE APIs -->
+            <class name="com.externalAPIs.tests.Charge.GetMerchantDetailsTests"/>
+            <class name="com.externalAPIs.tests.Charge.GetTransactionDetailsTests"/>
             <class name="com.externalAPIs.tests.Charge.CreatePaymentTokenSessionTests"/>
             <class name="com.externalAPIs.tests.Charge.CreateAchPaymentChargeTests"/>
             <class name="com.externalAPIs.tests.Charge.CreateRefundPaymentTests"/>

@@ -23,7 +23,7 @@ import java.util.*;
 public class Secure_TokenTests {
 
     @Story("As a secure service client, I can authenticate using secure credentials and obtain an OAuth token.")
-    @Test(priority = 1, groups = {"Sanity"})
+    @Test(priority = 1, groups = {"Sanity", "Smoke"})
     @Description("Ensures secure OAuth token can be fetched successfully with valid Base64-encoded credentials for downstream API authentication.")
 
     public void getSecureAuthToken() {

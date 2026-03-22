@@ -20,7 +20,7 @@ import java.util.*;
 @Severity(SeverityLevel.BLOCKER)
 public class Authorization_TokenTests {
 
-    @Test(priority = 1, groups = {"Sanity"})
+    @Test(priority = 1, groups = {"Sanity", "Smoke"})
     @Story("As a system, I can authenticate using client credentials and retrieve a valid OAuth token.")
     @Description("Ensures valid OAuth access token retrieval from the authorization server using Base64-encoded client credentials.")
 

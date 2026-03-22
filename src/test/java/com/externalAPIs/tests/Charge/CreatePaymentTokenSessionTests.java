@@ -32,7 +32,7 @@ public class CreatePaymentTokenSessionTests {
             priority = 1,
             dataProvider = "createPaymentTokenSessionData",
             dataProviderClass = DataProviderUtils.class,
-            groups = {"Regression"}
+            groups = {"Regression", "Sanity"}
     )
     @Description("Validates creation of a consumer payment token session using Glofox Client Token and organization context.")
     public void createPaymentTokenSession(Map<String, Object> requestData) {
