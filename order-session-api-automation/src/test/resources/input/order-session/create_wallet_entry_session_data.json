@@ -1,0 +1,20 @@
+[
+  {
+    "scenario": "WALLET_FULL_PAYLOAD",
+    "description": "POST /payment-session/wallet-entries — full WalletEntrySessionRequest",
+    "includePaymentMethods": true,
+    "includeSupportedTags": true,
+    "includeMetadata": true,
+    "expectedStatusMin": 201,
+    "expectedStatusMax": 201
+  },
+  {
+    "scenario": "WALLET_MINIMAL_REQUIRED",
+    "description": "POST /payment-session/wallet-entries — required fields only",
+    "includePaymentMethods": false,
+    "includeSupportedTags": false,
+    "includeMetadata": false,
+    "expectedStatusMin": 201,
+    "expectedStatusMax": 201
+  }
+]

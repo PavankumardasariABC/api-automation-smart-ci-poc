@@ -1,0 +1,16 @@
+# Copy to: config/oauth-env.local.properties (gitignored — matches config/*.local.properties)
+# Default merge path is set in src/test/resources/env/*.properties as external.api.env.path=config/oauth-env.local.properties
+#
+# Replace placeholders with your QA/Dev OAuth URLs and credentials (GLOFOX / CLIENT / SECURE — see docs/TEAM_CONFIGURATION.md).
+
+base.url=https://qa.YOUR-DOMAIN.example.com
+auth.url=https://qa.YOUR-DOMAIN.example.com/api/token
+credentials=YOUR_CLIENT_ID:YOUR_CLIENT_SECRET
+
+secure.base.url=https://secure.qa.YOUR-DOMAIN.example.com
+secure.auth.url=https://secure.qa.YOUR-DOMAIN.example.com/api/token
+secure.username=YOUR_SECURE_USER
+secure.password=YOUR_SECURE_PASSWORD
+
+# Optional Base64 client.credentials for other flows — only if your team uses it
+# client.credentials=

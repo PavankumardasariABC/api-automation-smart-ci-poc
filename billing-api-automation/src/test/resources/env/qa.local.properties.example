@@ -1,0 +1,5 @@
+# Copy to qa.local.properties (gitignored) — real tenant and OAuth password for local/team runs.
+billing.organization.id=your-tenant-uuid
+billing.oauth.password=your-client-secret
+billing.location.id=optional-location-uuid
+test.billing.account.id=optional-for-nested-read-tests

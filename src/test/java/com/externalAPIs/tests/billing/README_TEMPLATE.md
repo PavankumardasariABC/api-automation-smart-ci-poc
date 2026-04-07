@@ -18,8 +18,9 @@ This folder is a **reusable template** for API automation. Use it as a reference
 
 | Item | Purpose |
 |------|--------|
-| `CreateBillingAccountTransferTests.java` | Test class with TDD-style scenarios (positive + negative) |
-| `BillingDataProvider.java` | Data provider for JSON-driven scenarios |
+| `CreateBillingAccountTransferTests.java` | Test class with TDD-style scenarios (positive + negative + chained GET) |
+| `BillingTransferResponseStore.java` | Persists 2xx transfer/dry-run fields to `ResponseStore` for reuse |
+| `BillingDataProvider.java` | Data provider for JSON-driven scenarios (reads target `locationId` from store) |
 | `create_billing_account_transfer_data.json` | Test data for valid transfer / dry-run cases |
 
 ## Scenarios Covered (TDD)
@@ -80,7 +81,7 @@ export BILLING_ACCOUNT_ID=6f1e19b3-1ed2-44a2-8de9-3e2c4c2db5e6
 
 - **Token:** Secure client token (`AuthUtils.getSecureClientToken()`).  
 - **Organization ID:** From `ResponseStore.get("glofoxOrgId")` or default tenant.  
-- **Location ID (optional):** From `ResponseStore.get("locationId")` if you run after CreateLocationTests; otherwise a placeholder UUID is used.
+- **Location / transfer chaining:** `dryRunTrue_returnsEligibilityStatus_andPersistsForChaining` (priority 1) writes to `ResponseStore`: `billingAccountTransferId`, `billingTransferTargetLocationId`, `billingAccountTransferStatus`, `reasonCodeId` (if present), full JSON under `billingTransferLastResponseJson`, and mirrors location as `locationId` for older flows. `BillingDataProvider` and negative tests use `BillingTransferResponseStore.resolveTargetLocationId(...)`. `getTransferById_usingStoredTransferId_expect2xx` reads `billingAccountTransferId` for the GET follow-up.
 
 ## Demo / Presentation Notes
 

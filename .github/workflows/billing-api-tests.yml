@@ -1,0 +1,63 @@
+name: Billing API Automation
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target env'
+        required: true
+        default: qa
+        type: choice
+        options:
+          - qa
+          - dev
+          - stage
+          - beta
+      bucket:
+        description: 'TestNG groups'
+        required: true
+        default: Smoke
+        type: choice
+        options:
+          - Smoke
+          - Sanity
+          - Regression
+      test_class:
+        description: 'Optional full class name (overrides group filter for that class)'
+        required: false
+        default: ''
+
+jobs:
+  billing-api-tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: billing-api-automation
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Run tests
+        env:
+          BILLING_OAUTH_PASSWORD: ${{ secrets.BILLING_OAUTH_PASSWORD }}
+          BILLING_COMMERCE_JWT: ${{ secrets.BILLING_COMMERCE_JWT }}
+        run: |
+          chmod +x ./gradlew
+          ARGS="-Denv=${{ github.event.inputs.environment }} -Dgroups=${{ github.event.inputs.bucket }}"
+          if [ -n "${{ github.event.inputs.test_class }}" ]; then
+            ARGS="$ARGS -DtestClass=${{ github.event.inputs.test_class }}"
+          fi
+          ./gradlew test --no-daemon $ARGS
+        continue-on-error: false
+
+      - name: Upload Allure results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: billing-allure-results-${{ github.event.inputs.environment }}
+          path: billing-api-automation/build/allure-results/
