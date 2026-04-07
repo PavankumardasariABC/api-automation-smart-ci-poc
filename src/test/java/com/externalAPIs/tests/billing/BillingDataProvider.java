@@ -1,6 +1,5 @@
 package com.externalAPIs.tests.billing;
 
-import com.externalAPIs.store.ResponseStore;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.testng.annotations.DataProvider;
@@ -19,17 +18,15 @@ public final class BillingDataProvider {
 
     /**
      * Provides scenarios for Billing Account Transfer API.
-     * Uses locationId from ResponseStore (CreateLocationTests) when available; otherwise placeholder UUID.
+     * Uses {@link BillingTransferResponseStore#resolveTargetLocationId} (transfer / location flows) then default UUID.
      */
     @DataProvider(name = "billingAccountTransferData")
     public static Iterator<Object[]> getBillingAccountTransferData() throws Exception {
         Type listType = new TypeToken<List<Map<String, Object>>>() {}.getType();
         List<Map<String, Object>> data = new Gson().fromJson(new FileReader(TRANSFER_DATA_PATH), listType);
 
-        String locationIdFromStore = Optional.ofNullable(ResponseStore.get("locationId"))
-                .map(Object::toString)
-                .filter(s -> !s.isBlank() && !"null".equalsIgnoreCase(s))
-                .orElse("11ec0af2-3a19-b7d3-a84f-59243ef7e239");
+        String defaultLocation = "11ec0af2-3a19-b7d3-a84f-59243ef7e239";
+        String locationIdFromStore = BillingTransferResponseStore.resolveTargetLocationId(defaultLocation);
 
         List<Object[]> rows = new ArrayList<>();
         for (Map<String, Object> row : data) {

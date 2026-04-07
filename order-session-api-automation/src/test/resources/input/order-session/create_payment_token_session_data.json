@@ -1,0 +1,23 @@
+[
+  {
+    "scenario": "CREATE_TOKEN_PAYOR",
+    "description": "POST /payment-session/tokens — PAYOR (OpenAPI PaymentSessionBase)",
+    "ownerType": "PAYOR",
+    "expectedStatusMin": 201,
+    "expectedStatusMax": 201
+  },
+  {
+    "scenario": "CREATE_TOKEN_LOCATION",
+    "description": "POST /payment-session/tokens — LOCATION",
+    "ownerType": "LOCATION",
+    "expectedStatusMin": 201,
+    "expectedStatusMax": 201
+  },
+  {
+    "scenario": "CREATE_TOKEN_MEMBER",
+    "description": "POST /payment-session/tokens — MEMBER",
+    "ownerType": "MEMBER",
+    "expectedStatusMin": 201,
+    "expectedStatusMax": 201
+  }
+]

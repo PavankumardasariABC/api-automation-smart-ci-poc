@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suite name="Billing Commerce API" verbose="1" configfailurepolicy="continue">
+    <listeners>
+        <listener class-name="com.billing.reporting.AllureTestListener"/>
+    </listeners>
+
+    <test name="Billing API E2E and contracts" preserve-order="true">
+        <classes>
+            <class name="com.billing.tests.BaseTestTemplate"/>
+            <class name="com.billing.tests.auth.BillingAuthTokenTests"/>
+            <class name="com.billing.tests.auth.BillingOAuthNegativeTests"/>
+            <class name="com.billing.tests.security.BillingUnauthorizedTests"/>
+            <class name="com.billing.tests.codes.BillingCodesReadTests"/>
+            <class name="com.billing.tests.clientprofiles.BillingClientProfilesTests"/>
+            <class name="com.billing.tests.accounts.BillingAccountsReadTests"/>
+            <class name="com.billing.tests.accounts.BillingNestedAccountReadTests"/>
+            <class name="com.billing.tests.wallet.BillingWalletEntryAssignmentTests"/>
+            <class name="com.billing.tests.transactions.BillingAccountTransactionsTests"/>
+            <class name="com.billing.tests.negative.BillingNotFoundTests"/>
+            <class name="com.billing.tests.negative.BillingBadRequestTests"/>
+            <class name="com.billing.tests.e2e.BillingE2eHighLevelTests"/>
+        </classes>
+    </test>
+</suite>
