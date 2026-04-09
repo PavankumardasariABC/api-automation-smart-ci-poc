@@ -3,6 +3,8 @@ package com.ordersession.support;
 import com.ordersession.auth.OrderSessionAuth;
 import com.ordersession.config.ConfigManager;
 
+import java.util.Optional;
+
 /**
  * Gates integration tests and resolves values that must come from <strong>config only</strong>
  * ({@code env/*.properties} / {@code *.local.properties}) — not from Java or JSON data files.
@@ -13,7 +15,23 @@ public final class OrderSessionTestConfig {
     public static final String CONFIG_ORGANIZATION_PRIMARY = "abcfs.organization.id";
     public static final String CONFIG_ORGANIZATION_ALIAS = "organization.id";
 
+    /**
+     * Optional: payment session UUID in {@code CLOSED} (e.g. after paypage) — optional contract test.
+     */
+    public static final String CONFIG_PAYMENT_SESSION_CLOSED_ID = "test.payment.session.closed.id";
+
+    /**
+     * Optional: payment session UUID in {@code EXPIRED} — optional contract test.
+     */
+    public static final String CONFIG_PAYMENT_SESSION_EXPIRED_ID = "test.payment.session.expired.id";
+
+    /**
+     * Optional: wallet entry session UUID in {@code CLOSED} — optional contract test.
+     */
+    public static final String CONFIG_WALLET_ENTRY_SESSION_CLOSED_ID = "test.wallet.entry.session.closed.id";
+
     private OrderSessionTestConfig() {
+        
     }
 
     /**
@@ -105,5 +123,28 @@ public final class OrderSessionTestConfig {
 
     private static boolean nonBlank(String s) {
         return s != null && !s.isBlank();
+    }
+
+    /**
+     * Non-blank optional property from merged env (local → module → external).
+     */
+    public static Optional<String> optionalConfig(String key) {
+        String v = ConfigManager.getOptional(key);
+        if (v == null || v.isBlank()) {
+            return Optional.empty();
+        }
+        return Optional.of(v.trim());
+    }
+
+    public static Optional<String> optionalPaymentSessionClosedId() {
+        return optionalConfig(CONFIG_PAYMENT_SESSION_CLOSED_ID);
+    }
+
+    public static Optional<String> optionalPaymentSessionExpiredId() {
+        return optionalConfig(CONFIG_PAYMENT_SESSION_EXPIRED_ID);
+    }
+
+    public static Optional<String> optionalWalletEntrySessionClosedId() {
+        return optionalConfig(CONFIG_WALLET_ENTRY_SESSION_CLOSED_ID);
     }
 }

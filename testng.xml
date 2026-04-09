@@ -7,6 +7,8 @@
 
     <test name="Authentication and Merchant Flow">
         <classes>
+            <class name="com.externalAPIs.tests.BaseTestTemplate"/>
+
             <!-- 🔐 AUTH -->
             <class name="com.externalAPIs.tests.auth.Authorization_TokenTests"/>
             <class name="com.externalAPIs.tests.auth.Secure_TokenTests"/>
@@ -36,6 +38,12 @@
 
             <!-- 📋 BILLING (Template for reuse) -->
             <class name="com.externalAPIs.tests.billing.CreateBillingAccountTransferTests"/>
+
+            <!-- 📦 ORDER SESSION (commerce order-session API; configure env — see order-session-api-automation/) -->
+            <class name="com.externalAPIs.tests.orderSession.CreateOrderPaymentTokenSessionTests"/>
+            <class name="com.externalAPIs.tests.orderSession.CreateOrderWalletEntrySessionTests"/>
+            <class name="com.externalAPIs.tests.orderSession.GetOrderPaymentTokenSessionTests"/>
+            <class name="com.externalAPIs.tests.orderSession.GetOrderWalletEntrySessionTests"/>
         </classes>
     </test>
 </suite>

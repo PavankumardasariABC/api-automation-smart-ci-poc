@@ -30,6 +30,30 @@ public final class OrderSessionDataProvider {
 
     @DataProvider(name = "walletEntryInvalidBodies")
     public static Iterator<Object[]> walletInvalidBodies() {
+        Map<String, Object> missingConsumer = new LinkedHashMap<>();
+        missingConsumer.put("ownerType", "PAYOR");
+        missingConsumer.put("ownerId", sampleOwnerId());
+        missingConsumer.put("locationId", sampleLocationId());
+        missingConsumer.put("user", Map.of("id", sampleUserId(), "externalId", sampleUserExternalId()));
+
+        Map<String, Object> missingLocation = new LinkedHashMap<>();
+        missingLocation.put("consumerId", sampleConsumerId());
+        missingLocation.put("ownerType", "PAYOR");
+        missingLocation.put("ownerId", sampleOwnerId());
+        missingLocation.put("user", Map.of("id", sampleUserId(), "externalId", sampleUserExternalId()));
+
+        Map<String, Object> missingOwnerType = new LinkedHashMap<>();
+        missingOwnerType.put("consumerId", sampleConsumerId());
+        missingOwnerType.put("ownerId", sampleOwnerId());
+        missingOwnerType.put("locationId", sampleLocationId());
+        missingOwnerType.put("user", Map.of("id", sampleUserId(), "externalId", sampleUserExternalId()));
+
+        Map<String, Object> ownerTypeNotPayor = new LinkedHashMap<>(validWalletEntryBody());
+        ownerTypeNotPayor.put("ownerType", "LOCATION");
+
+        Map<String, Object> invalidPaymentMethods = new LinkedHashMap<>(validWalletEntryBody());
+        invalidPaymentMethods.put("paymentMethods", List.of("CARD", "INVALID_METHOD"));
+
         return Stream.of(
                 new Object[]{"missing ownerId", Map.of(
                         "consumerId", sampleConsumerId(),
@@ -45,7 +69,12 @@ public final class OrderSessionDataProvider {
                         "ownerType", "PAYOR",
                         "ownerId", sampleOwnerId(),
                         "locationId", sampleLocationId()
-                )}
+                )},
+                new Object[]{"missing consumerId", missingConsumer},
+                new Object[]{"missing locationId", missingLocation},
+                new Object[]{"missing ownerType", missingOwnerType},
+                new Object[]{"ownerType not PAYOR (OpenAPI WalletOwnerTypes)", ownerTypeNotPayor},
+                new Object[]{"invalid paymentMethods enum value", invalidPaymentMethods}
         ).iterator();
     }
 

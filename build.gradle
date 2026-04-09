@@ -135,6 +135,10 @@ tasks.register('generateAllureReport') {
 test {
     outputs.upToDateWhen { false }
 
+    // Gradle's -Denv is set on the Gradle JVM, not the forked test worker — forward it so
+    // ConfigManager and env/*.properties match the intended tier (avoids qa token URL vs dev API).
+    systemProperty 'env', System.getProperty('env', 'qa')
+
     def testSummary = [passed: 0, failed: 0, skipped: 0]
 
     beforeTest { descriptor ->
@@ -251,7 +255,7 @@ allure {
 tasks.register('printEnv') {
     doLast {
         println "\n===== ENVIRONMENT INFO ====="
-        println "Environment: " + System.getProperty("env", "dev")
+        println "Environment: " + System.getProperty("env", "qa")
         println "Workflow: " + System.getProperty("workflow", "all")
         println "Java Version: " + JavaVersion.current()
         println "Allure Version: ${allureVersion}"

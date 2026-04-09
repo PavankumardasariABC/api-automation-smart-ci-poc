@@ -9,8 +9,8 @@ public class ConfigManager {
     private static final String ENV;
 
     static {
-       // ENV = System.getProperty("env", "dev"); // default to dev
-        ENV = System.getProperty("env", "dev");
+        // Must match test JVM default in build.gradle (test.systemProperty) and BaseTestTemplate.
+        ENV = System.getProperty("env", "qa");
         loadProperties();
     }
 
@@ -29,6 +29,16 @@ public class ConfigManager {
             throw new RuntimeException("Missing property: " + key + " in " + ENV + ".properties");
         }
         return value;
+    }
+
+    /** Returns null when the key is absent or blank (optional config, e.g. Order Session). */
+    public static String getOptional(String key) {
+        String value = props.getProperty(key);
+        if (value == null) {
+            return null;
+        }
+        String t = value.trim();
+        return t.isEmpty() ? null : t;
     }
 
     public static String getEnv() {

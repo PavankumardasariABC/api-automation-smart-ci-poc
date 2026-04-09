@@ -4,13 +4,16 @@
         <listener class-name="com.ordersession.reporting.AllureTestListener"/>
     </listeners>
 
-    <!-- Billing-style E2E: OrderSessionApiE2ETests covers all openapi-spec-5 paths -->
+    <!-- Negative + security first (no env); then integration -->
     <test name="Order Session E2E" preserve-order="true">
         <classes>
-            <class name="com.ordersession.tests.BaseTestTemplate"/>
-            <class name="com.ordersession.tests.auth.ExternalApiAuthBootstrapTests"/>
-            <class name="com.ordersession.tests.OrderSessionApiE2ETests"/>
-            <class name="com.ordersession.tests.OrderSessionE2eHighLevelTest"/>
+            <class name="com.ordersession.tests.OrderSessionUnauthorizedTests"/>
+            <class name="com.ordersession.tests.PaymentTokenSessionValidationTests"/>
+            <class name="com.ordersession.tests.WalletEntrySessionValidationTests"/>
+            <class name="com.ordersession.tests.PaymentTokenSessionNotFoundTests"/>
+            <class name="com.ordersession.tests.WalletEntrySessionNotFoundTests"/>
+            <class name="com.ordersession.tests.PaymentTokenSessionIntegrationTests"/>
+            <class name="com.ordersession.tests.WalletEntrySessionIntegrationTests"/>
         </classes>
     </test>
 </suite>

@@ -25,7 +25,7 @@ import java.util.UUID;
 public class OrderSessionUnauthorizedTests {
 
     @Story("Requests without Authorization are rejected")
-    @Test(groups = {"Regression", "Smoke"})
+    @Test(groups = {"Regression", "Smoke", "OrderSession"})
     @Severity(SeverityLevel.CRITICAL)
     @Description("POST /payment-session/tokens without Bearer → 401 and ErrorPayload")
     public void postPaymentTokenSession_withoutBearer_returns401() {
@@ -38,7 +38,7 @@ public class OrderSessionUnauthorizedTests {
     }
 
     @Story("GET session without Authorization")
-    @Test(groups = {"Regression", "Smoke"})
+    @Test(groups = {"Regression", "Smoke", "OrderSession"})
     @Severity(SeverityLevel.CRITICAL)
     public void getPaymentTokenSession_withoutBearer_returns401() {
         Map<String, String> headers = new LinkedHashMap<>();
@@ -49,7 +49,7 @@ public class OrderSessionUnauthorizedTests {
     }
 
     @Story("POST wallet-entries without Authorization")
-    @Test(groups = {"Regression", "Smoke"})
+    @Test(groups = {"Regression", "Smoke", "OrderSession"})
     public void postWalletEntry_withoutBearer_returns401() {
         Map<String, String> headers = OrderSessionHeaders.jsonNoAuth();
         Response res = OrderSessionApiService.postWalletEntrySession(headers,
@@ -59,7 +59,7 @@ public class OrderSessionUnauthorizedTests {
     }
 
     @Story("GET wallet session without Authorization")
-    @Test(groups = {"Regression", "Smoke"})
+    @Test(groups = {"Regression", "Smoke", "OrderSession"})
     public void getWalletEntry_withoutBearer_returns401() {
         Map<String, String> headers = new LinkedHashMap<>();
         headers.put("ABCFS-ORGANIZATION-ID", OrderSessionTestConfig.organizationId());
@@ -69,7 +69,7 @@ public class OrderSessionUnauthorizedTests {
     }
 
     @Story("Missing organization header when authenticated")
-    @Test(groups = {"Regression"})
+    @Test(groups = {"Regression", "OrderSession"})
     @Severity(SeverityLevel.NORMAL)
     @Description("Spec: Forbidden example when ABCFS-ORGANIZATION-ID missing — may be 401/403 depending on gateway")
     public void postPaymentTokenSession_missingOrgHeader_rejected() {
@@ -82,6 +82,34 @@ public class OrderSessionUnauthorizedTests {
         Map<String, Object> body = OrderSessionDataProvider.validPaymentTokenBody("PAYOR");
         Response res = OrderSessionApiService.postPaymentTokenSession(headers,
                 new GsonBuilder().create().toJson(body));
+        int code = res.statusCode();
+        Assert.assertTrue(code == 401 || code == 403 || code == 400,
+                "Expected auth/forbidden style response, got " + code + ": " + res.asPrettyString());
+    }
+
+    @Story("GET with Bearer but missing ABCFS-ORGANIZATION-ID")
+    @Test(groups = {"Regression", "OrderSession"})
+    @Description("Spec Forbidden example — gateway may return 401/403")
+    public void getPaymentTokenSession_authenticatedMissingOrgHeader_rejected() {
+        if (!OrderSessionTestConfig.hasValidToken()) {
+            throw new SkipException("Set auth.bearer.token or ORDER_SESSION_JWT");
+        }
+        Map<String, String> headers = new LinkedHashMap<>();
+        headers.put("Authorization", "Bearer " + OrderSessionAuth.bearerToken());
+        Response res = OrderSessionApiService.getPaymentTokenSession(headers, UUID.randomUUID().toString());
+        int code = res.statusCode();
+        Assert.assertTrue(code == 401 || code == 403 || code == 400,
+                "Expected auth/forbidden style response, got " + code + ": " + res.asPrettyString());
+    }
+
+    @Test(groups = {"Regression", "OrderSession"})
+    public void getWalletEntrySession_authenticatedMissingOrgHeader_rejected() {
+        if (!OrderSessionTestConfig.hasValidToken()) {
+            throw new SkipException("Set auth.bearer.token or ORDER_SESSION_JWT");
+        }
+        Map<String, String> headers = new LinkedHashMap<>();
+        headers.put("Authorization", "Bearer " + OrderSessionAuth.bearerToken());
+        Response res = OrderSessionApiService.getWalletEntrySession(headers, UUID.randomUUID().toString());
         int code = res.statusCode();
         Assert.assertTrue(code == 401 || code == 403 || code == 400,
                 "Expected auth/forbidden style response, got " + code + ": " + res.asPrettyString());

@@ -31,7 +31,9 @@ public final class OrderSessionAuth {
 
     /**
      * True when the suite can obtain a bearer: env JWT, {@code -Dauth.bearer.token}, non-placeholder
-     * {@code auth.bearer.token} in properties, or a readable OAuth merge file ({@code external.api.env.path}).
+     * {@code auth.bearer.token} in properties, a readable OAuth merge file ({@code external.api.env.path}),
+     * or enough {@code order.session.auth.source} settings (CLIENT / SECURE / GLOFOX) for
+     * {@link ExternalApiTokenProvider#fetchFromConfiguredSource()} (same as {@link #bearerToken()} fallback).
      */
     public static boolean isAuthConfigured() {
         String env = System.getenv("ORDER_SESSION_JWT");
@@ -46,7 +48,42 @@ public final class OrderSessionAuth {
         if (fileTok != null && !isPlaceholderToken(fileTok)) {
             return true;
         }
-        return ConfigManager.hasExternalMerge();
+        if (ConfigManager.hasExternalMerge()) {
+            return true;
+        }
+        return hasOAuthFetchPrerequisites();
+    }
+
+    /**
+     * Mirrors {@link ExternalApiTokenProvider#fetchFromConfiguredSource()} prerequisites so
+     * {@link #isAuthConfigured()} matches cases where {@link #bearerToken()} can still fetch (e.g.
+     * {@code auth.url} + {@code credentials} in {@code env/qa.properties} without a merge file).
+     */
+    private static boolean hasOAuthFetchPrerequisites() {
+        String mode = ConfigManager.getOptional("order.session.auth.source");
+        if (mode == null || mode.isBlank()) {
+            mode = "GLOFOX";
+        }
+        return switch (mode.trim().toUpperCase()) {
+            case "CLIENT" -> nonBlank(ConfigManager.getOptional("auth.url"))
+                    && clientCredentialsPresent();
+            case "SECURE" -> nonBlank(ConfigManager.getOptional("secure.auth.url"))
+                    && nonBlank(ConfigManager.getOptional("secure.username"))
+                    && nonBlank(ConfigManager.getOptional("secure.password"));
+            default -> nonBlank(ConfigManager.getOptional("base.url"));
+        };
+    }
+
+    private static boolean clientCredentialsPresent() {
+        String sys = System.getProperty("auth.creds");
+        if (sys != null && !sys.isBlank()) {
+            return true;
+        }
+        return nonBlank(ConfigManager.getOptional("credentials"));
+    }
+
+    private static boolean nonBlank(String s) {
+        return s != null && !s.isBlank();
     }
 
     /**

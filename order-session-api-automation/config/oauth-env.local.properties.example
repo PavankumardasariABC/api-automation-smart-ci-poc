@@ -5,7 +5,7 @@
 
 base.url=https://qa.YOUR-DOMAIN.example.com
 auth.url=https://qa.YOUR-DOMAIN.example.com/api/token
-credentials=YOUR_CLIENT_ID:YOUR_CLIENT_SECRET
+credentials=AUTOMATED_TESTING:t3st@llth3th1ngs
 
 secure.base.url=https://secure.qa.YOUR-DOMAIN.example.com
 secure.auth.url=https://secure.qa.YOUR-DOMAIN.example.com/api/token

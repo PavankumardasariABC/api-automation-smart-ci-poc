@@ -21,7 +21,8 @@ import static io.restassured.RestAssured.given;
  */
 public class ApiClient {
 
-    private static final int MAX_RETRIES = 2;
+    /** Retries for transient 5xx (incl. Cloudflare 520/521) and overloaded origins. */
+    private static final int MAX_RETRIES = 5;
     private static final AllureRestAssured allureFilter = new AllureRestAssured();
 
     /** POST request **/
@@ -89,6 +90,13 @@ public class ApiClient {
                 if (response.statusCode() < 500) break;
 
                 Allure.step("⚠️ Retryable server error " + response.statusCode() + " on attempt " + attempt);
+                if (attempt < MAX_RETRIES) {
+                    try {
+                        Thread.sleep(400L * attempt);
+                    } catch (InterruptedException ie) {
+                        Thread.currentThread().interrupt();
+                    }
+                }
 
             } catch (Exception e) {
                 Allure.step("❌ Exception on attempt " + attempt + ": " + e.getMessage());
