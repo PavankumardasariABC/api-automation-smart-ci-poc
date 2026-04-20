@@ -54,21 +54,6 @@ jobs:
           distribution: temurin
           java-version: "17"
 
-      - name: Smart change hint (order-session tests)
-        id: smart
-        shell: bash
-        run: |
-          git fetch origin main 2>/dev/null || true
-          BASE="${GITHUB_BASE_REF:-main}"
-          CHANGED=$(git diff --name-only "origin/${BASE}...HEAD" 2>/dev/null | grep 'order-session-api-automation/src/test/java' || true)
-          if [ -n "$CHANGED" ]; then
-            echo "Changed Order Session tests:"
-            echo "$CHANGED"
-            echo "hint=changed" >> "$GITHUB_OUTPUT"
-          else
-            echo "hint=default" >> "$GITHUB_OUTPUT"
-          fi
-
       - name: Resolve bucket (PR / push / manual)
         id: bucket
         shell: bash

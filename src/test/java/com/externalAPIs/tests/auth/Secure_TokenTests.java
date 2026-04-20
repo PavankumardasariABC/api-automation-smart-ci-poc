@@ -43,11 +43,6 @@ public class Secure_TokenTests {
 
         Allure.step("✅ Encoded Credentials: " + encodedCreds.substring(0, 10) + "... (masked)");
 
-        // Optional: Verify encoded value for consistency (can disable in prod)
-        String expectedEncoded = "U0VDVVJFX0FVVE9NQVRFRF9URVNUSU5HOnQzc3RAbGx0aDN0aDFuZ3M=";
-        Assert.assertEquals(encodedCreds, expectedEncoded,
-                "⚠️ Encoded credentials mismatch! Verify secure.username and secure.password in config.");
-
         // Step 3️⃣: Prepare headers
         Map<String, String> headers = new LinkedHashMap<>();
         headers.put("Authorization", "Basic " + encodedCreds);

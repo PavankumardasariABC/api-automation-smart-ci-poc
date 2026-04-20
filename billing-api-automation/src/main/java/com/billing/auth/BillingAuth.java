@@ -29,7 +29,7 @@ public final class BillingAuth {
 
     public static String bearerToken() {
         String env = System.getenv("BILLING_COMMERCE_JWT");
-        if (env != null && !env.isBlank()) {
+        if (env != null && !env.isBlank() && !isPlaceholderToken(env)) {
             Allure.step("Bearer: BILLING_COMMERCE_JWT");
             cache(env.trim());
             return env.trim();

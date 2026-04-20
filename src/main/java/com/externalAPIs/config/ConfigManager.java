@@ -24,6 +24,17 @@ public class ConfigManager {
     }
 
     public static String get(String key) {
+        String sysValue = System.getProperty(key);
+        if (sysValue != null && !sysValue.isBlank()) {
+            return sysValue.trim();
+        }
+
+        String envKey = key.toUpperCase().replace('.', '_');
+        String envValue = System.getenv(envKey);
+        if (envValue != null && !envValue.isBlank()) {
+            return envValue.trim();
+        }
+
         String value = props.getProperty(key);
         if (value == null) {
             throw new RuntimeException("Missing property: " + key + " in " + ENV + ".properties");

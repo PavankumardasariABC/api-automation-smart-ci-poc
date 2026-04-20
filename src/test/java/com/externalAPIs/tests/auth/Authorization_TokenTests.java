@@ -40,10 +40,8 @@ public class Authorization_TokenTests {
 
         // Step 3️⃣ Prepare credentials
         String credentials = System.getProperty("auth.creds", ConfigManager.get("credentials"));
-        if (credentials == null || credentials.isBlank()) {
-            credentials = "AUTOMATED_TESTING:t3st@llth3th1ngs"; // fallback for local
-            Allure.step("⚠️ Using fallback credentials for local execution");
-        }
+        Assert.assertNotNull(credentials, "❌ Missing client credentials. Set -Dauth.creds or credentials in env properties.");
+        Assert.assertFalse(credentials.isBlank(), "❌ Client credentials are blank. Set -Dauth.creds or credentials in env properties.");
 
         String encodedCreds = Base64.getEncoder()
                 .encodeToString(credentials.getBytes(StandardCharsets.UTF_8));

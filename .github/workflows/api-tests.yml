@@ -56,6 +56,9 @@ jobs:
       PUBLISH_DIR: reports/site
       AUTH_USERNAME: ${{ secrets.AUTH_USERNAME }}
       AUTH_PASSWORD: ${{ secrets.AUTH_PASSWORD }}
+      CREDENTIALS: ${{ format('{0}:{1}', secrets.AUTH_USERNAME, secrets.AUTH_PASSWORD) }}
+      SECURE_USERNAME: ${{ secrets.AUTH_USERNAME }}
+      SECURE_PASSWORD: ${{ secrets.AUTH_PASSWORD }}
 
     steps:
       # 1️⃣ Checkout
@@ -89,27 +92,9 @@ jobs:
             echo "✅ Allure CLI already cached"
           fi
           echo "$BASE_DIR/allure-2.27.0/bin" >> $GITHUB_PATH
-          allure --version
+          "$BASE_DIR/allure-2.27.0/bin/allure" --version
 
-      # 4️⃣ Smart Test Selection
-      - name: 🧠 Smart Test Selection
-        id: smart
-        shell: bash
-        run: |
-          set -e
-          git fetch origin
-          echo "Detecting changed test files..."
-          CHANGED=$(git diff --name-only origin/main...HEAD | grep 'src/test/java' || true)
-          if [ -n "$CHANGED" ]; then
-            echo "Changed test files:"
-            echo "$CHANGED"
-            echo "group=Custom" >> $GITHUB_OUTPUT
-          else
-            echo "No specific changes; using input group."
-            echo "group=${{ github.event.inputs.test_group }}" >> $GITHUB_OUTPUT
-          fi
-
-      # 5️⃣ Run Tests — bucket selection by event (no manual intervention)
+      # 4️⃣ Run Tests — bucket selection by event (no manual intervention)
       # PR (before merge): Smoke. Push to main/develop (after merge): Regression. workflow_dispatch: use selected bucket.
       - name: 🧪 Run Tests
         id: run_tests
@@ -142,7 +127,7 @@ jobs:
           fi
           echo "✅ Test execution complete (with or without failures)."
 
-      # 6️⃣ Generate Allure Report (always runs)
+      # 5️⃣ Generate Allure Report (always runs)
       - name: 📊 Generate Allure Report
         if: always()
         shell: bash
@@ -155,7 +140,7 @@ jobs:
             echo "⚠️ No allure-results found — skipping report generation."
           fi
 
-      # 7️⃣ Prepare Allure Site for Publishing
+      # 6️⃣ Prepare Allure Site for Publishing
       - name: 🧰 Prepare Allure Site
         if: always()
         shell: bash
@@ -173,7 +158,7 @@ jobs:
           fi
           touch "${PUBLISH_DIR}/.nojekyll"
 
-      # 8️⃣ Upload Full Allure Report as Artifact
+      # 7️⃣ Upload Full Allure Report as Artifact
       - name: 📦 Upload Full Allure Report
         if: always()
         uses: actions/upload-artifact@v4
@@ -182,7 +167,7 @@ jobs:
           path: ${{ env.PUBLISH_DIR }}/
           retention-days: 15
 
-      # 9️⃣ Publish to GitHub Pages
+      # 8️⃣ Publish to GitHub Pages
       - name: 🌐 Publish Allure report (latest)
         if: always()
         uses: peaceiris/actions-gh-pages@v3
@@ -205,7 +190,7 @@ jobs:
           keep_files: true
           commit_message: "📊 Publish Allure Report (run ${{ github.run_number }})"
 
-      # 🔟 Comment PR with report links
+      # 9️⃣ Comment PR with report links
       - name: 💬 Comment on PR
         if: ${{ github.event_name == 'pull_request' }}
         uses: actions/github-script@v7
@@ -226,11 +211,11 @@ jobs:
             💾 **Artifacts**
             • [Download Allure Report](${runUrl}) → Allure-Full-Report-${{ github.run_number }}
 
-            _To view locally:_ unzip → run \`run_local_server.sh\` or \`run_local_server.bat\` → open http://localhost:8000
+            _To view locally:_ unzip → from repo root run \`./serve-allure-report.sh\` (or \`python3 -m http.server 8000\`) → open http://localhost:8000
             `;
             await github.rest.issues.createComment({ ...context.issue, body: msg });
 
-      # 🔥 Fail build if any test failed (but after report generation)
+      # 🔟 Fail build if any test failed (but after report generation)
       - name: 🛑 Fail Build on Any Test Failure
         if: failure() || steps.run_tests.outcome == 'failure'
         run: |

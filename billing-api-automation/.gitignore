@@ -3,5 +3,7 @@ build/
 *.local.properties
 reports/current/
 reports/history/
+reports/**/execution_summary.json
+**/reports/analytics/execution_summary.json
 allure.zip
 allure-*/

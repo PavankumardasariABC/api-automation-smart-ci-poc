@@ -5,6 +5,8 @@ build/
 # Reports & local artifacts
 reports/current/
 reports/history/
+reports/**/execution_summary.json
+**/reports/analytics/execution_summary.json
 *.log
 
 # IDE / OS
