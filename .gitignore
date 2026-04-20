@@ -11,3 +11,7 @@ reports/history/
 .idea/
 *.iml
 .DS_Store
+
+# Local working clones when publishing to other GitHub remotes
+_external-api-docs-import/
+_external-api-automation-import/
