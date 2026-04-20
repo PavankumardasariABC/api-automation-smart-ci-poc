@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>API Automation Framework — Leadership Overview</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0f1419;
+      --surface: #1a2332;
+      --border: #2d3a4d;
+      --text: #e6edf3;
+      --muted: #8b9cb3;
+      --accent: #3b82f6;
+      --accent-soft: rgba(59, 130, 246, 0.15);
+      --success: #22c55e;
+      --warning: #eab308;
+      --danger: #ef4444;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      font-size: 1rem;
+    }
+    .container { max-width: 900px; margin: 0 auto; padding: 0 1.5rem; }
+    .section { padding: 3rem 0; border-bottom: 1px solid var(--border); }
+    .section:last-of-type { border-bottom: none; }
+    h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2rem, 5vw, 2.75rem);
+      font-weight: 400;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.02em;
+    }
+    h2 {
+      font-size: 1.35rem;
+      font-weight: 600;
+      margin-bottom: 1.25rem;
+      color: var(--text);
+    }
+    h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--muted); }
+    p { margin-bottom: 1rem; color: var(--muted); }
+    ul { margin-bottom: 1rem; padding-left: 1.5rem; }
+    li { margin-bottom: 0.5rem; color: var(--muted); }
+    li strong { color: var(--text); }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .hero {
+      padding: 4rem 0;
+      text-align: center;
+      background: linear-gradient(180deg, var(--surface) 0%, var(--bg) 100%);
+      border-bottom: 1px solid var(--border);
+    }
+    .hero .tagline { font-size: 1.15rem; color: var(--muted); max-width: 560px; margin: 0 auto; }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .card h3 { margin-bottom: 0.75rem; }
+    .card ul { margin-bottom: 0; padding-left: 1.25rem; }
+    .card li { margin-bottom: 0.35rem; }
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media (max-width: 640px) { .grid2 { grid-template-columns: 1fr; } }
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.6rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    .badge-success { background: rgba(34, 197, 94, 0.2); color: var(--success); }
+    .badge-warning { background: rgba(234, 179, 8, 0.2); color: var(--warning); }
+    .badge-info { background: var(--accent-soft); color: var(--accent); }
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      font-size: 0.95rem;
+    }
+    .comparison-table th,
+    .comparison-table td { padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid var(--border); }
+    .comparison-table th { color: var(--muted); font-weight: 500; }
+    .comparison-table td { color: var(--text); }
+    .comparison-table tr:last-child td { border-bottom: none; }
+    .highlight { background: var(--accent-soft); border-left: 3px solid var(--accent); padding: 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+    .footer-note { font-size: 0.85rem; color: var(--muted); margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--border); }
+    .nav { padding: 1rem 0; border-bottom: 1px solid var(--border); }
+    .nav-inner { display: flex; flex-wrap: wrap; gap: 1rem; }
+    .nav a { color: var(--muted); font-size: 0.9rem; }
+    .nav a:hover { color: var(--accent); }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="#advantages">Advantages</a>
+      <a href="#speed">Speed</a>
+      <a href="#cicd">CI/CD & PR</a>
+      <a href="#failures">Failure Categories</a>
+      <a href="#future">Future</a>
+      <a href="#demo">Demo</a>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="container">
+      <h1>API Automation Framework</h1>
+      <p class="tagline">Smart CI-ready API tests with fast execution, PR integration, and failure categorization for leadership visibility.</p>
+    </div>
+  </header>
+
+  <section class="section" id="advantages">
+    <div class="container">
+      <h2>Advantages of This Framework</h2>
+      <ul>
+        <li><strong>Single reusable template</strong> — Add new APIs (e.g. Billing Account Transfer) by copying one folder and changing endpoint + data; minimal duplication.</li>
+        <li><strong>Bearer token auto-refresh</strong> — Expired auth is detected (401); token is regenerated and the request is retried so tests do not fail due to authorization alone.</li>
+        <li><strong>Dynamic test selection</strong> — Run by group (<code>-Dgroups=Billing</code>) or by class (<code>-DtestClass=...</code>), enabling faster PR and smoke runs.</li>
+        <li><strong>Allure reporting</strong> — Rich, offline-capable reports with request/response attachments and history for demos and audits.</li>
+        <li><strong>Environment-based config</strong> — Switch dev/qa/stage via <code>-Denv=qa</code>; no code change for different environments.</li>
+        <li><strong>TDD-style coverage</strong> — Positive and negative scenarios (validation, auth, missing/invalid data) built into templates like Billing Account Transfer.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" id="speed">
+    <div class="container">
+      <h2>Execution Speed vs Legacy MT Scripts</h2>
+      <p>Existing manual/MT scripts often take significantly longer due to full flows and sequential execution. This framework is designed for speed and scalability.</p>
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>Aspect</th>
+            <th>Legacy MT Scripts</th>
+            <th>This Framework</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Execution</td>
+            <td>Long-running; full end-to-end flows</td>
+            <td>Faster API-only runs; optional parallel and group/class filters</td>
+          </tr>
+          <tr>
+            <td>Scope control</td>
+            <td>Often all-or-nothing</td>
+            <td>Smart selection: run only Billing, Sanity, or a single test class</td>
+          </tr>
+          <tr>
+            <td>Feedback loop</td>
+            <td>Slower feedback</td>
+            <td>Quick feedback for PRs and demos (e.g. <code>-Dgroups=Billing</code>)</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="highlight">
+        <strong>Result:</strong> Same quality of coverage with much less time per run when using groups and class-based selection — ideal for VP and GM demos and daily CI.
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="cicd">
+    <div class="container">
+      <h2>CI/CD & PR Build Integration</h2>
+      <p>Tests are integrated with GitHub Actions so that every PR gets automated test runs and reports, with optional rerun without manual intervention.</p>
+      <div class="grid2">
+        <div class="card">
+          <h3>PR-triggered runs</h3>
+          <ul>
+            <li>On every pull request to <code>main</code> / <code>develop</code>, the workflow runs the test suite.</li>
+            <li>Allure report is generated and published (e.g. GitHub Pages + artifacts).</li>
+            <li>A comment is posted on the PR with links to the latest report and this run’s report.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Smart test selection (Gradle + workflow)</h3>
+          <ul>
+            <li><strong>Gradle:</strong> <code>-Dgroups=Sanity</code>, <code>-Dgroups=Billing</code>, or <code>-DtestClass=...</code> to run a subset of tests.</li>
+            <li>Workflow can use <code>test_group</code> / <code>test_class</code> inputs to run only relevant tests on PR.</li>
+            <li>Future: detect changed files and run only affected test classes for even faster PR feedback.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Rerun on failure (no manual intervention)</h3>
+        <ul>
+          <li>Build is marked as failed if any test fails, but Allure report is always generated (continue-on-error then explicit fail step).</li>
+          <li>Teams can re-run the same workflow (e.g. “Re-run all jobs”) to get a fresh run — same branch, same code; no manual re-trigger needed beyond clicking re-run.</li>
+          <li>Future: automated rerun (e.g. retry once on failure) can be added in the workflow for flaky mitigation.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="failures">
+    <div class="container">
+      <h2>Failure Categorization</h2>
+      <p>Failures can be classified so leadership and teams see whether issues are due to microservices, data, auth, or environment — not just “test failed.”</p>
+      <div class="grid2">
+        <div class="card">
+          <h3><span class="badge badge-danger">Microservice / API</span></h3>
+          <ul>
+            <li>5xx responses, timeouts, connection errors.</li>
+            <li>Tests: e.g. non-existent resource (404), server error (500).</li>
+            <li>Report and failure reason point to backend/API health.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3><span class="badge badge-warning">Data / validation</span></h3>
+          <ul>
+            <li>4xx validation (400, 422), missing/invalid payload.</li>
+            <li>Tests: missing locationId, invalid UUID, invalid metadata.</li>
+            <li>Failure reason points to test data or contract.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3><span class="badge badge-info">Authorization</span></h3>
+          <ul>
+            <li>401 Unauthorized — framework retries with refreshed token so transient auth expiry does not count as a “test failure.”</li>
+            <li>Billing Account Transfer (and other secured APIs) use bearer token; expiry is handled automatically.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3><span class="badge badge-info">Environment / config</span></h3>
+          <ul>
+            <li>Wrong base URL, missing env vars, missing tenant/organization ID.</li>
+            <li>Tests: e.g. “no ABCFS-ORGANIZATION-ID” expect 400/403.</li>
+            <li>Failure reason points to configuration or environment.</li>
+          </ul>
+        </div>
+      </div>
+      <p>By tagging tests and mapping failure reasons (e.g. in Allure or analytics), we can show dashboards: “X% microservice, Y% data, Z% env” for VP and GM reviews.</p>
+    </div>
+  </section>
+
+  <section class="section" id="future">
+    <div class="container">
+      <h2>Future Advancements</h2>
+      <ul>
+        <li><strong>CI/CD gates</strong> — Block merge when critical tests fail or when failure rate exceeds a threshold; optional per-environment gates.</li>
+        <li><strong>Failure buckets in reports</strong> — Automatically tag failures (microservice / data / auth / env) and expose in Allure or a custom dashboard.</li>
+        <li><strong>Smart test selection on PR</strong> — Run only tests affected by changed code (e.g. changed Java files → corresponding test classes) to keep PR feedback fast.</li>
+        <li><strong>Auto-rerun on failure</strong> — Workflow retries failed tests once (or N times) before marking the build failed, reducing noise from flaky runs.</li>
+        <li><strong>Extend template to more APIs</strong> — Reuse the Billing Account Transfer template pattern for other domains (subscriptions, invoicing, etc.) with minimal effort.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" id="demo">
+    <div class="container">
+      <h2>Billing Account Transfer — Demo Template</h2>
+      <p>This API uses <strong>Bearer token</strong> in the <code>Authorization</code> header. If the token expires, the framework detects 401, regenerates the token, and retries the request so the test does not fail solely due to authorization. This is already implemented in the shared <code>ApiClient</code> and in the Billing tests.</p>
+      <div class="card">
+        <h3>Quick run commands (Gradle)</h3>
+        <table class="comparison-table">
+          <tr><td>Billing only (demo)</td><td><code>./gradlew test -Dgroups=Billing</code></td></tr>
+          <tr><td>Sanity / Regression</td><td><code>./gradlew test -Dgroups=Sanity</code> or <code>-Dgroups=Regression</code></td></tr>
+          <tr><td>Single test class</td><td><code>./gradlew test -DtestClass=com.externalAPIs.tests.billing.CreateBillingAccountTransferTests</code></td></tr>
+          <tr><td>With environment</td><td><code>./gradlew test -Denv=qa -Dgroups=Billing</code></td></tr>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <footer class="section">
+    <div class="container footer-note">
+      API Automation Framework — Leadership overview. For detailed run instructions and template reuse, see project README and <code>src/test/java/.../billing/README_TEMPLATE.md</code>.
+    </div>
+  </footer>
+</body>
+</html>

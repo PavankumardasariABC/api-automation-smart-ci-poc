@@ -1,0 +1,19 @@
+# Copy to: qa.local.properties (gitignored). Overrides qa.properties — no code or JSON edits needed.
+
+# --- Organization (required for real API behavior; pick ONE key, or set abcfs.organization.id and it wins) ---
+abcfs.organization.id=00000000-0000-4000-8000-000000000000
+# organization.id=00000000-0000-4000-8000-000000000000
+
+# Optional: integration / E2E (all from config — create_payment_token_session_data.json has NO tenant/consumer ids)
+# test.consumer.id=
+# test.location.id=
+# test.owner.id=
+# test.wallet.user.id=
+# test.wallet.user.external.id=
+# test.consumer.origin=https://your-whitelisted-origin.example.com
+
+# Optional: bypass OAuth fetch
+# auth.bearer.token=paste_jwt_here
+
+# Optional: OAuth merge file path (default in qa.properties is config/oauth-env.local.properties)
+# external.api.env.path=config/oauth-env.local.properties

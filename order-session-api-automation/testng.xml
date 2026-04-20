@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suite name="Order Session API" verbose="1" configfailurepolicy="continue">
+    <listeners>
+        <listener class-name="com.ordersession.reporting.AllureTestListener"/>
+    </listeners>
+
+    <!-- Billing-style E2E: OrderSessionApiE2ETests covers all openapi-spec-5 paths -->
+    <test name="Order Session E2E" preserve-order="true">
+        <classes>
+            <class name="com.ordersession.tests.BaseTestTemplate"/>
+            <class name="com.ordersession.tests.auth.ExternalApiAuthBootstrapTests"/>
+            <class name="com.ordersession.tests.OrderSessionApiE2ETests"/>
+            <class name="com.ordersession.tests.OrderSessionE2eHighLevelTest"/>
+        </classes>
+    </test>
+</suite>

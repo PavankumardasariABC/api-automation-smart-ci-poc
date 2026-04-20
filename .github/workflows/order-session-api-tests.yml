@@ -1,0 +1,110 @@
+# Order Session API automation — runs the separate module under order-session-api-automation/
+# Smart selection aligned with root api-tests.yml: PR → Smoke, push → Regression, manual picks bucket.
+
+name: Order Session API automation
+
+on:
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - "order-session-api-automation/**"
+      - ".github/workflows/order-session-api-tests.yml"
+      - "run-order-session-demo.sh"
+  push:
+    branches: [main, develop]
+    paths:
+      - "order-session-api-automation/**"
+      - ".github/workflows/order-session-api-tests.yml"
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Target env (-Denv) for Order Session (OAuth: ORDER_SESSION_JWT or config/oauth-env.local.properties)"
+        type: choice
+        options: [dev, qa, stage, beta]
+        default: qa
+      test_group:
+        description: "TestNG bucket (or All)"
+        type: choice
+        options: [Smoke, Sanity, Regression, All]
+        default: Smoke
+      test_class:
+        description: "Optional: fully qualified test class name"
+        required: false
+        default: ""
+
+permissions:
+  contents: read
+
+concurrency:
+  group: order-session-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  order-session-tests:
+    runs-on: self-hosted
+    env:
+      ORDER_SESSION_JWT: ${{ secrets.ORDER_SESSION_JWT }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Smart change hint (order-session tests)
+        id: smart
+        shell: bash
+        run: |
+          git fetch origin main 2>/dev/null || true
+          BASE="${GITHUB_BASE_REF:-main}"
+          CHANGED=$(git diff --name-only "origin/${BASE}...HEAD" 2>/dev/null | grep 'order-session-api-automation/src/test/java' || true)
+          if [ -n "$CHANGED" ]; then
+            echo "Changed Order Session tests:"
+            echo "$CHANGED"
+            echo "hint=changed" >> "$GITHUB_OUTPUT"
+          else
+            echo "hint=default" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Resolve bucket (PR / push / manual)
+        id: bucket
+        shell: bash
+        run: |
+          if [ -n "${{ github.event.inputs.test_group }}" ]; then
+            echo "group=${{ github.event.inputs.test_group }}" >> "$GITHUB_OUTPUT"
+          elif [ "${{ github.event_name }}" = "pull_request" ]; then
+            echo "group=Smoke" >> "$GITHUB_OUTPUT"
+          else
+            echo "group=Regression" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Run Gradle tests
+        working-directory: order-session-api-automation
+        shell: bash
+        env:
+          ORDER_SESSION_JWT: ${{ secrets.ORDER_SESSION_JWT }}
+        run: |
+          set -e
+          chmod +x ./gradlew
+          ENV="${{ github.event.inputs.environment || 'qa' }}"
+          GROUP="${{ steps.bucket.outputs.group }}"
+          CLASS="${{ github.event.inputs.test_class }}"
+          ARGS=(test --no-daemon -Denv="$ENV")
+          if [ -n "$CLASS" ]; then
+            ARGS+=(-DtestClass="$CLASS")
+          elif [ "$GROUP" != "All" ]; then
+            ARGS+=(-Dgroups="$GROUP")
+          fi
+          echo "./gradlew ${ARGS[*]}"
+          ./gradlew "${ARGS[@]}"
+
+      - name: Upload Allure results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: order-session-allure-${{ github.run_number }}
+          path: order-session-api-automation/build/allure-results/
+          if-no-files-found: ignore

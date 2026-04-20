@@ -1,0 +1,238 @@
+name: "🚀 API Automation CI"
+
+on:
+  pull_request:
+    branches: [ main, develop ]
+  push:
+    branches: [ main, develop ]
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: "Select branch to run tests"
+        required: true
+        default: "feature/github-actions-poc-"
+
+      environment:
+          description: "Select Environment"
+          required: true
+          type: choice
+          options:
+            - dev
+            - qa
+            - stage
+            - prod
+          default: dev
+      test_group:
+        description: "Test bucket (Smoke, Sanity, Regression, All)"
+        required: true
+        type: choice
+        options:
+          - Smoke
+          - Sanity
+          - Regression
+          - All
+        default: "All"
+      test_class:
+        description: "Optional: Run only specific API test class"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+concurrency:
+  group: api-tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  api-tests:
+    runs-on: self-hosted
+    environment: ${{ github.event.inputs.environment || 'qa' }}
+    env:
+      TARGET_ENV: ${{ github.event.inputs.environment || 'qa' }}
+      TZ: "Asia/Kolkata"
+      ALLURE_RESULTS_DIR: build/allure-results
+      ALLURE_REPORT_DIR: build/reports/allure-report
+      PUBLISH_DIR: reports/site
+      AUTH_USERNAME: ${{ secrets.AUTH_USERNAME }}
+      AUTH_PASSWORD: ${{ secrets.AUTH_PASSWORD }}
+
+    steps:
+      # 1️⃣ Checkout
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.branch || github.ref_name }}
+          fetch-depth: 0
+
+      # 2️⃣ Setup JDK & Gradle
+      - name: ☕ Setup JDK + Gradle
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: wrapper
+          cache-read-only: false
+          cache-cleanup: true
+
+      # 3️⃣ Install Allure CLI (cached)
+      - name: 🧩 Install Allure CLI (cached)
+        shell: bash
+        run: |
+          set -e
+          BASE_DIR="${{ github.workspace }}/allure-cli"
+          if [ ! -d "$BASE_DIR/allure-2.27.0" ]; then
+            echo "⬇️ Installing Allure CLI..."
+            mkdir -p "$BASE_DIR"
+            curl -L -o "$BASE_DIR/allure.zip" https://github.com/allure-framework/allure2/releases/download/2.27.0/allure-2.27.0.zip
+            unzip -q "$BASE_DIR/allure.zip" -d "$BASE_DIR"
+            chmod +x "$BASE_DIR/allure-2.27.0/bin/allure"
+          else
+            echo "✅ Allure CLI already cached"
+          fi
+          echo "$BASE_DIR/allure-2.27.0/bin" >> $GITHUB_PATH
+          allure --version
+
+      # 4️⃣ Smart Test Selection
+      - name: 🧠 Smart Test Selection
+        id: smart
+        shell: bash
+        run: |
+          set -e
+          git fetch origin
+          echo "Detecting changed test files..."
+          CHANGED=$(git diff --name-only origin/main...HEAD | grep 'src/test/java' || true)
+          if [ -n "$CHANGED" ]; then
+            echo "Changed test files:"
+            echo "$CHANGED"
+            echo "group=Custom" >> $GITHUB_OUTPUT
+          else
+            echo "No specific changes; using input group."
+            echo "group=${{ github.event.inputs.test_group }}" >> $GITHUB_OUTPUT
+          fi
+
+      # 5️⃣ Run Tests — bucket selection by event (no manual intervention)
+      # PR (before merge): Smoke. Push to main/develop (after merge): Regression. workflow_dispatch: use selected bucket.
+      - name: 🧪 Run Tests
+        id: run_tests
+        shell: bash
+        continue-on-error: true
+        run: |
+          echo "🧪 Starting Test Execution..."
+          TEST_CLASS="${{ github.event.inputs.test_class }}"
+          # Automatic bucket: PR → Smoke (fast gate), Push → Regression (full), Manual → input
+          if [ -n "${{ github.event.inputs.test_group }}" ]; then
+            TEST_GROUP="${{ github.event.inputs.test_group }}"
+            echo "📌 Using selected bucket: $TEST_GROUP"
+          elif [ "${{ github.event_name }}" = "pull_request" ]; then
+            TEST_GROUP="Smoke"
+            echo "📌 PR detected → running Smoke (pre-merge gate)"
+          else
+            TEST_GROUP="Regression"
+            echo "📌 Push to main/develop → running Regression (post-merge)"
+          fi
+
+          if [ -n "$TEST_CLASS" ]; then
+            echo "🎯 Running specific class: $TEST_CLASS"
+            ./gradlew test --parallel --max-workers=4 --tests "$TEST_CLASS" --info
+          elif [ -n "$TEST_GROUP" ] && [ "$TEST_GROUP" != "All" ]; then
+            echo "🏷️ Running test bucket: $TEST_GROUP"
+            ./gradlew test --parallel --max-workers=4 -Dgroups="$TEST_GROUP" --info
+          else
+            echo "🧩 Running full suite (All)"
+            ./gradlew test --parallel --max-workers=4 --info
+          fi
+          echo "✅ Test execution complete (with or without failures)."
+
+      # 6️⃣ Generate Allure Report (always runs)
+      - name: 📊 Generate Allure Report
+        if: always()
+        shell: bash
+        run: |
+          set -e
+          if [ -d "${ALLURE_RESULTS_DIR}" ] && [ "$(find "${ALLURE_RESULTS_DIR}" -name '*.json' | wc -l)" -gt 0 ]; then
+            echo "⚙️ Generating Allure report via Gradle..."
+            ./gradlew generateAllureReport --info
+          else
+            echo "⚠️ No allure-results found — skipping report generation."
+          fi
+
+      # 7️⃣ Prepare Allure Site for Publishing
+      - name: 🧰 Prepare Allure Site
+        if: always()
+        shell: bash
+        run: |
+          set -e
+          mkdir -p "${PUBLISH_DIR}"
+          if [ -d "${ALLURE_REPORT_DIR}" ]; then
+            rsync -a --delete "${ALLURE_REPORT_DIR}/" "${PUBLISH_DIR}/"
+            echo "✅ Copied Allure report to ${PUBLISH_DIR}"
+          elif [ -d "reports/current" ]; then
+            rsync -a --delete "reports/current/" "${PUBLISH_DIR}/"
+            echo "✅ Copied offline Allure report"
+          else
+            echo "⚠️ No Allure report found."
+          fi
+          touch "${PUBLISH_DIR}/.nojekyll"
+
+      # 8️⃣ Upload Full Allure Report as Artifact
+      - name: 📦 Upload Full Allure Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Allure-Full-Report-${{ github.run_number }}
+          path: ${{ env.PUBLISH_DIR }}/
+          retention-days: 15
+
+      # 9️⃣ Publish to GitHub Pages
+      - name: 🌐 Publish Allure report (latest)
+        if: always()
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ${{ env.PUBLISH_DIR }}
+          publish_branch: gh-pages
+          destination_dir: reports/latest
+          keep_files: true
+          commit_message: "📊 Publish Allure Report (latest) #${{ github.run_number }}"
+
+      - name: 🌐 Publish Allure report (per-run)
+        if: always()
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ${{ env.PUBLISH_DIR }}
+          publish_branch: gh-pages
+          destination_dir: reports/runs/${{ github.run_number }}
+          keep_files: true
+          commit_message: "📊 Publish Allure Report (run ${{ github.run_number }})"
+
+      # 🔟 Comment PR with report links
+      - name: 💬 Comment on PR
+        if: ${{ github.event_name == 'pull_request' }}
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const runUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            const pagesBase = `https://${context.repo.owner}.github.io/${context.repo.repo}`;
+            const msg = `
+            ✅ **API Tests Completed**
+            • **Branch:** \`${{ github.ref_name }}\`
+            • **Suite:** \`${{ github.event.inputs.test_group || 'Smoke (PR) / Regression (push)' }}\`
+
+            📊 **Allure Reports**
+            • [Latest Report](${pagesBase}/reports/latest/)
+            • [This Run](${pagesBase}/reports/runs/${{ github.run_number }}/)
+
+            💾 **Artifacts**
+            • [Download Allure Report](${runUrl}) → Allure-Full-Report-${{ github.run_number }}
+
+            _To view locally:_ unzip → run \`run_local_server.sh\` or \`run_local_server.bat\` → open http://localhost:8000
+            `;
+            await github.rest.issues.createComment({ ...context.issue, body: msg });
+
+      # 🔥 Fail build if any test failed (but after report generation)
+      - name: 🛑 Fail Build on Any Test Failure
+        if: failure() || steps.run_tests.outcome == 'failure'
+        run: |
+          echo "❌ One or more test cases failed — marking build as failed."
+          exit 1

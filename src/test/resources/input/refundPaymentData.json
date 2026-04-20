@@ -1,0 +1,22 @@
+{
+  "refundData": [
+    {
+      "tokenId": "11f092f5-df62-00cb-91b9-ef36cde23978",
+      "referenceId": "AUTO_REF_001",
+      "terminalId": "11f092f7-a168-74cf-a13a-2bf2273e4f27",
+      "effectiveDate": "2025-09-16",
+      "amount": "2300",
+      "descriptor": "Refund via automation test",
+      "metadata": {}
+    },
+    {
+      "tokenId": "11f092f8-1139-f15c-91b9-ef36cde23978",
+      "referenceId": "AUTO_REF_002",
+      "terminalId": "11f0920c-9d1d-e3fc-874b-1bc2e63cef46",
+      "effectiveDate": "2025-09-20",
+      "amount": "1500",
+      "descriptor": "Partial refund validation test",
+      "metadata": {}
+    }
+  ]
+}

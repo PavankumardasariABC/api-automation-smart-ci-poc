@@ -1,0 +1,13 @@
+# Gradle
+.gradle/
+build/
+
+# Reports & local artifacts
+reports/current/
+reports/history/
+*.log
+
+# IDE / OS
+.idea/
+*.iml
+.DS_Store

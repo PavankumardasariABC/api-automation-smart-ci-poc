@@ -1,0 +1,9 @@
+[
+  {
+    "authClientId": "GLOFOX_AUTH",
+    "allowedOrigins": ["https://dev.30preprod.com"],
+    "allowedModes": ["ADD_TOKEN", "PAY_NOW"],
+    "disableVoidJob": false,
+    "enableReceiptNumberGeneration": false
+  }
+]

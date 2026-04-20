@@ -1,0 +1,16 @@
+.gradle/
+build/
+out/
+*.iml
+.idea/
+.DS_Store
+reports/current/
+reports/history/
+reports/analytics/
+allure-*/
+allure.zip
+build/response_store.json
+
+# Per-developer / team secrets (copy from *.local.properties.example)
+src/test/resources/env/*.local.properties
+config/*.local.properties

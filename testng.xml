@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suite name="External APIs Test Suite" parallel="none" configfailurepolicy="continue">
+
+    <listeners>
+        <listener class-name="com.externalAPIs.reporting.AllureTestListener"/>
+    </listeners>
+
+    <test name="Authentication and Merchant Flow">
+        <classes>
+            <!-- 🔐 AUTH -->
+            <class name="com.externalAPIs.tests.auth.Authorization_TokenTests"/>
+            <class name="com.externalAPIs.tests.auth.Secure_TokenTests"/>
+            <class name="com.externalAPIs.tests.auth.Glofox_ClientTokenTests"/>
+            <class name="com.externalAPIs.tests.auth.Glofox_SecureClientTokenTests"/>
+
+            <!-- 🧩 COMMON APIs -->
+            <class name="com.externalAPIs.tests.common.CreateClientTests"/>
+            <class name="com.externalAPIs.tests.common.CreateOrganizationTests"/>
+            <class name="com.externalAPIs.tests.common.CreateLocationTests"/>
+            <class name="com.externalAPIs.tests.common.CreateCompanyTests"/>
+            <class name="com.externalAPIs.tests.common.CreateMerchantTests"/>
+            <class name="com.externalAPIs.tests.common.UpdateMerchantTests"/>
+            <class name="com.externalAPIs.tests.common.CreateClientProfileTests"/>
+            <class name="com.externalAPIs.tests.common.CreateProcessorTests"/>
+            <class name="com.externalAPIs.tests.common.CreateTerminalTests"/>
+            <class name="com.externalAPIs.tests.common.CreatePaymentSessionConsumerTests"/>
+            <class name="com.externalAPIs.tests.common.CreateBankPaymentTokenTests"/>
+            <class name="com.externalAPIs.tests.common.CreateClientBankAccountTests"/>
+
+            <!-- 💳 CHARGE APIs -->
+            <class name="com.externalAPIs.tests.Charge.GetMerchantDetailsTests"/>
+            <class name="com.externalAPIs.tests.Charge.GetTransactionDetailsTests"/>
+            <class name="com.externalAPIs.tests.Charge.CreatePaymentTokenSessionTests"/>
+            <class name="com.externalAPIs.tests.Charge.CreateAchPaymentChargeTests"/>
+            <class name="com.externalAPIs.tests.Charge.CreateRefundPaymentTests"/>
+
+            <!-- 📋 BILLING (Template for reuse) -->
+            <class name="com.externalAPIs.tests.billing.CreateBillingAccountTransferTests"/>
+        </classes>
+    </test>
+</suite>

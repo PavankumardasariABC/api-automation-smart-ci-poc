@@ -1,0 +1,7 @@
+build/
+.gradle/
+*.local.properties
+reports/current/
+reports/history/
+allure.zip
+allure-*/
