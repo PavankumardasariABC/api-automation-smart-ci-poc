@@ -40,13 +40,14 @@ public class Glofox_ClientTokenTests {
         Allure.step("🔗 Auth URL: " + url);
 
         // Step 3️⃣: Prepare and encode credentials
-        String clientId = "GLOFOX_AUTH";
-        String clientSecret = "GLOFOX_AUTH";
-        String credentials = clientId + ":" + clientSecret;
+        String credentials = System.getProperty("auth.creds", ConfigManager.get("credentials"));
+        Assert.assertNotNull(credentials, "❌ Missing credentials. Set -Dauth.creds or credentials in env properties.");
+        Assert.assertFalse(credentials.isBlank(), "❌ Credentials are blank. Set -Dauth.creds or credentials in env properties.");
+        Assert.assertFalse(isPlaceholderCredentials(credentials), "❌ Placeholder credentials detected. Provide real credentials via secrets/env.");
         String encodedCreds = Base64.getEncoder()
                 .encodeToString(credentials.getBytes(StandardCharsets.UTF_8));
 
-        Allure.step("🧾 Using credentials: " + maskCredentials(clientId));
+        Allure.step("🧾 Using credentials: " + maskCredentials(credentials));
 
         // Step 4️⃣: Build headers
         Map<String, String> headers = new LinkedHashMap<>();
@@ -145,8 +146,23 @@ public class Glofox_ClientTokenTests {
     }
 
     /** Masks credentials for secure logging */
-    private String maskCredentials(String clientId) {
-        return clientId + ":********";
+    private String maskCredentials(String credentials) {
+        if (credentials == null) {
+            return "********";
+        }
+        if (credentials.contains(":")) {
+            String[] parts = credentials.split(":", 2);
+            return parts[0] + ":********";
+        }
+        return "********";
+    }
+
+    private boolean isPlaceholderCredentials(String credentials) {
+        String trimmed = credentials == null ? "" : credentials.trim();
+        return trimmed.isEmpty()
+                || trimmed.startsWith("REPLACE_")
+                || trimmed.contains("YOUR_")
+                || "PASTE_CREDENTIALS_HERE".equalsIgnoreCase(trimmed);
     }
 
     /** Masks token for display */

@@ -39,14 +39,18 @@ public class Glofox_SecureClientTokenTests {
         Allure.step("🔗 Endpoint: " + url);
 
         // Step 3️⃣: Prepare credentials
-        String username = "GLOFOX_SECURE_AUTH";
-        String password = "GLOFOX_SECURE_AUTH";
-        String credentials = username + ":" + password;
+        String secureCreds = System.getProperty(
+                "secure.auth.creds",
+                ConfigManager.get("secure.username") + ":" + ConfigManager.get("secure.password")
+        );
+        Assert.assertNotNull(secureCreds, "❌ Missing secure credentials. Set -Dsecure.auth.creds or secure.username/secure.password.");
+        Assert.assertFalse(secureCreds.isBlank(), "❌ Secure credentials are blank. Set -Dsecure.auth.creds or secure.username/secure.password.");
+        Assert.assertFalse(isPlaceholderCredentials(secureCreds), "❌ Placeholder secure credentials detected. Provide real credentials via secrets/env.");
 
         String encodedCreds = Base64.getEncoder()
-                .encodeToString(credentials.getBytes(StandardCharsets.UTF_8));
+                .encodeToString(secureCreds.getBytes(StandardCharsets.UTF_8));
 
-        Allure.step("🔐 Using credentials: " + maskCredentials(username));
+        Allure.step("🔐 Using credentials: " + maskCredentials(secureCreds));
         Allure.step("🧾 Encoded Credentials: " + encodedCreds.substring(0, 10) + "... (masked)");
 
         // Step 4️⃣: Prepare headers
@@ -147,8 +151,23 @@ public class Glofox_SecureClientTokenTests {
     }
 
     /** Masks credentials for secure logging */
-    private String maskCredentials(String username) {
-        return username + ":********";
+    private String maskCredentials(String credentials) {
+        if (credentials == null) {
+            return "********";
+        }
+        if (credentials.contains(":")) {
+            String[] parts = credentials.split(":", 2);
+            return parts[0] + ":********";
+        }
+        return "********";
+    }
+
+    private boolean isPlaceholderCredentials(String credentials) {
+        String trimmed = credentials == null ? "" : credentials.trim();
+        return trimmed.isEmpty()
+                || trimmed.startsWith("REPLACE_")
+                || trimmed.contains("YOUR_")
+                || "PASTE_CREDENTIALS_HERE".equalsIgnoreCase(trimmed);
     }
 
     /** Masks token for report logs */

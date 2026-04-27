@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suite name="Member Transfer API" verbose="1" configfailurepolicy="continue">
+    <listeners>
+        <listener class-name="com.membertransfer.reporting.AllureTestListener"/>
+    </listeners>
+
+    <test name="Member transfer tests" preserve-order="true">
+        <classes>
+            <class name="com.membertransfer.tests.BaseTestTemplate"/>
+            <class name="com.membertransfer.tests.MemberTransferAuthTokenTests"/>
+            <class name="com.membertransfer.tests.MemberTransferInquiryApiTests"/>
+            <!-- GET: /api/member-transfer/billing-account-batch-transfers/{bulkId} (q, page, size) — full suite only in this class -->
+            <class name="com.membertransfer.tests.billingaccountbatchtransfers.MemberTransferBillingAccountBatchTransfersGetApiTests"/>
+            <class name="com.membertransfer.tests.MemberTransferStatusApiTests"/>
+            <class name="com.membertransfer.tests.MemberTransferKafkaPublishPositiveTests"/>
+            <class name="com.membertransfer.tests.MemberTransferKafkaPublishNegativeTests"/>
+            <class name="com.membertransfer.tests.MemberTransferE2EProgressionTests"/>
+        </classes>
+    </test>
+</suite>

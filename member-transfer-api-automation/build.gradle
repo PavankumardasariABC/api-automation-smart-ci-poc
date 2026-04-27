@@ -3,7 +3,7 @@ plugins {
     id 'io.qameta.allure' version '2.11.2'
 }
 
-group = 'com.externalAPIs'
+group = 'com.membertransfer'
 version = '1.0'
 
 java {
@@ -20,25 +20,17 @@ ext {
 }
 
 dependencies {
-    // ✅ Core Libraries
     implementation "io.rest-assured:rest-assured:${restAssuredVersion}"
     implementation "io.rest-assured:json-path:${restAssuredVersion}"
     implementation "io.qameta.allure:allure-testng:${allureVersion}"
     implementation "io.qameta.allure:allure-rest-assured:${allureVersion}"
     implementation "org.testng:testng:${testngVersion}"
-
-    // ✅ Utility Libraries
-    implementation 'com.googlecode.json-simple:json-simple:1.1.1'
+    implementation 'org.apache.kafka:kafka-clients:latest.release'
     implementation 'com.google.code.gson:gson:2.11.0'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.0'
+    implementation 'com.googlecode.json-simple:json-simple:1.1.1'
     implementation 'org.slf4j:slf4j-simple:2.0.12'
-    implementation 'org.apache.logging.log4j:log4j-core:2.22.1'
-    implementation 'org.apache.logging.log4j:log4j-api:2.22.1'
 }
 
-/////////////////////////////////////////////////////////////
-// ✅ OFFLINE ALLURE REPORT (UTF-8 & Safari Safe)
-/////////////////////////////////////////////////////////////
 tasks.register('generateAllureReport') {
     group = "reporting"
     description = "Generate offline Allure report (UTF-8 & Safari safe)"
@@ -78,7 +70,6 @@ tasks.register('generateAllureReport') {
 
         println "✅ Allure report generated → ${outputDir}/index.html"
 
-        // 🧩 Embed JSONs for Safari/Offline Mode
         try {
             def dataDirs = [file("${outputDir}/data"), file("${outputDir}/widgets")]
             def jsonFiles = []
@@ -112,11 +103,34 @@ tasks.register('generateAllureReport') {
 </script>
 """
             def merged = indexHtml.replaceFirst('(?i)</body>', "${embeddedData}\n</body>")
+            // Same merged document as index + Safe — browsers block file:// fetches to data/*.json; hook reads embedded JSON
             finalHtml.setText(merged, 'UTF-8')
-            println "✅ Offline HTML created → ${finalHtml.absolutePath}"
+            indexFile.setText(merged, 'UTF-8')
+            println "✅ Allure_Offline_Single_Safe.html + index.html (offline-safe) → ${outputDir}"
         } catch (Exception e) {
             println "⚠️ Embedding failed: ${e.message}"
         }
+
+        try {
+            def anyIndex = file("${outputDir}/index.html")
+            file("${outputDir}/VIEW_REPORT.txt").text = """
+How to open this Allure report
+==============================
+
+1) Double-click (macOS) or open in Safari/Chrome (works with file://):
+   ${anyIndex.absolutePath}
+   (index.html is patched to load without HTTP — no more endless "Loading...")
+
+2) Or serve over HTTP (unmodified Allure also works that way):
+   ./scripts/serve-allure-report.sh
+   Then: http://127.0.0.1:8765/index.html
+
+3) If you use a custom output folder (e.g. allure generate -o allure-report), run
+   ./gradlew generateAllureReport
+   and use files under: ${outputDir.absolutePath}
+   Do NOT open a raw allure output folder in browser via file:// unless you generate with this project.
+""".stripIndent()
+        } catch (Exception ignored) { }
 
         copy {
             from outputDir
@@ -124,20 +138,53 @@ tasks.register('generateAllureReport') {
         }
         println "🗂 Archived report → reports/history/${timestamp}"
 
-        if (!isCI && System.getProperty("os.name").toLowerCase().contains("mac"))
-            ["bash", "-c", "open '${outputDir}/Allure_Offline_Single_Safe.html'"].execute()
+        if (!isCI && System.getProperty("os.name").toLowerCase().contains("mac")) {
+            def idx = file("${outputDir}/index.html")
+            if (idx.exists()) {
+                println "\n⭐ Open the report: ./gradlew openAllureReport"
+                ["bash", "-c", "open '${idx.absolutePath}'"].execute()
+            }
+        }
     }
 }
 
-/////////////////////////////////////////////////////////////
-// ✅ TEST CONFIGURATION — Dynamic Groups / Class + Workflow
-/////////////////////////////////////////////////////////////
-test {
-    // Forward -Denv (and other props) to the test JVM so ConfigManager loads the right src/test/resources/env file
-    systemProperty 'env', System.getProperty('env', 'dev')
-    systemProperty 'auth.creds', System.getProperty('auth.creds', '')
+tasks.register('openAllureReport') {
+    group = 'reporting'
+    description = "Opens reports/current/index.html (Safari) — use after generateAllureReport"
+    doLast {
+        def f = file("${projectDir}/reports/current/index.html")
+        if (!f.exists()) {
+            println "No report. Run: ./gradlew test && ./gradlew generateAllureReport"
+            return
+        }
+        def os = System.getProperty("os.name", "").toLowerCase()
+        if (os.contains("mac")) {
+            ["bash", "-c", "open '" + f.absolutePath + "'"].execute()
+            println "Opened: " + f.absolutePath
+        } else {
+            println "Open in browser: " + f.toURI()
+        }
+    }
+}
 
+tasks.register('serveAllureReport') {
+    group = 'reporting'
+    doLast {
+        def sh = file("${projectDir}/scripts/serve-allure-report.sh")
+        println "\n▶ In a separate terminal: ${sh.absolutePath}\n"
+    }
+}
+
+test {
     outputs.upToDateWhen { false }
+
+    systemProperty 'env', System.getProperty('env', 'qa')
+    systemProperty 'external.api.env.path', System.getProperty('external.api.env.path', '')
+    systemProperty 'auth.bearer.token', System.getProperty('auth.bearer.token', '')
+    systemProperty 'auth.creds', System.getProperty('auth.creds', '')
+    if (System.getProperty('member.transfer.auth.credentials') != null) {
+        systemProperty 'member.transfer.auth.credentials', System.getProperty('member.transfer.auth.credentials')
+    }
 
     def testSummary = [passed: 0, failed: 0, skipped: 0]
 
@@ -167,7 +214,6 @@ test {
         resultsDir.mkdirs()
         println "🧹 Cleared old allure-results"
 
-        // ✅ Generate dynamic suite early (fix race condition)
         def groupsProp = System.getProperty('groups')
         def classProp = System.getProperty('testClass')
         def hasGroup = groupsProp && !groupsProp.trim().isEmpty()
@@ -189,7 +235,7 @@ test {
 
             def filteredClasses = allClasses.findAll { !classFilter || it == classFilter }
             if (filteredClasses.isEmpty()) {
-                println "⚠️ No matching classes found for filter. Using full suite."
+                println "⚠️ No matching classes. Using full suite."
                 suiteFile.text = xmlFile.text
             } else {
                 def includeGroupsXml = groupFilter ? groupFilter.split(',')
@@ -198,6 +244,9 @@ test {
 
                 suiteFile.text = """<?xml version="1.0" encoding="UTF-8"?>
 <suite name="DynamicSuite" verbose="1" configfailurepolicy="continue">
+  <listeners>
+    <listener class-name="com.membertransfer.reporting.AllureTestListener"/>
+  </listeners>
   <test name="FilteredExecution" preserve-order="true">
     ${groupFilter ? """
     <groups><run>${includeGroupsXml}</run></groups>""" : ""}
@@ -210,23 +259,17 @@ test {
             }
             println "🧩 Created suite → ${suiteFile.canonicalPath}"
         } else {
-            // No filter: run ALL tests — use testng.xml content so full suite runs
             suiteFile.text = xmlFile.text
-            println "🧩 Full suite — all test classes from testng.xml"
+            println "🧩 Full suite from testng.xml"
         }
     }
 
     useTestNG {
-        // Always use dynamic-suite.xml (written in doFirst: full suite or filtered)
         def suiteFile = file("$buildDir/dynamic-suite.xml")
         options.suites(suiteFile)
     }
 
-    // ✅ Run all tests so report includes every class (e.g. Billing). Set -Dworkflow=all for strict fail-fast.
-    def workflow = System.getProperty('workflow', 'all').toLowerCase()
-    failFast = false  // false = run all tests (including Billing) even if one fails; report shows full results
-    println "⚙️ Workflow Mode: ${workflow} → failFast=${failFast} (all tests run for full report)"
-
+    failFast = false
     finalizedBy 'generateAllureReport'
 
     testLogging {
@@ -236,10 +279,6 @@ test {
     }
 }
 
-
-/////////////////////////////////////////////////////////////
-// ✅ ALLURE CONFIGURATION
-/////////////////////////////////////////////////////////////
 allure {
     version = allureVersion
     adapter {
@@ -249,25 +288,16 @@ allure {
     }
 }
 
-/////////////////////////////////////////////////////////////
-// ✅ ENV PRINT TASK
-/////////////////////////////////////////////////////////////
 tasks.register('printEnv') {
     doLast {
-        println "\n===== ENVIRONMENT INFO ====="
-        println "Environment: " + System.getProperty("env", "dev")
-        println "Workflow: " + System.getProperty("workflow", "all")
-        println "Java Version: " + JavaVersion.current()
-        println "Allure Version: ${allureVersion}"
-        println "RestAssured Version: ${restAssuredVersion}"
+        println "\n===== MEMBER TRANSFER AUTOMATION ====="
+        println "Environment (-Denv): " + System.getProperty("env", "qa")
+        println "Java: " + JavaVersion.current()
         println "============================\n"
     }
 }
 
-/////////////////////////////////////////////////////////////
-// ✅ FAIL BUILD IF TESTS FAIL
-/////////////////////////////////////////////////////////////
 gradle.buildFinished { result ->
     if (result.failure)
-        println "❌ Tests failed — build marked as failed (Allure report generated)."
+        println "❌ Tests failed — see build/reports/tests and reports/current/ for Allure."
 }

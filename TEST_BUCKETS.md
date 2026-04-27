@@ -47,3 +47,14 @@ public void createSomething() { ... }
 ```
 
 Ensure the test class is included in `testng.xml` so it is part of the suite when running by group.
+
+## Member transfer (standalone module)
+
+**Member transfer** API tests are a **separate Gradle project** in `member-transfer-api-automation/` (same layout as the sibling `order-session-api-automation/` folder: own `gradlew`, `build.gradle`, `testng.xml`, layered `env/`). It is **not** part of the monorepo root `./gradlew test` suite.
+
+```bash
+cd member-transfer-api-automation
+./gradlew test -Denv=qa -Dgroups=MemberTransfer
+```
+
+See that folder’s `README.md` and `TEST_BUCKETS.md` for group tags (`MT_Smoke`, `MT_Progression`, etc.).

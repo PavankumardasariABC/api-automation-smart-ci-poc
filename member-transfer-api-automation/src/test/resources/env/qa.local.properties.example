@@ -1,0 +1,26 @@
+# Copy to qa.local.properties (gitignored) for per-developer secrets and tenant/test UUIDs.
+# Merged on top of qa.properties — same key names.
+
+# member.transfer.auth.credentials=USER:pass
+# member.transfer.abcfs.tenant.id=
+# member.transfer.inquiry.from.billing.account.id=
+# member.transfer.inquiry.to.location.id=
+# Optional low-priv credentials for negative authorization scenarios in status tests:
+# member.transfer.auth.credentials.no.client.authority=
+# member.transfer.auth.credentials.no.user.permission=
+# member.transfer.auth.credentials.no.inquiry.client.authority=
+# member.transfer.auth.credentials.no.inquiry.user.permission=
+
+# Kafka verification (optional, required for MemberTransferKafkaPublishTests)
+# member.transfer.kafka.bootstrap.servers=
+# member.transfer.kafka.topic=bulk-account-transfer
+# member.transfer.kafka.legacy.topic=account-transfer
+# member.transfer.kafka.negative.wrong.topic=bulk-account-transfer-invalid
+# member.transfer.kafka.security.protocol=SASL_SSL
+# member.transfer.kafka.sasl.mechanism=PLAIN
+# member.transfer.kafka.sasl.username=
+# member.transfer.kafka.sasl.password=
+# member.transfer.kafka.sasl.jaas.config=
+# member.transfer.kafka.auto.offset.reset=latest
+# member.transfer.kafka.max.wait.seconds=45
+# member.transfer.kafka.poll.interval.ms=1000
